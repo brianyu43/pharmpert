@@ -1,0 +1,65 @@
+{
+  "status": "complete",
+  "device": "cpu",
+  "cell_lines": 94,
+  "genes": 32738,
+  "outer_folds": 5,
+  "inner_folds": 4,
+  "models": [
+    "B0",
+    "B1",
+    "B2",
+    "B3",
+    "B4"
+  ],
+  "total_seconds": 4.543750249998993,
+  "predictions_rows": 470,
+  "each_cell_line_predicted_once_per_model": true,
+  "primary_metrics": {
+    "B0": {
+      "rmse_delta_mean": 0.35586989439316863,
+      "pcc_delta_mean": null,
+      "pcc_context_mean": 0.0476129853361132,
+      "rmse_gain_vs_b1_mean": -0.0321202702076342,
+      "rmse_gain_vs_b1_ci95_low": -0.035440736476061316,
+      "rmse_gain_vs_b1_ci95_high": -0.028758550372469095
+    },
+    "B1": {
+      "rmse_delta_mean": 0.32374962418553427,
+      "pcc_delta_mean": 0.42008617447848834,
+      "pcc_context_mean": null,
+      "rmse_gain_vs_b1_mean": 0.0,
+      "rmse_gain_vs_b1_ci95_low": 0.0,
+      "rmse_gain_vs_b1_ci95_high": 0.0
+    },
+    "B2": {
+      "rmse_delta_mean": 0.3506234860348117,
+      "pcc_delta_mean": 0.34555211415420867,
+      "pcc_context_mean": 0.06459696551176251,
+      "rmse_gain_vs_b1_mean": -0.02687386184927737,
+      "rmse_gain_vs_b1_ci95_low": -0.03233729964031651,
+      "rmse_gain_vs_b1_ci95_high": -0.02185872646241812
+    },
+    "B3": {
+      "rmse_delta_mean": 0.429704790374438,
+      "pcc_delta_mean": 0.24716426701579955,
+      "pcc_context_mean": 0.058568289015872306,
+      "rmse_gain_vs_b1_mean": -0.1059551661889036,
+      "rmse_gain_vs_b1_ci95_low": -0.11540649222154568,
+      "rmse_gain_vs_b1_ci95_high": -0.09731301780013496
+    },
+    "B4": {
+      "rmse_delta_mean": 0.3220347668040167,
+      "pcc_delta_mean": 0.42800050574465837,
+      "pcc_context_mean": 0.10766634591391255,
+      "rmse_gain_vs_b1_mean": 0.00171485738151758,
+      "rmse_gain_vs_b1_ci95_low": 0.0011676497257807157,
+      "rmse_gain_vs_b1_ci95_high": 0.002284273293162492
+    }
+  },
+  "prediction_sha256": "7d905af11b10f178954a2a9b5c0518a80efe2a2212054c4dbb23160356ad797c",
+  "models_config_sha256": "64140e8aa0c6b0644ae83d355176fb40cfdb74700f582b373c6840af102e932d",
+  "splits_config_sha256": "4e3d4a28010332552af2595ad50c43ca4145141a023dad39e991e408d4036834",
+  "sensitivity_used_as_predictor": false,
+  "mutations_used_as_predictor": false
+}

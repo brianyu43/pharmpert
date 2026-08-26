@@ -1,0 +1,103 @@
+{
+  "qc_gene_rule": {
+    "min_total_control_counts": 100,
+    "min_expressing_lines_per_time": 10,
+    "gene_count": 16843,
+    "model_feature_selection": false
+  },
+  "control_time_all_97": {
+    "median_pcc": 0.9726753164148927,
+    "p05_pcc": 0.94644286090518,
+    "median_spearman": 0.9589468587380646,
+    "median_rmse": 0.4072934966177121
+  },
+  "strict_94_comparison": {
+    "median_control_time_rmse": 0.40544975913692666,
+    "median_trametinib_response_rmse": 0.4535558223833066,
+    "median_control_to_treatment_rmse_ratio": 0.88790949384353
+  },
+  "marker_response": [
+    {
+      "gene_symbol": "EGR1",
+      "gene_id": "ENSG00000120738",
+      "n_cell_lines": 94,
+      "mean_delta_log1p_cpm": -2.669840527975813,
+      "median_delta_log1p_cpm": -2.7669845819473267,
+      "ci95_low": -2.8264878436764502,
+      "ci95_high": -2.5035054890874853,
+      "fraction_negative": 1.0
+    },
+    {
+      "gene_symbol": "ETV4",
+      "gene_id": "ENSG00000175832",
+      "n_cell_lines": 94,
+      "mean_delta_log1p_cpm": -2.4672736493830985,
+      "median_delta_log1p_cpm": -2.485203742980957,
+      "ci95_low": -2.6492949218509043,
+      "ci95_high": -2.2791554236190117,
+      "fraction_negative": 1.0
+    },
+    {
+      "gene_symbol": "ETV5",
+      "gene_id": "ENSG00000244405",
+      "n_cell_lines": 94,
+      "mean_delta_log1p_cpm": -1.8757397798781699,
+      "median_delta_log1p_cpm": -1.8547040820121765,
+      "ci95_low": -2.0355314782642306,
+      "ci95_high": -1.7149602439492309,
+      "fraction_negative": 0.9893617021276596
+    },
+    {
+      "gene_symbol": "DUSP4",
+      "gene_id": "ENSG00000120875",
+      "n_cell_lines": 94,
+      "mean_delta_log1p_cpm": -1.4319429140775761,
+      "median_delta_log1p_cpm": -1.347768783569336,
+      "ci95_low": -1.6022248064346136,
+      "ci95_high": -1.2735928483624408,
+      "fraction_negative": 0.9787234042553191
+    },
+    {
+      "gene_symbol": "DUSP5",
+      "gene_id": "ENSG00000138166",
+      "n_cell_lines": 94,
+      "mean_delta_log1p_cpm": -1.1060304914383179,
+      "median_delta_log1p_cpm": -1.103427767753601,
+      "ci95_low": -1.2330913810812412,
+      "ci95_high": -0.9815652788319489,
+      "fraction_negative": 0.9680851063829787
+    },
+    {
+      "gene_symbol": "DUSP6",
+      "gene_id": "ENSG00000139318",
+      "n_cell_lines": 94,
+      "mean_delta_log1p_cpm": -2.3944393339309284,
+      "median_delta_log1p_cpm": -2.242372155189514,
+      "ci95_low": -2.577553759657956,
+      "ci95_high": -2.2100947635287933,
+      "fraction_negative": 1.0
+    },
+    {
+      "gene_symbol": "SPRY2",
+      "gene_id": "ENSG00000136158",
+      "n_cell_lines": 94,
+      "mean_delta_log1p_cpm": -0.9966462533524696,
+      "median_delta_log1p_cpm": -0.8241015076637268,
+      "ci95_low": -1.1463350068540015,
+      "ci95_high": -0.8491076530769786,
+      "fraction_negative": 0.9468085106382979
+    },
+    {
+      "gene_symbol": "SPRY4",
+      "gene_id": "ENSG00000187678",
+      "n_cell_lines": 94,
+      "mean_delta_log1p_cpm": -1.3050145684404577,
+      "median_delta_log1p_cpm": -1.2757955193519592,
+      "ci95_low": -1.446933670104184,
+      "ci95_high": -1.1675906087489838,
+      "fraction_negative": 0.9787234042553191
+    }
+  ],
+  "pooling_decision": "sensitivity_only",
+  "pooling_used_for_primary": false
+}

@@ -23,6 +23,13 @@ REQUIRED_PATHS = (
     "docs/evaluation_protocol.md",
     "cell_count_matrix.csv",
     "processed_manifest.csv",
+    "cell_line_annotations.csv",
+    "split_assignments.csv",
+    "inner_split_assignments.csv",
+    "notebooks/02_response_landscape.ipynb",
+    "notebooks/03_baselines.ipynb",
+    "results/logs/baseline_summary.json",
+    "results/tables/baseline_comparison.csv",
 )
 
 
@@ -56,7 +63,15 @@ def smoke_report(root: Path | None = None) -> dict[str, object]:
         "project": project_config["project"],
         "packages": {
             name: package_version(name)
-            for name in ("anndata", "numpy", "pandas", "pertpy", "scikit-learn", "scipy")
+            for name in (
+                "anndata",
+                "numpy",
+                "pandas",
+                "pertpy",
+                "rdata",
+                "scikit-learn",
+                "scipy",
+            )
         },
     }
 

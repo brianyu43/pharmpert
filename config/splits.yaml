@@ -1,11 +1,15 @@
-status: pending_data_audit
+status: frozen_v1
 seed: 20260827
 outer:
   strategy: deterministic_lineage_aware_cell_line_folds
   n_splits: 5
 inner:
-  strategy: cell_line_grouped_cv
+  strategy: deterministic_lineage_aware_cell_line_folds
   n_splits: 4
+lineage_balance:
+  definition: author_Disease_from_all_CL_features_rds_v3
+  rare_lineage_rule: retain_original_label_and_spread_members_greedily
+  performance_results_used_to_choose_rule: false
 constraints:
   no_cell_level_random_split: true
   fit_preprocessing_on_outer_train_only: true

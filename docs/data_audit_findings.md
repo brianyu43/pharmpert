@@ -50,3 +50,15 @@ Stage 1의 다음 작업은 저자 코드와 Figshare manifest에서 다음 원 
   - DMSO 6h+24h pooled 대 trametinib 24h, 양 조건 각각 20개 이상: 97 lines
 
 따라서 주 예측은 시간 일치 94-line cohort로 정의하고, 97-line pooled-control 결과는 논문 재현 및 민감도 분석으로 분리한다. 이 선택은 모델 성능을 보기 전에 이루어졌다.
+
+## Cell-line feature 파일 감사
+
+Figshare v3의 `all_CL_features.rds`(3,097,885 bytes, MD5
+`07ca14ced15e00468d08ffd7b145a871`)를 공식 API file ID `23322536`에서 받았다.
+저자 코드와 일치하게 `Trametinib_24hr_expt3` 객체의 `sens=1-AUC_avg`,
+BRAF/KRAS/HRAS/NRAS hotspot field와 `metadata` 객체의 Disease/Subtype을 사용한다.
+
+- strict 94 DepMap ID 전부 정확히 한 번 연결
+- Disease 21개, 결측 없음
+- 결합 sensitivity 94/94, 네 mutation field 94/94 완전
+- sensitivity/mutation은 baseline predictor가 아니라 탐색·해석 전용

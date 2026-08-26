@@ -1,0 +1,8 @@
+metric,value,cohort
+qc_gene_count,16843.0,97
+dmso_6h_vs_24h_median_pcc,0.9726753164148927,97
+dmso_6h_vs_24h_p05_pcc,0.94644286090518,97
+dmso_6h_vs_24h_median_spearman,0.9589468587380646,97
+control_time_source_median_rmse,0.40544975913692666,94
+trametinib_response_median_rmse,0.4535558223833066,94
+control_to_treatment_median_rmse_ratio,0.88790949384353,94

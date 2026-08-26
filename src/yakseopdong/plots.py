@@ -146,3 +146,209 @@ def write_cell_count_heatmap(root: Path, counts: pd.DataFrame) -> None:
     colorbar.set_label("log1p(normal cells)")
     fig.tight_layout(rect=[0, 0, 1, 0.95])
     _finish(fig, root / "results" / "figures" / "cell_count_heatmap.png")
+
+
+def _display_lineages(lineages: pd.Series, minimum_count: int = 4) -> pd.Series:
+    counts = lineages.value_counts()
+    common = set(counts[counts >= minimum_count].index)
+    return lineages.where(lineages.isin(common), "other / rare")
+
+
+def write_landscape_figures(
+    root: Path,
+    landscape: pd.DataFrame,
+    directions: pd.DataFrame,
+    report: dict[str, object],
+) -> None:
+    """Write descriptive PCA and perturbation-direction figures."""
+    figure_dir = root / "results" / "figures"
+    display_lineage = _display_lineages(landscape["lineage"])
+    categories = sorted(display_lineage.unique())
+    palette = plt.get_cmap("tab10")
+    colors = {category: palette(index % 10) for index, category in enumerate(categories)}
+
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+    panels = [
+        (
+            "control_pc1",
+            "control_pc2",
+            "Baseline DMSO 24h PCA",
+            "control_pc_explained_variance_ratio",
+        ),
+        (
+            "response_pc1",
+            "response_pc2",
+            "Trametinib response PCA",
+            "response_pc_explained_variance_ratio",
+        ),
+    ]
+    for axis, (x_column, y_column, title, variance_key) in zip(axes, panels, strict=True):
+        variance = report[variance_key]
+        for category in categories:
+            mask = display_lineage.eq(category)
+            axis.scatter(
+                landscape.loc[mask, x_column],
+                landscape.loc[mask, y_column],
+                s=34,
+                alpha=0.82,
+                color=colors[category],
+                edgecolor="white",
+                linewidth=0.4,
+                label=category,
+            )
+        axis.set_title(title, loc="left", color=INK)
+        axis.set_xlabel(f"PC1 ({100 * variance[0]:.1f}%)")
+        axis.set_ylabel(f"PC2 ({100 * variance[1]:.1f}%)")
+        axis.grid(color=GRID, linewidth=0.7, alpha=0.7)
+        axis.spines[["top", "right"]].set_visible(False)
+    handles, labels = axes[1].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="center left", bbox_to_anchor=(1.0, 0.5), frameon=False)
+    fig.suptitle(
+        "Control context and transcriptional response occupy different low-dimensional spaces",
+        x=0.07,
+        y=1.02,
+        ha="left",
+        fontsize=13,
+        color=INK,
+    )
+    fig.tight_layout()
+    _finish(fig, figure_dir / "response_landscape.png")
+
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4.5))
+    axes[0].hist(
+        directions["control_vs_drug_cosine"].dropna(),
+        bins=16,
+        color=BLUE,
+        edgecolor="white",
+    )
+    axes[0].axvline(0, color=INK, linewidth=1)
+    axes[0].set_title("Direction similarity", loc="left", color=INK)
+    axes[0].set_xlabel("Cosine: DMSO 6→24h change vs drug response")
+    axes[0].set_ylabel("Cell lines")
+
+    axes[1].scatter(
+        directions["control_6h_to_24h_rmse"],
+        directions["drug_24h_response_rmse"],
+        s=34,
+        color=BLUE,
+        alpha=0.8,
+        edgecolor="white",
+        linewidth=0.4,
+    )
+    low = float(
+        min(
+            directions["control_6h_to_24h_rmse"].min(),
+            directions["drug_24h_response_rmse"].min(),
+        )
+    )
+    high = float(
+        max(
+            directions["control_6h_to_24h_rmse"].max(),
+            directions["drug_24h_response_rmse"].max(),
+        )
+    )
+    axes[1].plot([low, high], [low, high], linestyle="--", color=INK, linewidth=1)
+    axes[1].set_title("Magnitude comparison", loc="left", color=INK)
+    axes[1].set_xlabel("DMSO 6→24h RMSE")
+    axes[1].set_ylabel("Trametinib response RMSE")
+    for axis in axes:
+        axis.grid(color=GRID, linewidth=0.7, alpha=0.7)
+        axis.spines[["top", "right"]].set_visible(False)
+    fig.suptitle(
+        "Shared-anchor diagnostic: control-time/source and drug-response directions oppose",
+        x=0.08,
+        y=1.02,
+        ha="left",
+        fontsize=13,
+        color=INK,
+    )
+    fig.text(
+        0.08,
+        -0.02,
+        "Caution: both contrasts contain DMSO 24h with opposite signs; "
+        "this is not an independent causal comparison.",
+        color="#59636E",
+        fontsize=9,
+    )
+    fig.tight_layout(rect=[0, 0.05, 1, 1])
+    _finish(fig, figure_dir / "direction_comparison.png")
+
+    fig, axis = plt.subplots(figsize=(6.4, 4.8))
+    axis.scatter(
+        landscape["trametinib_sensitivity"],
+        landscape["response_pc1"],
+        s=38,
+        color=BLUE,
+        alpha=0.82,
+        edgecolor="white",
+        linewidth=0.4,
+    )
+    axis.set_xlabel("Trametinib sensitivity (1 − author-combined AUC)")
+    axis.set_ylabel("Response PC1 score")
+    axis.set_title("Response PC1 and external drug sensitivity", loc="left", color=INK)
+    axis.text(
+        0.02,
+        0.98,
+        f"Pearson r = {report['response_pc1_sensitivity_pearson']:.3f}\n"
+        f"Spearman ρ = {report['response_pc1_sensitivity_spearman']:.3f}",
+        transform=axis.transAxes,
+        ha="left",
+        va="top",
+        color="#59636E",
+    )
+    axis.grid(color=GRID, linewidth=0.7, alpha=0.7)
+    axis.spines[["top", "right"]].set_visible(False)
+    fig.tight_layout()
+    _finish(fig, figure_dir / "response_pc1_sensitivity.png")
+
+
+def write_baseline_figure(root: Path, comparison: pd.DataFrame) -> None:
+    """Write macro performance and B1-gain panels for B0-B4."""
+    models = comparison["model"].tolist()
+    positions = np.arange(len(models))
+    colors = ["#9AA3AD", GOLD, "#5A8F62", "#7A6FAC", BLUE]
+    fig, axes = plt.subplots(1, 3, figsize=(13.2, 4.5))
+
+    for axis, metric, title, ylabel in [
+        (axes[0], "rmse_delta", "Held-out error", "RMSE-Δ (lower is better)"),
+        (axes[1], "rmse_gain_vs_b1", "Improvement over B1", "RMSE gain (higher is better)"),
+    ]:
+        means = comparison[f"{metric}_mean"].to_numpy(dtype=float)
+        lower = means - comparison[f"{metric}_ci95_low"].to_numpy(dtype=float)
+        upper = comparison[f"{metric}_ci95_high"].to_numpy(dtype=float) - means
+        axis.bar(positions, means, color=colors, width=0.72)
+        axis.errorbar(
+            positions,
+            means,
+            yerr=np.vstack([lower, upper]),
+            fmt="none",
+            ecolor=INK,
+            capsize=3,
+            linewidth=1,
+        )
+        if metric.endswith("gain_vs_b1"):
+            axis.axhline(0, color=INK, linewidth=1)
+        axis.set_title(title, loc="left", color=INK)
+        axis.set_ylabel(ylabel)
+        axis.set_xticks(positions, models)
+
+    context = comparison["pcc_context_mean"].to_numpy(dtype=float)
+    finite = np.isfinite(context)
+    axes[2].bar(positions[finite], context[finite], color=np.asarray(colors)[finite], width=0.72)
+    axes[2].axhline(0, color=INK, linewidth=1)
+    axes[2].set_title("Cell-line-specific signal", loc="left", color=INK)
+    axes[2].set_ylabel("PCC-context (higher is better)")
+    axes[2].set_xticks(positions, models)
+    for axis in axes:
+        axis.grid(axis="y", color=GRID, linewidth=0.7, alpha=0.7)
+        axis.spines[["top", "right"]].set_visible(False)
+    fig.suptitle(
+        "Five-fold held-out cell-line baseline benchmark",
+        x=0.07,
+        y=1.02,
+        ha="left",
+        fontsize=13,
+        color=INK,
+    )
+    fig.tight_layout()
+    _finish(fig, root / "results" / "figures" / "baseline_performance.png")

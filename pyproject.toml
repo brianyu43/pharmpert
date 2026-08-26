@@ -17,6 +17,7 @@ dependencies = [
   "pertpy>=1.0,<2",
   "pyarrow>=18,<24",
   "pyyaml>=6.0,<7",
+  "rdata>=0.11,<1",
   "scikit-learn>=1.6,<2",
   "scipy>=1.14,<2",
 ]

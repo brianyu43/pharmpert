@@ -1,6 +1,19 @@
-# Evaluation Protocol v0.1 — Pre-data freeze
+# Evaluation Protocol v1.0 — Frozen baseline benchmark
 
-이 문서는 모델 결과를 보기 전에 평가 원칙을 고정한다. 실제 split ID, gene universe, pathway gene set 버전은 Stage 1–4에서 원자료 감사 후 추가하고 Git commit으로 동결한다.
+이 문서는 모델 결과를 보기 전에 정한 평가 원칙과 Stage 4에서 고정한 실제 split/feature 규칙을 기록한다. pathway gene set 평가는 아직 버전이 고정되지 않아 baseline 주 결과에서 제외한다.
+
+## Frozen implementation
+
+- seed: `20260827`
+- outer: `split_assignments.csv`, lineage-aware 5-fold, fold size 18–19
+- inner: `inner_split_assignments.csv`, 각 outer-train 안의 lineage-aware 4-fold, fold size 18–19
+- lineage: Figshare v3 `all_CL_features.rds`의 저자 `Disease` 필드, 원래 21개 label 유지
+- target: strict 94-line의 전체 32,738-gene `Trametinib 24h − DMSO 24h`
+- B3/B4 control feature: 각 training partition에서 평균 `log1p(CPM) ≥ 0.1`, nonzero variance인 gene 중 분산 상위 5,000개
+- B3/B4 PCA dimensions: `[5, 10, 20, 30]`; whitening 사용
+- B4 ridge alpha: `[0.01, 0.1, 1, 10, 100]`
+- B2: 같은 lineage training line이 2개 미만이면 B1 fallback
+- sensitivity/mutation: predictor 사용 금지, 해석 전용
 
 ## 일반화 단위
 

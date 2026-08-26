@@ -1,0 +1,23 @@
+{
+  "source": "https://figshare.com/articles/dataset/MIX-seq_data/10298696",
+  "source_file": "all_CL_features.rds",
+  "source_sha256": "58c65f74974be33311c7d06409d9121d1a5fc1630bf49aff50ba2f2ef4351fa9",
+  "rds_object": "Trametinib_24hr_expt3",
+  "cell_lines": 94,
+  "depmap_ids": 94,
+  "lineages": 21,
+  "sensitivity_complete": true,
+  "mutation_complete": true,
+  "model_inputs": [
+    "control_24h_log1p_cpm",
+    "training_lineage_for_B2_only"
+  ],
+  "interpretation_only": [
+    "trametinib_sensitivity",
+    "trametinib_auc",
+    "braf_mut",
+    "kras_mut",
+    "hras_mut",
+    "nras_mut"
+  ]
+}

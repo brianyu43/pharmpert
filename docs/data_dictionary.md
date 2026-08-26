@@ -1,6 +1,6 @@
 # Data Dictionary
 
-상태: Stage 1 원자료 감사 및 24시간 pseudobulk 계약 확인 완료. 아래 항목은 추정값이 아니라 실행으로 확인한 값만 기록한다.
+상태: Stage 1–5 원자료, pseudobulk, annotation, split, baseline 계약 확인 완료. 아래 항목은 추정값이 아니라 실행으로 확인한 값만 기록한다.
 
 ## Source manifest
 
@@ -40,6 +40,18 @@
 
 각 expression/response 값은 Arrow fixed-size list로 저장한다. pseudobulk raw UMI 합을 library size로 나눈 뒤 `log1p(CPM)`을 적용하며 scaling factor는 1,000,000이다. 처리 파일은 Git에서 제외되고 `make pseudobulk`로 재생성한다.
 
+## Annotation and model-output contract
+
+| 파일 | 행 | 의미 |
+|---|---:|---|
+| `cell_line_annotations.csv` | 94 | DepMap ID, 저자 Disease/Subtype, Trametinib AUC/sensitivity, BRAF/RAS 변이 |
+| `split_assignments.csv` | 94 | 각 cell line의 유일한 outer test fold |
+| `inner_split_assignments.csv` | 376 | 5개 outer train 각각의 4-fold inner assignment |
+| `baseline_predictions.parquet` | 470 | 94 lines × B0–B4, `predicted_delta_log1p_cpm[32738]` |
+| `baseline_metrics_by_line.csv` | 470 | cell-line 단위 RMSE/NRMSE/PCC/Spearman/top-50/context/gain |
+
+`all_CL_features.rds`는 Figshare v3의 `Trametinib_24hr_expt3`와 `metadata` 객체를 사용한다. strict 94 lines에서 lineage, sensitivity, 네 hotspot mutation field의 필수값은 모두 완전하다. PRISM AUC 2개와 GDSC AUC 39개는 개별 source에서 결측이지만 저자의 결합 `AUC_avg`와 `sens=1-AUC_avg`는 94개 모두 존재한다.
+
 ## Observation fields
 
 | 개념 | 실제 열 | 단위/값 | 결측/주의사항 |
@@ -51,7 +63,7 @@
 | dose | `dose_value`, `dose_unit` | trametinib `0.1 µM`, control `0.0 µM` | Supplementary Table 3과 AnnData metadata가 일치 |
 | pool/channel | `channel`, `hash_assignment`, `hash_tag` | 문자열 `nan`, 숫자/문자 channel, hash condition | 99-line expt3 식별 규칙이 아직 미확정 |
 | quality/singlet | `cell_quality`, `hash_tag` | `normal` 등 5개; time-course `multiplet`/`unknown` | time-course clean tag filtering 필요 |
-| lineage | 미확인 | 미확인 | 현재 `tissue_type`은 모두 `cell_line`; 별도 disease/cell-line metadata 검토 필요 |
+| lineage | 저자 RDS `metadata.Disease` | 21 unique | strict 94 lines 모두 연결; split balancing과 B2에만 사용 |
 
 ## Cohort counts
 

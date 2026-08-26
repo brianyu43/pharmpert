@@ -1,0 +1,70 @@
+{
+  "status": "frozen_v1",
+  "seed": 20260827,
+  "generalization_unit": "cell_line",
+  "strategy": "greedy lineage-spread with balanced fold sizes",
+  "outer_fold_sizes": {
+    "0": 19,
+    "1": 19,
+    "2": 19,
+    "3": 18,
+    "4": 19
+  },
+  "inner_fold_sizes_by_outer": {
+    "0": {
+      "0": 19,
+      "1": 18,
+      "2": 19,
+      "3": 19
+    },
+    "1": {
+      "0": 19,
+      "1": 19,
+      "2": 18,
+      "3": 19
+    },
+    "2": {
+      "0": 18,
+      "1": 19,
+      "2": 19,
+      "3": 19
+    },
+    "3": {
+      "0": 19,
+      "1": 19,
+      "2": 19,
+      "3": 19
+    },
+    "4": {
+      "0": 19,
+      "1": 19,
+      "2": 19,
+      "3": 18
+    }
+  },
+  "lineage_counts": {
+    "bile_duct": 2,
+    "breast": 5,
+    "central_nervous_system": 7,
+    "colorectal": 4,
+    "esophagus": 4,
+    "gastric": 4,
+    "kidney": 5,
+    "liver": 3,
+    "lung": 24,
+    "mesothelioma": 3,
+    "ovary": 5,
+    "pancreas": 5,
+    "prostate": 3,
+    "rhabdoid": 1,
+    "rhabdomyosarcoma": 1,
+    "skin": 8,
+    "soft_tissue": 1,
+    "thyroid": 3,
+    "upper_aerodigestive": 2,
+    "urinary_tract": 1,
+    "uterus": 3
+  },
+  "all_outer_train_test_disjoint": true,
+  "each_cell_line_tested_once": true
+}

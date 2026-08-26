@@ -12,6 +12,12 @@
 - [x] EGR1, ETV4/5, DUSP4/5/6, SPRY2/4의 평균 억제 방향 확인
 - [x] 2,000회 cell-line bootstrap으로 marker 평균의 95% 구간 계산
 - [x] cell-count, control-time, marker-response 그림 생성 및 시각 검수
+- [x] 저자 `all_CL_features.rds`를 94 lines에 100% 연결하고 source checksum 검증
+- [x] response PCA PC1과 외부 trametinib sensitivity 연관 정량화
+- [x] lineage-aware outer 5-fold와 nested inner 4-fold 동결
+- [x] B0–B4를 모든 outer fold에서 실행하고 470개 예측 저장
+- [x] paired cell-line bootstrap으로 B1 대비 gain 95% CI 계산
+- [x] 동일 seed/config 재실행에서 baseline prediction SHA-256 일치 확인
 
 ## 관찰된 최소 재현 결과
 
@@ -21,15 +27,18 @@
 - 중앙 control/treatment RMSE 비율: `0.8879`
 - EGR1 평균 response: `-2.6698`, 음수 비율 `100%`
 - DUSP6 평균 response: `-2.3944`, 음수 비율 `100%`
+- response PC1 대 sensitivity: Pearson `-0.5989`, Spearman `-0.6683` (PCA 부호는 임의)
+- B1 global mean RMSE: `0.323750`
+- B4 direct ridge RMSE: `0.322035`; PCC-context: `0.107666`
+- B4 RMSE gain vs B1: `0.001715` (95% CI `0.001168–0.002284`, 상대 약 `0.53%`)
 
 높은 상관만으로 DMSO pooling을 정당화할 수 없다. 시간/source 차이의 RMSE가 약물 반응 RMSE에 비해 작지 않으므로 주 분석은 DMSO 24h time-matched control을 유지한다. pooled control은 원 논문 재현 및 민감도 분석에만 사용한다.
 
 ## 남은 항목
 
-- [ ] trametinib sensitivity와 반응 PCA 축의 연관 방향
 - [ ] 후기 E2F/G2M/cell-cycle 프로그램 재현
 - [ ] 3–48시간 time-course pseudobulk 및 시점별 최소 세포 기준 감사
-- [ ] control 상태 PCA와 cell-line identity 설명력 정량화
+- [ ] CCLR 저차원 response-component 주 모델과 B4의 공정한 nested-CV 비교
 
 ## 해석 제한
 

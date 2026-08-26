@@ -1,0 +1,44 @@
+{
+  "archives": {
+    "dmso_6h": {
+      "archive": "DMSO_6hr_expt3.zip",
+      "cells_total": 9557,
+      "cells_normal": 8398,
+      "quality_counts": {
+        "normal": 8398,
+        "doublet": 796,
+        "empty_droplet": 238,
+        "low_quality": 125
+      },
+      "genes_tsv_sha256": "8778dd78085086be6dcafa8334f95f7cf76b25526e8ef2b63186db5127a1492c"
+    },
+    "dmso_24h": {
+      "archive": "DMSO_24hr_expt3.zip",
+      "cells_total": 6887,
+      "cells_normal": 6075,
+      "quality_counts": {
+        "normal": 6075,
+        "doublet": 540,
+        "empty_droplet": 179,
+        "low_quality": 93
+      },
+      "genes_tsv_sha256": "8778dd78085086be6dcafa8334f95f7cf76b25526e8ef2b63186db5127a1492c"
+    },
+    "trametinib_24h": {
+      "archive": "Trametinib_24hr_expt3.zip",
+      "cells_total": 12239,
+      "cells_normal": 10657,
+      "quality_counts": {
+        "normal": 10657,
+        "doublet": 1469,
+        "low_quality": 112,
+        "low_confidence": 1
+      },
+      "genes_tsv_sha256": "8778dd78085086be6dcafa8334f95f7cf76b25526e8ef2b63186db5127a1492c"
+    }
+  },
+  "cell_lines_in_normal_union": 97,
+  "primary_strict_eligible_lines": 94,
+  "reproduction_pooled_eligible_lines": 97,
+  "genes_tsv_sha256": "8778dd78085086be6dcafa8334f95f7cf76b25526e8ef2b63186db5127a1492c"
+}

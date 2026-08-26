@@ -1777,6 +1777,21 @@ wheels = [
 ]
 
 [[package]]
+name = "rdata"
+version = "0.11.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy" },
+    { name = "pandas" },
+    { name = "typing-extensions" },
+    { name = "xarray" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/47/07/97936fdd91fb71b4d48e0f72da65e35b40f992819ddf793abf390dc0f06e/rdata-0.11.2.tar.gz", hash = "sha256:86f50312f97569c656f01d6dc343b920ded0ccf884a31decfb670cbef80bab39", size = 38531, upload-time = "2024-03-04T12:39:07.358Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/df/0b/56f33362cb4e4319e7de8dff31ea1f27517df8f4087066bc946b2272324d/rdata-0.11.2-py3-none-any.whl", hash = "sha256:d819241bcec2aaaf5d267256cbdbcbe4fcbfae66b605e7a34980049f80521450", size = 46478, upload-time = "2024-03-04T12:39:05.558Z" },
+]
+
+[[package]]
 name = "referencing"
 version = "0.37.0"
 source = { registry = "https://pypi.org/simple" }
@@ -2322,6 +2337,7 @@ dependencies = [
     { name = "pertpy" },
     { name = "pyarrow" },
     { name = "pyyaml" },
+    { name = "rdata" },
     { name = "scikit-learn" },
     { name = "scipy" },
 ]
@@ -2343,6 +2359,7 @@ requires-dist = [
     { name = "pertpy", specifier = ">=1.0,<2" },
     { name = "pyarrow", specifier = ">=18,<24" },
     { name = "pyyaml", specifier = ">=6.0,<7" },
+    { name = "rdata", specifier = ">=0.11,<1" },
     { name = "scikit-learn", specifier = ">=1.6,<2" },
     { name = "scipy", specifier = ">=1.14,<2" },
 ]

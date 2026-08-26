@@ -1,0 +1,20 @@
+{
+  "status": "exploratory_full_cohort_not_used_for_model_selection",
+  "cell_lines": 94,
+  "control_pca_genes": 5000,
+  "response_pca_genes": 5000,
+  "control_pc_explained_variance_ratio": [
+    0.12944120168685913,
+    0.07639030367136002
+  ],
+  "response_pc_explained_variance_ratio": [
+    0.05885472521185875,
+    0.03778654709458351
+  ],
+  "response_pc1_sensitivity_pearson": -0.5989379862983413,
+  "response_pc1_sensitivity_spearman": -0.6682729472961746,
+  "median_control_vs_drug_pcc": -0.34243890341021455,
+  "median_control_vs_drug_cosine": -0.34791989624500275,
+  "fraction_positive_cosine": 0.0,
+  "shared_anchor_warning": "control change and drug response share DMSO 24h with opposite signs; direction comparison is diagnostic, not an independent causal contrast"
+}

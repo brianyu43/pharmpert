@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
+from scipy.stats import rankdata
 
 EPSILON = 1e-8
 
@@ -41,6 +42,14 @@ def pearson_or_nan(observed: ArrayLike, predicted: ArrayLike) -> float:
     return float(np.corrcoef(obs, pred)[0, 1])
 
 
+def spearman_or_nan(observed: ArrayLike, predicted: ArrayLike) -> float:
+    """Spearman correlation, returning NaN for either constant vector."""
+    obs, pred = _paired_vectors(observed, predicted)
+    if np.ptp(obs) == 0 or np.ptp(pred) == 0:
+        return float("nan")
+    return pearson_or_nan(rankdata(obs), rankdata(pred))
+
+
 def context_residual(response: ArrayLike, training_mean_response: ArrayLike) -> NDArray:
     """Subtract the outer-training mean response from a response vector."""
     response_vector, training_mean = _paired_vectors(response, training_mean_response)
@@ -67,3 +76,21 @@ def signed_topk_overlap(observed: ArrayLike, predicted: ArrayLike, k: int = 50) 
     down_overlap = len(set(obs_order[:k]) & set(pred_order[:k])) / k
     up_overlap = len(set(obs_order[-k:]) & set(pred_order[-k:])) / k
     return float((down_overlap + up_overlap) / 2)
+
+
+def bootstrap_mean_interval(
+    values: ArrayLike,
+    n_bootstrap: int = 2_000,
+    seed: int = 20260827,
+) -> tuple[float, float, float]:
+    """Cell-line bootstrap mean and percentile 95% interval."""
+    array = np.asarray(values, dtype=float).ravel()
+    array = array[np.isfinite(array)]
+    if array.size == 0:
+        return float("nan"), float("nan"), float("nan")
+    if n_bootstrap <= 0:
+        raise ValueError("n_bootstrap must be positive")
+    rng = np.random.default_rng(seed)
+    draws = rng.choice(array, size=(n_bootstrap, len(array)), replace=True).mean(axis=1)
+    low, high = np.quantile(draws, [0.025, 0.975])
+    return float(array.mean()), float(low), float(high)

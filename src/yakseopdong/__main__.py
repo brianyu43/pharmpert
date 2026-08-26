@@ -6,9 +6,6 @@ import argparse
 import json
 
 from yakseopdong.checks import print_smoke_report, repository_root
-from yakseopdong.core_audit import run_core_audit
-from yakseopdong.data_probe import run_probe
-from yakseopdong.pseudobulk import run_pseudobulk
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -26,6 +23,10 @@ def build_parser() -> argparse.ArgumentParser:
         "build-pseudobulk",
         help="build experiment 3 pseudobulk matrices and QC evidence",
     )
+    subparsers.add_parser("metadata-audit", help="join author cell-line annotations")
+    subparsers.add_parser("landscape", help="build exploratory control/response PCA")
+    subparsers.add_parser("build-splits", help="freeze nested cell-line splits")
+    subparsers.add_parser("run-baselines", help="run nested-CV B0-B4 baselines")
     return parser
 
 
@@ -34,14 +35,20 @@ def main() -> int:
     if args.command == "smoke":
         return print_smoke_report()
     if args.command == "data-probe":
+        from yakseopdong.data_probe import run_probe
+
         report = run_probe(repository_root(), download=args.download)
         print(json.dumps({"ok": True, "shape": report["shape"]}, ensure_ascii=False))
         return 0
     if args.command == "core-audit":
+        from yakseopdong.core_audit import run_core_audit
+
         report = run_core_audit(repository_root())
         print(json.dumps(report, indent=2, ensure_ascii=False))
         return 0
     if args.command == "build-pseudobulk":
+        from yakseopdong.pseudobulk import run_pseudobulk
+
         report = run_pseudobulk(repository_root())
         print(
             json.dumps(
@@ -54,6 +61,27 @@ def main() -> int:
                 ensure_ascii=False,
             )
         )
+        return 0
+    if args.command == "metadata-audit":
+        from yakseopdong.metadata import run_metadata_audit
+
+        print(json.dumps(run_metadata_audit(repository_root()), indent=2))
+        return 0
+    if args.command == "landscape":
+        from yakseopdong.landscape import run_landscape
+
+        print(json.dumps(run_landscape(repository_root()), indent=2))
+        return 0
+    if args.command == "build-splits":
+        from yakseopdong.splits import run_splits
+
+        print(json.dumps(run_splits(repository_root()), indent=2))
+        return 0
+    if args.command == "run-baselines":
+        from yakseopdong.benchmark import run_baselines
+
+        report = run_baselines(repository_root())
+        print(json.dumps(report, indent=2))
         return 0
     raise RuntimeError(f"unknown command: {args.command}")
 

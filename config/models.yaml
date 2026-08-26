@@ -11,6 +11,23 @@ baselines:
   - id: B4
     name: direct_ridge
 
+baseline_protocol:
+  lineage_mean_min_train_lines: 2
+  feature_selection:
+    fit_on: outer_or_inner_training_control_only
+    min_mean_log1p_cpm: 0.1
+    max_variable_genes: 5000
+  control_pca_dimensions: [5, 10, 20, 30]
+  control_pca_whiten: true
+  nearest_neighbor_metric: euclidean_whitened_control_pc
+  ridge_alphas: [0.01, 0.1, 1.0, 10.0, 100.0]
+  selection_metric: cell_line_macro_rmse_delta
+  target_genes: all_32738
+  top_k: 50
+  bootstrap_replicates: 2000
+  sensitivity_as_predictor: false
+  mutations_as_predictor: false
+
 main_model:
   id: CCLR
   name: context_conditioned_low_rank_response

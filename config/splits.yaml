@@ -1,0 +1,12 @@
+status: pending_data_audit
+seed: 20260827
+outer:
+  strategy: deterministic_lineage_aware_cell_line_folds
+  n_splits: 5
+inner:
+  strategy: cell_line_grouped_cv
+  n_splits: 4
+constraints:
+  no_cell_level_random_split: true
+  fit_preprocessing_on_outer_train_only: true
+  timecourse_not_used_for_core_tuning: true

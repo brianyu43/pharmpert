@@ -1,0 +1,15 @@
+project:
+  name: yakseopdong
+  protocol_version: "0.1"
+  scope_version: "1.1"
+  random_seed: 20260827
+  generalization_unit: cell_line
+  primary_drug: trametinib
+  primary_time_hours: 24
+  control_label_status: verified_expt3_archives
+
+paths:
+  raw: data/raw
+  interim: data/interim
+  processed: data/processed
+  results: results

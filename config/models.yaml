@@ -1,0 +1,23 @@
+baselines:
+  - id: B0
+    name: no_change
+  - id: B1
+    name: global_mean
+  - id: B2
+    name: lineage_mean
+    fallback: B1
+  - id: B3
+    name: nearest_neighbor
+  - id: B4
+    name: direct_ridge
+
+main_model:
+  id: CCLR
+  name: context_conditioned_low_rank_response
+  control_pca_dimensions: [5, 10, 20, 30]
+  response_ranks: [2, 5, 10, 20]
+  ridge_alphas: [0.01, 0.1, 1.0, 10.0, 100.0]
+
+compute:
+  device: cpu
+  max_workers: 12

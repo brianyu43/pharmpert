@@ -1,0 +1,35 @@
+status: pending_data_audit
+
+primary_24h:
+  drug: trametinib
+  time_hours: 24
+  control_source: DMSO_24hr_expt3
+  treated_source: Trametinib_24hr_expt3
+  min_cells_per_condition: 20
+  required_conditions:
+    - control
+    - trametinib
+
+reproduction_sensitivity:
+  description: reproduce the authors' pooled-control cohort
+  control_sources:
+    - DMSO_6hr_expt3
+    - DMSO_24hr_expt3
+  treated_source: Trametinib_24hr_expt3
+  min_cells_per_condition: 20
+  use_for_primary_claim: false
+
+sensitivity_thresholds:
+  - 10
+  - 20
+  - 30
+
+timecourse:
+  expected_hours:
+    - 3
+    - 6
+    - 12
+    - 24
+    - 48
+  min_cells_per_condition: 10
+  pool_controls_only_after_time_effect_check: true

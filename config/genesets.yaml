@@ -1,0 +1,19 @@
+status: pending_version_freeze
+collections:
+  - MAPK_KRAS_signaling
+  - E2F_targets
+  - G2M_checkpoint
+  - apoptosis
+  - epithelial_mesenchymal_transition
+  - immediate_early_response
+
+manual_markers:
+  immediate_early:
+    - EGR1
+    - ETV4
+    - ETV5
+    - DUSP4
+    - DUSP5
+    - DUSP6
+    - SPRY2
+    - SPRY4

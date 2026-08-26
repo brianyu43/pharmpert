@@ -1,0 +1,31 @@
+.DS_Store
+.venv/
+node_modules
+.pytest_cache/
+.ruff_cache/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Raw and generated data
+data/*.h5ad
+data/raw/**
+data/interim/**
+data/processed/**
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+
+# Generated artifacts
+results/figures/**
+results/tables/**
+results/predictions/**
+results/models/**
+results/logs/**
+!results/figures/.gitkeep
+!results/tables/.gitkeep
+!results/predictions/.gitkeep
+!results/models/.gitkeep
+!results/logs/.gitkeep
+
+.ipynb_checkpoints/

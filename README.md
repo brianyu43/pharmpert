@@ -5,12 +5,12 @@
 ## 현재 상태
 
 - Scope Lock: v1.1
-- 단계: Stage 1 — 원자료 metadata 감사
+- 단계: Stage 1 완료; Stage 2 최소 재현 및 Stage 3 24h 반응 행렬 완료
 - 핵심 일반화 단위: cell line
 - 핵심 비교: B1 global mean response 대비 context 정보의 추가 이득
 - GPU: 핵심 분석에는 불필요
 
-이 저장소는 아직 분석 결과를 주장하지 않는다. 데이터 접근, metadata, dose, 코호트 수, split 가능성을 실제 원자료로 검증한 뒤 Stage 1로 넘어간다.
+공식 experiment 3 원자료에서 strict 94-line 24시간 pseudobulk와 반응 행렬을 생성했다. EGR1/DUSP6 등 사전 지정 MAPK marker의 억제 방향을 재현했지만, 아직 held-out cell-line 모델 성능이나 임상적 결과는 주장하지 않는다.
 
 ## 빠른 시작
 
@@ -27,6 +27,8 @@ make test
 ```bash
 make data-probe
 make core-audit
+make pseudobulk
+make notebooks
 ```
 
 ## 문서
@@ -36,6 +38,8 @@ make core-audit
 - `docs/evaluation_protocol.md`: 분할, 지표, 누수 방지 규칙
 - `docs/data_dictionary.md`: Stage 1에서 채울 데이터 계약
 - `docs/leakage_audit.md`: fold별 누수 감사표
+- `docs/reproduction_checklist.md`: 현재 최소 재현 결과와 남은 항목
+- `processed_manifest.csv`: 생성된 Parquet의 shape, 값 열, SHA-256
 
 ## 검증 게이트
 
@@ -47,6 +51,8 @@ uv run python -m yakseopdong smoke
 uv run pytest
 ```
 
-Stage 1 진입 전에는 `data-probe`가 실제 AnnData 구조를 기록하고 raw count, condition, time, dose, pool/channel 필드를 확인해야 한다.
+`make pseudobulk`는 공식 expt3 zip의 integer raw count를 희소 상태에서 세포주별 합산하고, `data/processed/`에 vector-valued Parquet을 생성한다. 전체 single-cell 행렬을 dense로 변환하지 않는다.
 
 현재 core cohort는 공식 Figshare experiment 3 원자료로 분리한다. 주 분석은 시간 일치 `DMSO_24hr_expt3` 대 `Trametinib_24hr_expt3`의 94개 eligible line이며, 저자 분석 재현용 pooled-control(`DMSO_6hr + DMSO_24hr`) 97개 line은 별도 민감도 분석으로 유지한다.
+
+현재 QC에서 DMSO 6h–24h 중앙 PCC는 0.9727이지만, control 시간/source RMSE는 trametinib 반응 RMSE의 중앙 0.8879배다. 따라서 높은 상관만으로 pooling을 주 분석에 사용하지 않고 24시간 DMSO를 유지한다.

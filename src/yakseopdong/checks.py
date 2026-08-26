@@ -22,6 +22,7 @@ REQUIRED_PATHS = (
     "docs/scope.md",
     "docs/evaluation_protocol.md",
     "cell_count_matrix.csv",
+    "processed_manifest.csv",
 )
 
 

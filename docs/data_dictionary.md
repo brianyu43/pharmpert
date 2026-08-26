@@ -1,6 +1,6 @@
 # Data Dictionary
 
-상태: Stage 1에서 실제 AnnData와 원자료를 읽은 뒤 채운다. 아래 항목은 추정값이 아니라 실행으로 확인한 값만 기록한다.
+상태: Stage 1 원자료 감사 및 24시간 pseudobulk 계약 확인 완료. 아래 항목은 추정값이 아니라 실행으로 확인한 값만 기록한다.
 
 ## Source manifest
 
@@ -19,11 +19,26 @@
 
 | 항목 | 확인값 |
 |---|---|
-| `adata.X` 의미 | raw UMI count 후보; 비영값 100,000개 표본이 모두 정수형. 전체 검증 전까지 확정하지 않음 |
+| `adata.X` 의미 | pertpy 통합 파일에서는 raw UMI count 후보; 비영값 100,000개 표본이 모두 정수형 |
 | raw count 위치 | 별도 layer 없음; `adata.raw` 없음; 후보는 `adata.X`뿐 |
 | sparse format/dtype | CSC sparse, `float32`, 711,380,841 nonzero entries |
 | gene identifier | `var_names`는 gene symbol, `var["ensembl_id"]`에 Ensembl ID |
-| duplicated gene IDs | `var_names` unique; Ensembl 중복 여부는 추가 확인 예정 |
+| official expt3 raw count | 각 Figshare zip의 `matrix.mtx`; Matrix Market `integer general`, non-negative 전체 검증 |
+| raw matrix orientation | 32,738 genes × cells |
+| duplicated gene IDs | expt3 `genes.tsv`의 Ensembl ID 32,738개는 결측·중복 없음 |
+
+## Processed matrix contract
+
+| 파일 | 행 | 값 열 | 의미 |
+|---|---:|---|---|
+| `pseudobulk_24h.parquet` | 188 | `log1p_cpm[32738]` | strict 94 lines × control/trametinib |
+| `response_24h.parquet` | 94 | `delta_log1p_cpm[32738]` | trametinib 24h − DMSO 24h |
+| `pseudobulk_control_time.parquet` | 194 | `log1p_cpm[32738]` | 97 lines × DMSO 6h/24h |
+| `pseudobulk_pooled_sensitivity.parquet` | 194 | `log1p_cpm[32738]` | 97 lines × pooled DMSO/trametinib |
+| `response_pooled_sensitivity.parquet` | 97 | `delta_log1p_cpm[32738]` | trametinib 24h − pooled DMSO |
+| `gene_metadata.parquet` | 32,738 | `gene_id`, `gene_symbol` | 모든 vector 값의 고정 순서 |
+
+각 expression/response 값은 Arrow fixed-size list로 저장한다. pseudobulk raw UMI 합을 library size로 나눈 뒤 `log1p(CPM)`을 적용하며 scaling factor는 1,000,000이다. 처리 파일은 Git에서 제외되고 `make pseudobulk`로 재생성한다.
 
 ## Observation fields
 
@@ -43,11 +58,14 @@
 - 24시간 strict time-matched core: normal cell 기준 양 조건 각각 20개 이상인 94개 line
 - 저자 pooled-control 재현 cohort: DMSO 6h+24h와 trametinib 24h에서 각각 20개 이상인 97개 line
 - time-course clean hashtag cell 수: 13,713개로 원 논문 수치와 일치
-- time-course의 모든 필수 시점을 만족하는 cell line: 미확인
-- 제외 규칙과 제외 목록: 미확인
+- time-course의 모든 필수 시점을 만족하는 cell line: 미확인(후속 시간축 단계)
+- strict 24h 제외 규칙: DMSO 24h 또는 trametinib 24h 정상 세포 20개 미만
+- strict 24h 제외 목록: `JHOM1_OVARY`(DMSO 24h 11 cells),
+  `SNU410_PANCREAS`(18), `SNU61_LARGE_INTESTINE`(18)
 
 ## 첫 감사에서 확인한 주의사항
 
 1. `time == "24"`와 `perturbation in {control, Trametinib}`만으로는 99-line core가 분리되지 않는다.
 2. time-course row의 `time` 값은 시점 목록 전체이며 실제 조건은 `hash_tag`에서 읽어야 한다.
 3. 저자 코드는 experiment 3 trametinib 분석에서 `DMSO_6hr_expt3`와 `DMSO_24hr_expt3`를 control로 함께 사용한다. 이 pooling이 97-line 기준을 재현한다.
+4. DMSO 6h와 24h는 별도 archive이므로 두 조건의 차이는 순수 시간효과가 아니라 시간과 source/batch 차이가 섞인 관찰적 QC다.

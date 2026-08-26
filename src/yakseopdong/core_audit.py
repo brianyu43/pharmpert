@@ -124,4 +124,8 @@ def run_core_audit(root: Path) -> dict[str, object]:
     output = root / "results" / "logs" / "core_audit_summary.json"
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    from yakseopdong.plots import write_cell_count_heatmap
+
+    write_cell_count_heatmap(root, counts)
     return report

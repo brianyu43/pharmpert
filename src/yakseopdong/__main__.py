@@ -8,6 +8,7 @@ import json
 from yakseopdong.checks import print_smoke_report, repository_root
 from yakseopdong.core_audit import run_core_audit
 from yakseopdong.data_probe import run_probe
+from yakseopdong.pseudobulk import run_pseudobulk
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -21,6 +22,10 @@ def build_parser() -> argparse.ArgumentParser:
         help="explicitly allow the pertpy loader to download/cache the dataset",
     )
     subparsers.add_parser("core-audit", help="audit authoritative experiment 3 metadata")
+    subparsers.add_parser(
+        "build-pseudobulk",
+        help="build experiment 3 pseudobulk matrices and QC evidence",
+    )
     return parser
 
 
@@ -35,6 +40,20 @@ def main() -> int:
     if args.command == "core-audit":
         report = run_core_audit(repository_root())
         print(json.dumps(report, indent=2, ensure_ascii=False))
+        return 0
+    if args.command == "build-pseudobulk":
+        report = run_pseudobulk(repository_root())
+        print(
+            json.dumps(
+                {
+                    "ok": True,
+                    "primary_lines": report["primary_lines"],
+                    "sensitivity_lines": report["sensitivity_lines"],
+                    "gene_count": report["gene_count"],
+                },
+                ensure_ascii=False,
+            )
+        )
         return 0
     raise RuntimeError(f"unknown command: {args.command}")
 

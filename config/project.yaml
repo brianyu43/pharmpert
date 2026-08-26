@@ -1,6 +1,6 @@
 project:
   name: yakseopdong
-  protocol_version: "0.1"
+  protocol_version: "0.2"
   scope_version: "1.1"
   random_seed: 20260827
   generalization_unit: cell_line

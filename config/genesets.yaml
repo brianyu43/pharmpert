@@ -1,4 +1,4 @@
-status: pending_version_freeze
+status: manual_markers_frozen_collections_pending_version
 collections:
   - MAPK_KRAS_signaling
   - E2F_targets

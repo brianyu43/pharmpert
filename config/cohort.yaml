@@ -1,4 +1,4 @@
-status: pending_data_audit
+status: primary_and_pooled_cohorts_frozen_v1
 
 primary_24h:
   drug: trametinib
@@ -23,6 +23,17 @@ sensitivity_thresholds:
   - 10
   - 20
   - 30
+
+normalization:
+  aggregation: sum_raw_umi_by_cell_line_and_condition
+  method: log1p_cpm
+  scale_factor: 1000000
+
+descriptive_control_time_qc:
+  min_total_control_counts: 100
+  min_expressing_lines_per_time: 10
+  use_for_model_feature_selection: false
+  interpretation: time_and_source_difference_not_causal_time_effect
 
 timecourse:
   expected_hours:

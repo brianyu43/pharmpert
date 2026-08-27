@@ -721,6 +721,105 @@ gene-level 확증으로 표현하지 않는다."""
     nbf.write(_notebook(cells), root / "notebooks" / "07_biological_interpretation.ipynb")
 
 
+def build_robustness(root: Path) -> None:
+    cells = [
+        nbf.v4.new_markdown_cell(
+            """# W10 robustness and measurement-noise ceiling
+
+## tl;dr
+
+B4의 B1 대비 작은 RMSE 이득은 세 bootstrap seed, inclusion threshold 10/20/30,
+1k–10k variable-gene filter, 극단 sensitivity 제거에서 양의 95% CI를 유지했다.
+Leave-one-lineage-out 평균 이득은 0.00051이나 CI가 0을 포함했다. 더 중요하게,
+조건당 정확히 20개 세포로 맞춘 5회 재표집에서는 이득이 모두 음수였다.
+Raw cells의 split-half Δ로 추정한 full-target noise floor는 RMSE 0.279였고
+split-half PCC는 0.236에 불과했다. 따라서 원 코호트의 0.53% 개선은 계산적으로
+재현되지만 sampling support에 민감하며 강한 개인화 증거가 아니다."""
+        ),
+        nbf.v4.new_code_cell(ROOT_CELL),
+        nbf.v4.new_code_cell(
+            """summary = json.loads((root / "results/logs/robustness_summary.json").read_text())
+validation = json.loads((root / "results/logs/robustness_validation.json").read_text())
+metrics = pd.read_csv(root / "results/tables/robustness_metrics.csv")
+noise = pd.read_csv(root / "results/tables/noise_ceiling_by_line.csv")
+subsampling = pd.read_csv(root / "results/tables/subsampling_metrics.csv")
+conclusions = pd.read_csv(root / "results/tables/robustness_conclusions.csv")
+
+display(pd.DataFrame({
+    "metric": ["robustness rows", "split-half rows", "subsampling rows",
+               "mean target noise floor", "mean split-half PCC"],
+    "value": [summary["robustness_rows"], summary["noise_rows"],
+              summary["subsampling_rows"],
+              summary["mean_full_target_noise_floor_approx"],
+              summary["mean_split_half_pcc"]],
+}))
+assert validation["status"] == "passed"
+assert validation["threshold_cohort_sizes"] == {
+    "min_cells_10": 97, "min_cells_20": 94, "min_cells_30": 82
+}
+"""
+        ),
+        nbf.v4.new_markdown_cell(
+            """## Context & Methods
+
+### Key Assumptions
+
+- 모든 모델 평가는 cell-line held-out이며 fixed PC20/alpha100 B4를 쓴다.
+- threshold 10/20/30은 time-matched DMSO24와 Tram24가 모두 기준을 만족한
+  97/94/82-line 코호트에서 다시 split한다.
+- variable genes는 각 training fold control에서만 1k/3k/5k/10k를 선택한다.
+- leave-one-lineage-out은 한 Disease lineage 전체를 test로 둔다.
+- sensitivity 양끝 10% 제거는 기존 OOF prediction의 사후 강건성 분석이다.
+- equal-cell 분석은 각 조건에서 line당 20개 raw cell을 without replacement로 뽑아
+  5회 pseudobulk와 모델 평가를 처음부터 반복한다.
+- noise ceiling은 같은 line/condition 세포를 두 반으로 나눈 response Δ끼리 비교한다.
+  Half-to-half RMSE/2를 full-target sampling noise의 근사값으로 보고 인과적·절대적
+  상한으로 과대해석하지 않는다."""
+        ),
+        nbf.v4.new_markdown_cell("## Results"),
+        nbf.v4.new_code_cell(
+            """display(Image(filename=str(root / "results/figures/robustness_summary.png")))
+display(metrics.loc[
+    metrics["metric"].eq("rmse_gain_vs_b1")
+    & metrics["analysis"].isin([
+        "cell_line_bootstrap", "inclusion_threshold", "gene_filter",
+        "extreme_sensitivity", "leave_one_lineage_out", "response_rank"
+    ]),
+    ["analysis", "variant", "estimate", "ci95_low", "ci95_high", "n"]
+])
+display(conclusions)
+"""
+        ),
+        nbf.v4.new_code_cell(
+            """display(Image(filename=str(root / "results/figures/noise_ceiling.png")))
+display(metrics.loc[metrics["analysis"].isin(["cell_subsampling", "split_half_noise"]), [
+    "analysis", "variant", "metric", "estimate", "ci95_low", "ci95_high", "n"
+]])
+display(noise.groupby("cell_line")[[
+    "full_target_noise_floor_approx", "split_half_pcc"
+]].mean().describe())
+"""
+        ),
+        nbf.v4.new_markdown_cell(
+            """## Takeaways
+
+- **동결 결과는 계산적으로 안정적**: bootstrap seed와 threshold, gene filter,
+  sensitivity outlier 제거에서는 B4−B1 이득의 방향과 CI가 유지된다.
+- **lineage 외삽은 불확실**: LOLO 평균은 양수지만 CI −0.00013–0.00118로 0을 포함한다.
+- **sampling에는 취약**: 20-cell 균등 재표집에서 gain은 매회 −0.00144∼−0.00168이고
+  각 CI도 0 아래다. 원 데이터의 line별 cell-count 차이가 결과 안정성에 중요하다.
+- **target noise가 큼**: noise-floor 근사 0.279는 B4 RMSE 0.322의 큰 부분이며,
+  split-half PCC 0.236은 개별-line 전체 gene Δ가 낮은 세포 수에서 불안정함을 뜻한다.
+- **rank 결론 유지**: rank 2–50 low-rank 변형은 모두 B1보다 낫지만 W7의 B4를
+  넘는 고정 변형은 없다.
+
+최종 주장은 “baseline context의 작은 신호가 검출된다”로 제한하고,
+“강한 개인화 예측” 또는 “새 lineage에 확실히 일반화”라고 주장하지 않는다."""
+        ),
+    ]
+    nbf.write(_notebook(cells), root / "notebooks" / "08_robustness.ipynb")
+
+
 def main() -> None:
     root = Path(__file__).resolve().parents[1]
     (root / "notebooks").mkdir(exist_ok=True)
@@ -732,6 +831,7 @@ def main() -> None:
     build_ablation(root)
     build_temporal(root)
     build_biology(root)
+    build_robustness(root)
 
 
 if __name__ == "__main__":

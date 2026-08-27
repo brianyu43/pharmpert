@@ -40,3 +40,22 @@
 - Comparison logic: baseline PCA is fit independently inside each outer training fold.
 - Caveats: response RMS and RMSE share scale; partial-rank analyses separately evaluate
   cell-count support, and all driver results remain observational.
+
+## W10 measurement noise and equal-cell robustness
+
+- Question: how reproducible is the response target, and does B4 gain survive equal sampling?
+- Grain: left, 94 line means over five split-halves; right, five independent 20-cell resamples.
+- Encodings: left x = split-half RMSE/2, y = split-half PCC; right x = paired B4−B1
+  RMSE gain with bootstrap CI, y = resample.
+- Comparison logic: raw cells are sampled without replacement within line and condition;
+  every resample reruns fold-local feature fitting and B4 evaluation.
+- Caveats: RMSE/2 is a sampling-noise approximation, not a formal biological ceiling.
+
+## W10 context-gain sensitivity
+
+- Question: does the small B4 gain persist across cohorts, features, outliers, and lineage shift?
+- Grain: one point per predeclared variant, macro over held-out cell lines.
+- Encodings: x = paired RMSE gain vs B1 with cell-line bootstrap CI; y = variant.
+- Comparison logic: threshold cohorts are independently split; gene filtering remains fold-local;
+  leave-one-lineage-out holds out an entire Disease category.
+- Caveats: a positive point with a CI crossing zero is inconclusive, not robust.

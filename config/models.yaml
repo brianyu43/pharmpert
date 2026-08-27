@@ -128,6 +128,26 @@ w9_biology:
   low_cell_quantile: 0.25
   sensitivity_as_predictor: false
 
+w10_robustness:
+  protocol_version: "1.0"
+  fixed_model:
+    control_dimension: 20
+    ridge_alpha: 100.0
+    min_mean_log1p_cpm: 0.1
+  cell_subsampling:
+    cells_per_condition: 20
+    replicates: 5
+  split_half:
+    replicates: 5
+    full_target_noise_floor_divisor: 2.0
+  inclusion_thresholds: [10, 20, 30]
+  variable_gene_counts: [1000, 3000, 5000, 10000]
+  response_ranks: [2, 5, 10, 20, 30, 40, 50]
+  bootstrap_seeds: [20260827, 20260828, 20260829]
+  sensitivity_extreme_quantiles: [0.1, 0.9]
+  leave_one_lineage_out: true
+  sensitivity_as_predictor: false
+
 compute:
   device: cpu
   max_workers: 12

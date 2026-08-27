@@ -1,0 +1,16 @@
+{
+  "stage": "W10_robustness",
+  "status": "passed",
+  "robustness_rows": 69,
+  "noise_rows": 470,
+  "subsampling_rows": 470,
+  "lolo_lines": 94,
+  "threshold_cohort_sizes": {
+    "min_cells_10": 97,
+    "min_cells_20": 94,
+    "min_cells_30": 82
+  },
+  "max_noise_floor_identity_error": 1.1102230246251565e-16,
+  "max_subsampling_summary_recomputation_error": 5.074066167232161e-17,
+  "sensitivity_used_as_predictor": false
+}

@@ -1,4 +1,4 @@
-.PHONY: install smoke test lint data-probe core-audit pseudobulk metadata landscape splits baselines cclr validate-cclr ablation validate-ablation temporal validate-temporal biology validate-biology notebooks
+.PHONY: install smoke test lint data-probe core-audit pseudobulk metadata landscape splits baselines cclr validate-cclr ablation validate-ablation temporal validate-temporal biology validate-biology robustness validate-robustness notebooks
 
 install:
 	uv sync --all-groups
@@ -57,6 +57,12 @@ biology:
 validate-biology:
 	uv run python -m yakseopdong validate-biology
 
+robustness:
+	uv run python -m yakseopdong run-robustness
+
+validate-robustness:
+	uv run python -m yakseopdong validate-robustness
+
 notebooks:
 	uv run python scripts/build_notebooks.py
 	uv run jupyter nbconvert --execute --to notebook --inplace notebooks/00_data_audit.ipynb
@@ -67,3 +73,4 @@ notebooks:
 	uv run jupyter nbconvert --execute --to notebook --inplace notebooks/05_ablation.ipynb
 	uv run jupyter nbconvert --execute --to notebook --inplace notebooks/06_temporal.ipynb
 	uv run jupyter nbconvert --execute --to notebook --inplace notebooks/07_biological_interpretation.ipynb
+	uv run jupyter nbconvert --execute --to notebook --inplace notebooks/08_robustness.ipynb

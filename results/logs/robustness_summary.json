@@ -1,0 +1,47 @@
+{
+  "stage": "W10_robustness",
+  "status": "complete_pending_independent_validation",
+  "robustness_rows": 69,
+  "noise_rows": 470,
+  "subsampling_rows": 470,
+  "threshold_cohort_sizes": {
+    "min_cells_10": 97,
+    "min_cells_20": 94,
+    "min_cells_30": 82
+  },
+  "mean_full_target_noise_floor_approx": 0.27902799653591487,
+  "mean_split_half_pcc": 0.23637306868058205,
+  "conclusions": [
+    {
+      "conclusion": "B4 gain over B1 is positive in the frozen split",
+      "status": "robust",
+      "evidence": "three bootstrap seeds have CI above zero"
+    },
+    {
+      "conclusion": "B4 gain survives inclusion thresholds 10/20/30",
+      "status": "robust",
+      "evidence": "gain range 0.001470 to 0.001892"
+    },
+    {
+      "conclusion": "B4 gain survives variable-gene filters",
+      "status": "robust",
+      "evidence": "gain range 0.001246 to 0.001637"
+    },
+    {
+      "conclusion": "B4 gain survives equal-20-cell subsampling",
+      "status": "sensitive",
+      "evidence": "positive repeats 0/5"
+    },
+    {
+      "conclusion": "B4 gain under leave-one-lineage-out",
+      "status": "inconclusive",
+      "evidence": "LOLO gain 0.000514, 95% CI -0.000132 to 0.001178"
+    },
+    {
+      "conclusion": "Absolute error is close to a nonzero measurement floor",
+      "status": "limitation",
+      "evidence": "split-half-derived full-target floor 0.2790"
+    }
+  ],
+  "sensitivity_used_as_predictor": false
+}

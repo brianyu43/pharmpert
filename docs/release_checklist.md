@@ -33,4 +33,6 @@ Jupyter required local kernel sockets, so notebook execution was authorized outs
 
 ## Release commits
 
-The analysis parent is `7bd38c61bc4220a35483c47b17168c57aecd3380`. The final content and release-record commits are filled after the two-step commit freeze to avoid a self-referential commit hash.
+- Analysis parent: `7bd38c61bc4220a35483c47b17168c57aecd3380`
+- Release content freeze: `5a01de46ddf57dea6ab64d9b12f8c096e4c5c2ad`
+- Release record: the commit tagged `v1.0.0`; its hash is reported in the final handoff rather than embedded recursively in itself.

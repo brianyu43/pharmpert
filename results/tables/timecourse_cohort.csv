@@ -1,0 +1,25 @@
+depmap_id,cell_line,disease,matched_group_count,min_cells_across_matched_groups,eligible_t10,eligible_t20,eligible_t30
+ACH-000415,BICR6_UPPER_AERODIGESTIVE_TRACT,head and neck cancer,10,16,True,False,False
+ACH-000228,BICR31_UPPER_AERODIGESTIVE_TRACT,head and neck cancer,10,37,True,True,True
+ACH-000927,BT474_BREAST,breast cancer,10,14,True,False,False
+ACH-000288,BT549_BREAST,breast cancer,10,19,True,False,False
+ACH-000713,CAOV3_OVARY,ovarian cancer,10,23,True,True,False
+ACH-000329,CCFSTTG1_CENTRAL_NERVOUS_SYSTEM,brain cancer,10,31,True,True,True
+ACH-000717,COLO680N_OESOPHAGUS,esophageal cancer,10,94,True,True,True
+ACH-000123,COV434_OVARY,ovarian cancer,10,9,False,False,False
+ACH-000244,DKMG_CENTRAL_NERVOUS_SYSTEM,brain cancer,10,38,True,True,True
+ACH-000672,IALM_LUNG,lung cancer,10,10,True,False,False
+ACH-000977,LNCAPCLONEFGC_PROSTATE,prostate cancer,10,15,True,False,False
+ACH-000252,LS1034_LARGE_INTESTINE,colon/colorectal cancer,10,17,True,False,False
+ACH-000367,NCIH226_LUNG,lung cancer,10,32,True,True,True
+ACH-000875,NCIH2347_LUNG,lung cancer,10,8,False,False,False
+ACH-000189,RCC10RGB_KIDNEY,kidney cancer,10,56,True,True,True
+ACH-000565,RCM1_LARGE_INTESTINE,colon/colorectal cancer,10,36,True,True,True
+ACH-000791,RERFLCAD1_LUNG,lung cancer,10,38,True,True,True
+ACH-000764,SH10TC_STOMACH,gastric cancer,10,38,True,True,True
+ACH-001190,SKMEL2_SKIN,skin cancer,10,25,True,True,False
+ACH-000423,SKMEL3_SKIN,skin cancer,10,24,True,True,False
+ACH-000209,SNU1079_BILIARY_TRACT,bile duct cancer,10,12,True,False,False
+ACH-000553,SQ1_LUNG,lung cancer,10,30,True,True,True
+ACH-000397,TEN_ENDOMETRIUM,endometrial/uterine cancer,10,35,True,True,True
+ACH-000834,UMUC1_URINARY_TRACT,bladder cancer,10,61,True,True,True

@@ -534,6 +534,102 @@ print("Mean fold-pair response-subspace overlap:", stability["mean_squared_cosin
     nbf.write(_notebook(cells), root / "notebooks" / "05_ablation.ipynb")
 
 
+def build_temporal(root: Path) -> None:
+    cells = [
+        nbf.v4.new_markdown_cell(
+            """# W8 trametinib time-course analysis
+
+## tl;dr
+
+정상 세포 13,713개를 24개 cell line × 11개 condition/time 그룹으로
+pseudobulk했다. 모든 DMSO/Tram 시점에서 조건별 10개 이상 세포가 있는 22개를
+주 코호트로 사용했다. Immediate-early 8-gene 반응은 3시간부터 강한 억제를
+보였고, E2F/G2M 억제는 12–48시간에 커졌다. 반면 cross-line 이질성이 후기에
+더 커진다는 paired 차이는 0을 포함했다. 94-line 24h 모델은 겹치는 DepMap ID를
+제외한 17개 외부 line에서 24h와 48h에만 B1보다 작지만 양의 RMSE 이득을 보였다."""
+        ),
+        nbf.v4.new_code_cell(ROOT_CELL),
+        nbf.v4.new_code_cell(
+            """summary = json.loads((root / "results/logs/temporal_summary.json").read_text())
+validation = json.loads((root / "results/logs/temporal_validation.json").read_text())
+cohort = pd.read_csv(root / "results/tables/timecourse_cohort.csv")
+heterogeneity = pd.read_csv(root / "results/tables/temporal_heterogeneity_summary.csv")
+pathways = pd.read_csv(root / "results/tables/timecourse_pathway_summary.csv")
+transfer = pd.read_csv(root / "results/tables/temporal_transfer_summary.csv")
+
+display(pd.DataFrame({
+    "metric": ["normal assigned cells", "all lines", "primary lines",
+               "external transfer lines", "response reconstruction max error"],
+    "value": [summary["cohort"]["normal_assigned_cells"],
+              summary["cohort"]["cell_lines_all"],
+              summary["cohort"]["cell_lines_t10"],
+              summary["external_transfer"]["external_test_lines"],
+              validation["max_response_reconstruction_error"]],
+}))
+assert validation["status"] == "passed"
+assert validation["training_depmap_overlap"] == 0
+assert validation["temporal_response_used_for_fit"] is False
+"""
+        ),
+        nbf.v4.new_markdown_cell(
+            """## Context & Methods
+
+### Key Assumptions
+
+- condition과 시간은 `perturbation`/`time`이 아니라 실제 multiplexing `hash_tag`에서 읽는다.
+- `cell_quality == normal`만 포함하고 `singlet_ID`를 canonical cell-line ID로 쓴다.
+- 주 Δ는 각 시점의 `Tram − DMSO`; `Untreated_48hr`는 DMSO 48h QC에만 쓴다.
+- 22-line 주 코호트는 10개 matched group 모두에서 ≥10 cells인 line이다.
+- 공통 PCA는 전체 time course 기술용이며 예측 모델 선택에 사용하지 않는다.
+- 전이 모델은 strict 94-line 24h에서만 fit하며 겹치는 DepMap ID 5개를 제외한다.
+- 각 time point는 독립 표본 관찰이며 paired single-cell trajectory가 아니다."""
+        ),
+        nbf.v4.new_markdown_cell("## Data"),
+        nbf.v4.new_code_cell(
+            """from yakseopdong.pseudobulk import read_vector_parquet
+
+pb_meta, pb = read_vector_parquet(
+    root / "data/processed/pseudobulk_timecourse.parquet", "log1p_cpm"
+)
+response_meta, response = read_vector_parquet(
+    root / "data/processed/response_timecourse.parquet", "delta_log1p_cpm"
+)
+print("pseudobulk_timecourse", pb_meta.shape, pb.shape)
+print("response_timecourse", response_meta.shape, response.shape)
+display(cohort)
+assert pb.shape == (264, 32738)
+assert response.shape == (120, 32738)
+assert cohort["eligible_t10"].sum() == 22
+"""
+        ),
+        nbf.v4.new_markdown_cell("## Results"),
+        nbf.v4.new_code_cell(
+            """component_figure = root / "results/figures/temporal_component_trajectories.png"
+display(Image(filename=str(component_figure)))
+display(pathways.loc[pathways["pathway"].isin([
+    "immediate_early_response", "E2F_targets", "G2M_checkpoint"
+])])
+display(Image(filename=str(root / "results/figures/temporal_heterogeneity_transfer.png")))
+display(heterogeneity)
+display(transfer.loc[transfer["metric"].isin(["rmse_delta", "rmse_gain_vs_b1"])])
+"""
+        ),
+        nbf.v4.new_markdown_cell(
+            """## Takeaways
+
+- Immediate-early marker 평균은 3h부터 약 −1.41이고 48h까지 강한 음수다.
+- E2F/G2M 평균은 3h에 거의 0이나 12h부터 음수, 24–48h에 크게 억제된다.
+- cross-line dispersion은 6–12h가 수치상 높지만, late(24/48)−early(3/6)
+  line RMSE 차이는 −0.0097 (95% CI −0.0342–0.0121)로 0을 포함한다.
+- 외부 17-line에서 B4의 B1 대비 RMSE gain은 3h/6h에 음수, 12h에 불확실,
+  24h 0.00207 및 48h 0.00384로 작지만 양의 CI다.
+- 따라서 24h 모델은 이 데이터에서 즉시 반응용 모델이 아니며 24–48h late response에만
+  제한적인 시간 전이 근거가 있다. 절대 이득은 작아 강한 개인화 모델로 해석하지 않는다."""
+        ),
+    ]
+    nbf.write(_notebook(cells), root / "notebooks" / "06_temporal.ipynb")
+
+
 def main() -> None:
     root = Path(__file__).resolve().parents[1]
     (root / "notebooks").mkdir(exist_ok=True)
@@ -543,6 +639,7 @@ def main() -> None:
     build_baselines(root)
     build_main_model(root)
     build_ablation(root)
+    build_temporal(root)
 
 
 if __name__ == "__main__":

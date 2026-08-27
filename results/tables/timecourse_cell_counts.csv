@@ -1,0 +1,265 @@
+cell_line,depmap_id,disease,condition,time_hours,n_cells,library_size,source_tag,eligible_t10,eligible_t20,eligible_t30
+BICR6_UPPER_AERODIGESTIVE_TRACT,ACH-000415,head and neck cancer,control,3,26,985448,DMSO_3hr,True,False,False
+BICR6_UPPER_AERODIGESTIVE_TRACT,ACH-000415,head and neck cancer,control,6,16,536363,DMSO_6hr,True,False,False
+BICR6_UPPER_AERODIGESTIVE_TRACT,ACH-000415,head and neck cancer,control,12,25,880182,DMSO_12hr,True,False,False
+BICR6_UPPER_AERODIGESTIVE_TRACT,ACH-000415,head and neck cancer,control,24,24,820040,DMSO_24hr,True,False,False
+BICR6_UPPER_AERODIGESTIVE_TRACT,ACH-000415,head and neck cancer,control,48,62,2311685,DMSO_48hr,True,False,False
+BICR6_UPPER_AERODIGESTIVE_TRACT,ACH-000415,head and neck cancer,trametinib,3,28,958939,Tram_3hr,True,False,False
+BICR6_UPPER_AERODIGESTIVE_TRACT,ACH-000415,head and neck cancer,trametinib,6,20,704202,Tram_6hr,True,False,False
+BICR6_UPPER_AERODIGESTIVE_TRACT,ACH-000415,head and neck cancer,trametinib,12,23,878408,Tram_12hr,True,False,False
+BICR6_UPPER_AERODIGESTIVE_TRACT,ACH-000415,head and neck cancer,trametinib,24,38,1152751,Tram_24hr,True,False,False
+BICR6_UPPER_AERODIGESTIVE_TRACT,ACH-000415,head and neck cancer,trametinib,48,24,572405,Tram_48hr,True,False,False
+BICR6_UPPER_AERODIGESTIVE_TRACT,ACH-000415,head and neck cancer,untreated,48,30,1090822,Untreated_48hr,True,False,False
+BICR31_UPPER_AERODIGESTIVE_TRACT,ACH-000228,head and neck cancer,control,3,55,1452996,DMSO_3hr,True,True,True
+BICR31_UPPER_AERODIGESTIVE_TRACT,ACH-000228,head and neck cancer,control,6,57,1806220,DMSO_6hr,True,True,True
+BICR31_UPPER_AERODIGESTIVE_TRACT,ACH-000228,head and neck cancer,control,12,37,831606,DMSO_12hr,True,True,True
+BICR31_UPPER_AERODIGESTIVE_TRACT,ACH-000228,head and neck cancer,control,24,61,1405580,DMSO_24hr,True,True,True
+BICR31_UPPER_AERODIGESTIVE_TRACT,ACH-000228,head and neck cancer,control,48,109,2588590,DMSO_48hr,True,True,True
+BICR31_UPPER_AERODIGESTIVE_TRACT,ACH-000228,head and neck cancer,trametinib,3,59,1682246,Tram_3hr,True,True,True
+BICR31_UPPER_AERODIGESTIVE_TRACT,ACH-000228,head and neck cancer,trametinib,6,43,1195358,Tram_6hr,True,True,True
+BICR31_UPPER_AERODIGESTIVE_TRACT,ACH-000228,head and neck cancer,trametinib,12,56,1278138,Tram_12hr,True,True,True
+BICR31_UPPER_AERODIGESTIVE_TRACT,ACH-000228,head and neck cancer,trametinib,24,75,1755345,Tram_24hr,True,True,True
+BICR31_UPPER_AERODIGESTIVE_TRACT,ACH-000228,head and neck cancer,trametinib,48,55,1088900,Tram_48hr,True,True,True
+BICR31_UPPER_AERODIGESTIVE_TRACT,ACH-000228,head and neck cancer,untreated,48,55,1669021,Untreated_48hr,True,True,True
+BT474_BREAST,ACH-000927,breast cancer,control,3,27,958113,DMSO_3hr,True,False,False
+BT474_BREAST,ACH-000927,breast cancer,control,6,28,1060760,DMSO_6hr,True,False,False
+BT474_BREAST,ACH-000927,breast cancer,control,12,14,630398,DMSO_12hr,True,False,False
+BT474_BREAST,ACH-000927,breast cancer,control,24,28,1132148,DMSO_24hr,True,False,False
+BT474_BREAST,ACH-000927,breast cancer,control,48,71,2750330,DMSO_48hr,True,False,False
+BT474_BREAST,ACH-000927,breast cancer,trametinib,3,29,1080458,Tram_3hr,True,False,False
+BT474_BREAST,ACH-000927,breast cancer,trametinib,6,33,1200921,Tram_6hr,True,False,False
+BT474_BREAST,ACH-000927,breast cancer,trametinib,12,16,598978,Tram_12hr,True,False,False
+BT474_BREAST,ACH-000927,breast cancer,trametinib,24,39,1387387,Tram_24hr,True,False,False
+BT474_BREAST,ACH-000927,breast cancer,trametinib,48,69,2154828,Tram_48hr,True,False,False
+BT474_BREAST,ACH-000927,breast cancer,untreated,48,36,1446319,Untreated_48hr,True,False,False
+BT549_BREAST,ACH-000288,breast cancer,control,3,23,902757,DMSO_3hr,True,False,False
+BT549_BREAST,ACH-000288,breast cancer,control,6,23,683597,DMSO_6hr,True,False,False
+BT549_BREAST,ACH-000288,breast cancer,control,12,19,699234,DMSO_12hr,True,False,False
+BT549_BREAST,ACH-000288,breast cancer,control,24,32,1085321,DMSO_24hr,True,False,False
+BT549_BREAST,ACH-000288,breast cancer,control,48,56,1809962,DMSO_48hr,True,False,False
+BT549_BREAST,ACH-000288,breast cancer,trametinib,3,23,886371,Tram_3hr,True,False,False
+BT549_BREAST,ACH-000288,breast cancer,trametinib,6,24,805440,Tram_6hr,True,False,False
+BT549_BREAST,ACH-000288,breast cancer,trametinib,12,33,1088761,Tram_12hr,True,False,False
+BT549_BREAST,ACH-000288,breast cancer,trametinib,24,46,1646419,Tram_24hr,True,False,False
+BT549_BREAST,ACH-000288,breast cancer,trametinib,48,51,1874817,Tram_48hr,True,False,False
+BT549_BREAST,ACH-000288,breast cancer,untreated,48,32,1087368,Untreated_48hr,True,False,False
+CAOV3_OVARY,ACH-000713,ovarian cancer,control,3,23,986891,DMSO_3hr,True,True,False
+CAOV3_OVARY,ACH-000713,ovarian cancer,control,6,36,1301958,DMSO_6hr,True,True,False
+CAOV3_OVARY,ACH-000713,ovarian cancer,control,12,40,1381502,DMSO_12hr,True,True,False
+CAOV3_OVARY,ACH-000713,ovarian cancer,control,24,47,1681455,DMSO_24hr,True,True,False
+CAOV3_OVARY,ACH-000713,ovarian cancer,control,48,93,3686843,DMSO_48hr,True,True,False
+CAOV3_OVARY,ACH-000713,ovarian cancer,trametinib,3,41,1724779,Tram_3hr,True,True,False
+CAOV3_OVARY,ACH-000713,ovarian cancer,trametinib,6,27,1192794,Tram_6hr,True,True,False
+CAOV3_OVARY,ACH-000713,ovarian cancer,trametinib,12,35,1433839,Tram_12hr,True,True,False
+CAOV3_OVARY,ACH-000713,ovarian cancer,trametinib,24,64,2456439,Tram_24hr,True,True,False
+CAOV3_OVARY,ACH-000713,ovarian cancer,trametinib,48,49,1744984,Tram_48hr,True,True,False
+CAOV3_OVARY,ACH-000713,ovarian cancer,untreated,48,43,1944544,Untreated_48hr,True,True,False
+CCFSTTG1_CENTRAL_NERVOUS_SYSTEM,ACH-000329,brain cancer,control,3,37,784513,DMSO_3hr,True,True,True
+CCFSTTG1_CENTRAL_NERVOUS_SYSTEM,ACH-000329,brain cancer,control,6,31,664587,DMSO_6hr,True,True,True
+CCFSTTG1_CENTRAL_NERVOUS_SYSTEM,ACH-000329,brain cancer,control,12,32,730192,DMSO_12hr,True,True,True
+CCFSTTG1_CENTRAL_NERVOUS_SYSTEM,ACH-000329,brain cancer,control,24,44,1002864,DMSO_24hr,True,True,True
+CCFSTTG1_CENTRAL_NERVOUS_SYSTEM,ACH-000329,brain cancer,control,48,78,1765483,DMSO_48hr,True,True,True
+CCFSTTG1_CENTRAL_NERVOUS_SYSTEM,ACH-000329,brain cancer,trametinib,3,31,608979,Tram_3hr,True,True,True
+CCFSTTG1_CENTRAL_NERVOUS_SYSTEM,ACH-000329,brain cancer,trametinib,6,40,933234,Tram_6hr,True,True,True
+CCFSTTG1_CENTRAL_NERVOUS_SYSTEM,ACH-000329,brain cancer,trametinib,12,32,706935,Tram_12hr,True,True,True
+CCFSTTG1_CENTRAL_NERVOUS_SYSTEM,ACH-000329,brain cancer,trametinib,24,79,1588247,Tram_24hr,True,True,True
+CCFSTTG1_CENTRAL_NERVOUS_SYSTEM,ACH-000329,brain cancer,trametinib,48,80,1823566,Tram_48hr,True,True,True
+CCFSTTG1_CENTRAL_NERVOUS_SYSTEM,ACH-000329,brain cancer,untreated,48,42,921144,Untreated_48hr,True,True,True
+COLO680N_OESOPHAGUS,ACH-000717,esophageal cancer,control,3,118,3789034,DMSO_3hr,True,True,True
+COLO680N_OESOPHAGUS,ACH-000717,esophageal cancer,control,6,94,3228579,DMSO_6hr,True,True,True
+COLO680N_OESOPHAGUS,ACH-000717,esophageal cancer,control,12,124,4121300,DMSO_12hr,True,True,True
+COLO680N_OESOPHAGUS,ACH-000717,esophageal cancer,control,24,130,3949536,DMSO_24hr,True,True,True
+COLO680N_OESOPHAGUS,ACH-000717,esophageal cancer,control,48,204,6629728,DMSO_48hr,True,True,True
+COLO680N_OESOPHAGUS,ACH-000717,esophageal cancer,trametinib,3,105,3285908,Tram_3hr,True,True,True
+COLO680N_OESOPHAGUS,ACH-000717,esophageal cancer,trametinib,6,135,4525642,Tram_6hr,True,True,True
+COLO680N_OESOPHAGUS,ACH-000717,esophageal cancer,trametinib,12,118,3794803,Tram_12hr,True,True,True
+COLO680N_OESOPHAGUS,ACH-000717,esophageal cancer,trametinib,24,212,6020060,Tram_24hr,True,True,True
+COLO680N_OESOPHAGUS,ACH-000717,esophageal cancer,trametinib,48,210,6712872,Tram_48hr,True,True,True
+COLO680N_OESOPHAGUS,ACH-000717,esophageal cancer,untreated,48,124,3765054,Untreated_48hr,True,True,True
+COV434_OVARY,ACH-000123,ovarian cancer,control,3,23,554688,DMSO_3hr,False,False,False
+COV434_OVARY,ACH-000123,ovarian cancer,control,6,9,201953,DMSO_6hr,False,False,False
+COV434_OVARY,ACH-000123,ovarian cancer,control,12,22,435094,DMSO_12hr,False,False,False
+COV434_OVARY,ACH-000123,ovarian cancer,control,24,24,549483,DMSO_24hr,False,False,False
+COV434_OVARY,ACH-000123,ovarian cancer,control,48,33,647072,DMSO_48hr,False,False,False
+COV434_OVARY,ACH-000123,ovarian cancer,trametinib,3,18,390496,Tram_3hr,False,False,False
+COV434_OVARY,ACH-000123,ovarian cancer,trametinib,6,14,316110,Tram_6hr,False,False,False
+COV434_OVARY,ACH-000123,ovarian cancer,trametinib,12,19,466920,Tram_12hr,False,False,False
+COV434_OVARY,ACH-000123,ovarian cancer,trametinib,24,38,886078,Tram_24hr,False,False,False
+COV434_OVARY,ACH-000123,ovarian cancer,trametinib,48,30,621097,Tram_48hr,False,False,False
+COV434_OVARY,ACH-000123,ovarian cancer,untreated,48,22,547535,Untreated_48hr,False,False,False
+DKMG_CENTRAL_NERVOUS_SYSTEM,ACH-000244,brain cancer,control,3,68,1078487,DMSO_3hr,True,True,True
+DKMG_CENTRAL_NERVOUS_SYSTEM,ACH-000244,brain cancer,control,6,38,566611,DMSO_6hr,True,True,True
+DKMG_CENTRAL_NERVOUS_SYSTEM,ACH-000244,brain cancer,control,12,43,656160,DMSO_12hr,True,True,True
+DKMG_CENTRAL_NERVOUS_SYSTEM,ACH-000244,brain cancer,control,24,64,979774,DMSO_24hr,True,True,True
+DKMG_CENTRAL_NERVOUS_SYSTEM,ACH-000244,brain cancer,control,48,140,2260709,DMSO_48hr,True,True,True
+DKMG_CENTRAL_NERVOUS_SYSTEM,ACH-000244,brain cancer,trametinib,3,45,810550,Tram_3hr,True,True,True
+DKMG_CENTRAL_NERVOUS_SYSTEM,ACH-000244,brain cancer,trametinib,6,55,999908,Tram_6hr,True,True,True
+DKMG_CENTRAL_NERVOUS_SYSTEM,ACH-000244,brain cancer,trametinib,12,42,614302,Tram_12hr,True,True,True
+DKMG_CENTRAL_NERVOUS_SYSTEM,ACH-000244,brain cancer,trametinib,24,75,1008338,Tram_24hr,True,True,True
+DKMG_CENTRAL_NERVOUS_SYSTEM,ACH-000244,brain cancer,trametinib,48,64,1011235,Tram_48hr,True,True,True
+DKMG_CENTRAL_NERVOUS_SYSTEM,ACH-000244,brain cancer,untreated,48,54,914949,Untreated_48hr,True,True,True
+IALM_LUNG,ACH-000672,lung cancer,control,3,13,431463,DMSO_3hr,True,False,False
+IALM_LUNG,ACH-000672,lung cancer,control,6,10,270471,DMSO_6hr,True,False,False
+IALM_LUNG,ACH-000672,lung cancer,control,12,18,617240,DMSO_12hr,True,False,False
+IALM_LUNG,ACH-000672,lung cancer,control,24,21,807291,DMSO_24hr,True,False,False
+IALM_LUNG,ACH-000672,lung cancer,control,48,26,977734,DMSO_48hr,True,False,False
+IALM_LUNG,ACH-000672,lung cancer,trametinib,3,16,668110,Tram_3hr,True,False,False
+IALM_LUNG,ACH-000672,lung cancer,trametinib,6,10,470997,Tram_6hr,True,False,False
+IALM_LUNG,ACH-000672,lung cancer,trametinib,12,16,563249,Tram_12hr,True,False,False
+IALM_LUNG,ACH-000672,lung cancer,trametinib,24,25,989812,Tram_24hr,True,False,False
+IALM_LUNG,ACH-000672,lung cancer,trametinib,48,30,1069951,Tram_48hr,True,False,False
+IALM_LUNG,ACH-000672,lung cancer,untreated,48,17,541402,Untreated_48hr,True,False,False
+LNCAPCLONEFGC_PROSTATE,ACH-000977,prostate cancer,control,3,23,756445,DMSO_3hr,True,False,False
+LNCAPCLONEFGC_PROSTATE,ACH-000977,prostate cancer,control,6,21,626794,DMSO_6hr,True,False,False
+LNCAPCLONEFGC_PROSTATE,ACH-000977,prostate cancer,control,12,22,685445,DMSO_12hr,True,False,False
+LNCAPCLONEFGC_PROSTATE,ACH-000977,prostate cancer,control,24,16,505809,DMSO_24hr,True,False,False
+LNCAPCLONEFGC_PROSTATE,ACH-000977,prostate cancer,control,48,42,1391275,DMSO_48hr,True,False,False
+LNCAPCLONEFGC_PROSTATE,ACH-000977,prostate cancer,trametinib,3,15,476301,Tram_3hr,True,False,False
+LNCAPCLONEFGC_PROSTATE,ACH-000977,prostate cancer,trametinib,6,26,727131,Tram_6hr,True,False,False
+LNCAPCLONEFGC_PROSTATE,ACH-000977,prostate cancer,trametinib,12,22,792494,Tram_12hr,True,False,False
+LNCAPCLONEFGC_PROSTATE,ACH-000977,prostate cancer,trametinib,24,41,1242265,Tram_24hr,True,False,False
+LNCAPCLONEFGC_PROSTATE,ACH-000977,prostate cancer,trametinib,48,47,1298216,Tram_48hr,True,False,False
+LNCAPCLONEFGC_PROSTATE,ACH-000977,prostate cancer,untreated,48,26,883904,Untreated_48hr,True,False,False
+LS1034_LARGE_INTESTINE,ACH-000252,colon/colorectal cancer,control,3,36,1025000,DMSO_3hr,True,False,False
+LS1034_LARGE_INTESTINE,ACH-000252,colon/colorectal cancer,control,6,32,831052,DMSO_6hr,True,False,False
+LS1034_LARGE_INTESTINE,ACH-000252,colon/colorectal cancer,control,12,17,397051,DMSO_12hr,True,False,False
+LS1034_LARGE_INTESTINE,ACH-000252,colon/colorectal cancer,control,24,40,1215251,DMSO_24hr,True,False,False
+LS1034_LARGE_INTESTINE,ACH-000252,colon/colorectal cancer,control,48,76,2026422,DMSO_48hr,True,False,False
+LS1034_LARGE_INTESTINE,ACH-000252,colon/colorectal cancer,trametinib,3,21,605114,Tram_3hr,True,False,False
+LS1034_LARGE_INTESTINE,ACH-000252,colon/colorectal cancer,trametinib,6,29,666067,Tram_6hr,True,False,False
+LS1034_LARGE_INTESTINE,ACH-000252,colon/colorectal cancer,trametinib,12,24,577645,Tram_12hr,True,False,False
+LS1034_LARGE_INTESTINE,ACH-000252,colon/colorectal cancer,trametinib,24,45,742864,Tram_24hr,True,False,False
+LS1034_LARGE_INTESTINE,ACH-000252,colon/colorectal cancer,trametinib,48,20,346154,Tram_48hr,True,False,False
+LS1034_LARGE_INTESTINE,ACH-000252,colon/colorectal cancer,untreated,48,43,981260,Untreated_48hr,True,False,False
+NCIH226_LUNG,ACH-000367,lung cancer,control,3,66,2308481,DMSO_3hr,True,True,True
+NCIH226_LUNG,ACH-000367,lung cancer,control,6,32,1168335,DMSO_6hr,True,True,True
+NCIH226_LUNG,ACH-000367,lung cancer,control,12,48,1560901,DMSO_12hr,True,True,True
+NCIH226_LUNG,ACH-000367,lung cancer,control,24,46,1660478,DMSO_24hr,True,True,True
+NCIH226_LUNG,ACH-000367,lung cancer,control,48,91,2614646,DMSO_48hr,True,True,True
+NCIH226_LUNG,ACH-000367,lung cancer,trametinib,3,36,1303457,Tram_3hr,True,True,True
+NCIH226_LUNG,ACH-000367,lung cancer,trametinib,6,47,1390791,Tram_6hr,True,True,True
+NCIH226_LUNG,ACH-000367,lung cancer,trametinib,12,34,1257550,Tram_12hr,True,True,True
+NCIH226_LUNG,ACH-000367,lung cancer,trametinib,24,80,2435887,Tram_24hr,True,True,True
+NCIH226_LUNG,ACH-000367,lung cancer,trametinib,48,67,2202514,Tram_48hr,True,True,True
+NCIH226_LUNG,ACH-000367,lung cancer,untreated,48,57,1810843,Untreated_48hr,True,True,True
+NCIH2347_LUNG,ACH-000875,lung cancer,control,3,18,794083,DMSO_3hr,False,False,False
+NCIH2347_LUNG,ACH-000875,lung cancer,control,6,15,610596,DMSO_6hr,False,False,False
+NCIH2347_LUNG,ACH-000875,lung cancer,control,12,11,481240,DMSO_12hr,False,False,False
+NCIH2347_LUNG,ACH-000875,lung cancer,control,24,18,657012,DMSO_24hr,False,False,False
+NCIH2347_LUNG,ACH-000875,lung cancer,control,48,22,881274,DMSO_48hr,False,False,False
+NCIH2347_LUNG,ACH-000875,lung cancer,trametinib,3,17,730907,Tram_3hr,False,False,False
+NCIH2347_LUNG,ACH-000875,lung cancer,trametinib,6,10,406384,Tram_6hr,False,False,False
+NCIH2347_LUNG,ACH-000875,lung cancer,trametinib,12,8,262341,Tram_12hr,False,False,False
+NCIH2347_LUNG,ACH-000875,lung cancer,trametinib,24,16,425005,Tram_24hr,False,False,False
+NCIH2347_LUNG,ACH-000875,lung cancer,trametinib,48,17,404008,Tram_48hr,False,False,False
+NCIH2347_LUNG,ACH-000875,lung cancer,untreated,48,11,286534,Untreated_48hr,False,False,False
+RCC10RGB_KIDNEY,ACH-000189,kidney cancer,control,3,82,2869558,DMSO_3hr,True,True,True
+RCC10RGB_KIDNEY,ACH-000189,kidney cancer,control,6,76,2391043,DMSO_6hr,True,True,True
+RCC10RGB_KIDNEY,ACH-000189,kidney cancer,control,12,64,1880709,DMSO_12hr,True,True,True
+RCC10RGB_KIDNEY,ACH-000189,kidney cancer,control,24,92,2701460,DMSO_24hr,True,True,True
+RCC10RGB_KIDNEY,ACH-000189,kidney cancer,control,48,167,5130731,DMSO_48hr,True,True,True
+RCC10RGB_KIDNEY,ACH-000189,kidney cancer,trametinib,3,56,1835057,Tram_3hr,True,True,True
+RCC10RGB_KIDNEY,ACH-000189,kidney cancer,trametinib,6,79,2415184,Tram_6hr,True,True,True
+RCC10RGB_KIDNEY,ACH-000189,kidney cancer,trametinib,12,59,1905158,Tram_12hr,True,True,True
+RCC10RGB_KIDNEY,ACH-000189,kidney cancer,trametinib,24,110,2729138,Tram_24hr,True,True,True
+RCC10RGB_KIDNEY,ACH-000189,kidney cancer,trametinib,48,109,3004640,Tram_48hr,True,True,True
+RCC10RGB_KIDNEY,ACH-000189,kidney cancer,untreated,48,105,3501425,Untreated_48hr,True,True,True
+RCM1_LARGE_INTESTINE,ACH-000565,colon/colorectal cancer,control,3,67,2780301,DMSO_3hr,True,True,True
+RCM1_LARGE_INTESTINE,ACH-000565,colon/colorectal cancer,control,6,56,2197452,DMSO_6hr,True,True,True
+RCM1_LARGE_INTESTINE,ACH-000565,colon/colorectal cancer,control,12,57,2749953,DMSO_12hr,True,True,True
+RCM1_LARGE_INTESTINE,ACH-000565,colon/colorectal cancer,control,24,70,2762119,DMSO_24hr,True,True,True
+RCM1_LARGE_INTESTINE,ACH-000565,colon/colorectal cancer,control,48,136,5915860,DMSO_48hr,True,True,True
+RCM1_LARGE_INTESTINE,ACH-000565,colon/colorectal cancer,trametinib,3,66,2652729,Tram_3hr,True,True,True
+RCM1_LARGE_INTESTINE,ACH-000565,colon/colorectal cancer,trametinib,6,68,2496459,Tram_6hr,True,True,True
+RCM1_LARGE_INTESTINE,ACH-000565,colon/colorectal cancer,trametinib,12,61,1983139,Tram_12hr,True,True,True
+RCM1_LARGE_INTESTINE,ACH-000565,colon/colorectal cancer,trametinib,24,60,1749647,Tram_24hr,True,True,True
+RCM1_LARGE_INTESTINE,ACH-000565,colon/colorectal cancer,trametinib,48,36,888170,Tram_48hr,True,True,True
+RCM1_LARGE_INTESTINE,ACH-000565,colon/colorectal cancer,untreated,48,96,3846232,Untreated_48hr,True,True,True
+RERFLCAD1_LUNG,ACH-000791,lung cancer,control,3,57,1119580,DMSO_3hr,True,True,True
+RERFLCAD1_LUNG,ACH-000791,lung cancer,control,6,38,774923,DMSO_6hr,True,True,True
+RERFLCAD1_LUNG,ACH-000791,lung cancer,control,12,51,1015616,DMSO_12hr,True,True,True
+RERFLCAD1_LUNG,ACH-000791,lung cancer,control,24,59,1355824,DMSO_24hr,True,True,True
+RERFLCAD1_LUNG,ACH-000791,lung cancer,control,48,120,2488374,DMSO_48hr,True,True,True
+RERFLCAD1_LUNG,ACH-000791,lung cancer,trametinib,3,45,851177,Tram_3hr,True,True,True
+RERFLCAD1_LUNG,ACH-000791,lung cancer,trametinib,6,65,1182358,Tram_6hr,True,True,True
+RERFLCAD1_LUNG,ACH-000791,lung cancer,trametinib,12,53,1083621,Tram_12hr,True,True,True
+RERFLCAD1_LUNG,ACH-000791,lung cancer,trametinib,24,97,1777201,Tram_24hr,True,True,True
+RERFLCAD1_LUNG,ACH-000791,lung cancer,trametinib,48,92,1741611,Tram_48hr,True,True,True
+RERFLCAD1_LUNG,ACH-000791,lung cancer,untreated,48,75,1598790,Untreated_48hr,True,True,True
+SH10TC_STOMACH,ACH-000764,gastric cancer,control,3,46,2208357,DMSO_3hr,True,True,True
+SH10TC_STOMACH,ACH-000764,gastric cancer,control,6,38,1744697,DMSO_6hr,True,True,True
+SH10TC_STOMACH,ACH-000764,gastric cancer,control,12,52,2524259,DMSO_12hr,True,True,True
+SH10TC_STOMACH,ACH-000764,gastric cancer,control,24,54,3111805,DMSO_24hr,True,True,True
+SH10TC_STOMACH,ACH-000764,gastric cancer,control,48,110,5511454,DMSO_48hr,True,True,True
+SH10TC_STOMACH,ACH-000764,gastric cancer,trametinib,3,40,1924130,Tram_3hr,True,True,True
+SH10TC_STOMACH,ACH-000764,gastric cancer,trametinib,6,42,2185311,Tram_6hr,True,True,True
+SH10TC_STOMACH,ACH-000764,gastric cancer,trametinib,12,56,2459982,Tram_12hr,True,True,True
+SH10TC_STOMACH,ACH-000764,gastric cancer,trametinib,24,79,3855693,Tram_24hr,True,True,True
+SH10TC_STOMACH,ACH-000764,gastric cancer,trametinib,48,94,4701066,Tram_48hr,True,True,True
+SH10TC_STOMACH,ACH-000764,gastric cancer,untreated,48,54,2359058,Untreated_48hr,True,True,True
+SKMEL2_SKIN,ACH-001190,skin cancer,control,3,80,2252077,DMSO_3hr,True,True,False
+SKMEL2_SKIN,ACH-001190,skin cancer,control,6,73,1826061,DMSO_6hr,True,True,False
+SKMEL2_SKIN,ACH-001190,skin cancer,control,12,83,2092717,DMSO_12hr,True,True,False
+SKMEL2_SKIN,ACH-001190,skin cancer,control,24,94,2413397,DMSO_24hr,True,True,False
+SKMEL2_SKIN,ACH-001190,skin cancer,control,48,179,4852872,DMSO_48hr,True,True,False
+SKMEL2_SKIN,ACH-001190,skin cancer,trametinib,3,64,1700166,Tram_3hr,True,True,False
+SKMEL2_SKIN,ACH-001190,skin cancer,trametinib,6,87,2138679,Tram_6hr,True,True,False
+SKMEL2_SKIN,ACH-001190,skin cancer,trametinib,12,59,1453106,Tram_12hr,True,True,False
+SKMEL2_SKIN,ACH-001190,skin cancer,trametinib,24,82,1818157,Tram_24hr,True,True,False
+SKMEL2_SKIN,ACH-001190,skin cancer,trametinib,48,25,759591,Tram_48hr,True,True,False
+SKMEL2_SKIN,ACH-001190,skin cancer,untreated,48,101,2465531,Untreated_48hr,True,True,False
+SKMEL3_SKIN,ACH-000423,skin cancer,control,3,25,934360,DMSO_3hr,True,True,False
+SKMEL3_SKIN,ACH-000423,skin cancer,control,6,24,866942,DMSO_6hr,True,True,False
+SKMEL3_SKIN,ACH-000423,skin cancer,control,12,29,1106392,DMSO_12hr,True,True,False
+SKMEL3_SKIN,ACH-000423,skin cancer,control,24,31,1226829,DMSO_24hr,True,True,False
+SKMEL3_SKIN,ACH-000423,skin cancer,control,48,53,1991315,DMSO_48hr,True,True,False
+SKMEL3_SKIN,ACH-000423,skin cancer,trametinib,3,26,904883,Tram_3hr,True,True,False
+SKMEL3_SKIN,ACH-000423,skin cancer,trametinib,6,32,1194823,Tram_6hr,True,True,False
+SKMEL3_SKIN,ACH-000423,skin cancer,trametinib,12,26,917434,Tram_12hr,True,True,False
+SKMEL3_SKIN,ACH-000423,skin cancer,trametinib,24,41,1118149,Tram_24hr,True,True,False
+SKMEL3_SKIN,ACH-000423,skin cancer,trametinib,48,32,877802,Tram_48hr,True,True,False
+SKMEL3_SKIN,ACH-000423,skin cancer,untreated,48,30,1005922,Untreated_48hr,True,True,False
+SNU1079_BILIARY_TRACT,ACH-000209,bile duct cancer,control,3,14,587385,DMSO_3hr,True,False,False
+SNU1079_BILIARY_TRACT,ACH-000209,bile duct cancer,control,6,21,906226,DMSO_6hr,True,False,False
+SNU1079_BILIARY_TRACT,ACH-000209,bile duct cancer,control,12,25,968899,DMSO_12hr,True,False,False
+SNU1079_BILIARY_TRACT,ACH-000209,bile duct cancer,control,24,19,685314,DMSO_24hr,True,False,False
+SNU1079_BILIARY_TRACT,ACH-000209,bile duct cancer,control,48,28,1160088,DMSO_48hr,True,False,False
+SNU1079_BILIARY_TRACT,ACH-000209,bile duct cancer,trametinib,3,13,565701,Tram_3hr,True,False,False
+SNU1079_BILIARY_TRACT,ACH-000209,bile duct cancer,trametinib,6,12,378998,Tram_6hr,True,False,False
+SNU1079_BILIARY_TRACT,ACH-000209,bile duct cancer,trametinib,12,16,596521,Tram_12hr,True,False,False
+SNU1079_BILIARY_TRACT,ACH-000209,bile duct cancer,trametinib,24,23,814650,Tram_24hr,True,False,False
+SNU1079_BILIARY_TRACT,ACH-000209,bile duct cancer,trametinib,48,26,942359,Tram_48hr,True,False,False
+SNU1079_BILIARY_TRACT,ACH-000209,bile duct cancer,untreated,48,25,1092982,Untreated_48hr,True,False,False
+SQ1_LUNG,ACH-000553,lung cancer,control,3,42,1873946,DMSO_3hr,True,True,True
+SQ1_LUNG,ACH-000553,lung cancer,control,6,37,1857408,DMSO_6hr,True,True,True
+SQ1_LUNG,ACH-000553,lung cancer,control,12,52,2314307,DMSO_12hr,True,True,True
+SQ1_LUNG,ACH-000553,lung cancer,control,24,57,2615575,DMSO_24hr,True,True,True
+SQ1_LUNG,ACH-000553,lung cancer,control,48,90,4381922,DMSO_48hr,True,True,True
+SQ1_LUNG,ACH-000553,lung cancer,trametinib,3,38,2081909,Tram_3hr,True,True,True
+SQ1_LUNG,ACH-000553,lung cancer,trametinib,6,30,1769967,Tram_6hr,True,True,True
+SQ1_LUNG,ACH-000553,lung cancer,trametinib,12,33,1600676,Tram_12hr,True,True,True
+SQ1_LUNG,ACH-000553,lung cancer,trametinib,24,75,3023995,Tram_24hr,True,True,True
+SQ1_LUNG,ACH-000553,lung cancer,trametinib,48,61,2471904,Tram_48hr,True,True,True
+SQ1_LUNG,ACH-000553,lung cancer,untreated,48,40,2413431,Untreated_48hr,True,True,True
+TEN_ENDOMETRIUM,ACH-000397,endometrial/uterine cancer,control,3,44,1843514,DMSO_3hr,True,True,True
+TEN_ENDOMETRIUM,ACH-000397,endometrial/uterine cancer,control,6,38,1855042,DMSO_6hr,True,True,True
+TEN_ENDOMETRIUM,ACH-000397,endometrial/uterine cancer,control,12,49,2299908,DMSO_12hr,True,True,True
+TEN_ENDOMETRIUM,ACH-000397,endometrial/uterine cancer,control,24,40,1573833,DMSO_24hr,True,True,True
+TEN_ENDOMETRIUM,ACH-000397,endometrial/uterine cancer,control,48,112,4660406,DMSO_48hr,True,True,True
+TEN_ENDOMETRIUM,ACH-000397,endometrial/uterine cancer,trametinib,3,35,1365527,Tram_3hr,True,True,True
+TEN_ENDOMETRIUM,ACH-000397,endometrial/uterine cancer,trametinib,6,48,1874095,Tram_6hr,True,True,True
+TEN_ENDOMETRIUM,ACH-000397,endometrial/uterine cancer,trametinib,12,46,1777973,Tram_12hr,True,True,True
+TEN_ENDOMETRIUM,ACH-000397,endometrial/uterine cancer,trametinib,24,63,2345896,Tram_24hr,True,True,True
+TEN_ENDOMETRIUM,ACH-000397,endometrial/uterine cancer,trametinib,48,85,3015995,Tram_48hr,True,True,True
+TEN_ENDOMETRIUM,ACH-000397,endometrial/uterine cancer,untreated,48,54,2534954,Untreated_48hr,True,True,True
+UMUC1_URINARY_TRACT,ACH-000834,bladder cancer,control,3,85,2827041,DMSO_3hr,True,True,True
+UMUC1_URINARY_TRACT,ACH-000834,bladder cancer,control,6,72,2598294,DMSO_6hr,True,True,True
+UMUC1_URINARY_TRACT,ACH-000834,bladder cancer,control,12,64,1970153,DMSO_12hr,True,True,True
+UMUC1_URINARY_TRACT,ACH-000834,bladder cancer,control,24,90,2871908,DMSO_24hr,True,True,True
+UMUC1_URINARY_TRACT,ACH-000834,bladder cancer,control,48,158,4699343,DMSO_48hr,True,True,True
+UMUC1_URINARY_TRACT,ACH-000834,bladder cancer,trametinib,3,77,2547167,Tram_3hr,True,True,True
+UMUC1_URINARY_TRACT,ACH-000834,bladder cancer,trametinib,6,83,2374682,Tram_6hr,True,True,True
+UMUC1_URINARY_TRACT,ACH-000834,bladder cancer,trametinib,12,61,1731181,Tram_12hr,True,True,True
+UMUC1_URINARY_TRACT,ACH-000834,bladder cancer,trametinib,24,99,2310954,Tram_24hr,True,True,True
+UMUC1_URINARY_TRACT,ACH-000834,bladder cancer,trametinib,48,66,1311856,Tram_48hr,True,True,True
+UMUC1_URINARY_TRACT,ACH-000834,bladder cancer,untreated,48,81,2760585,Untreated_48hr,True,True,True

@@ -1,0 +1,24 @@
+{
+  "stage": "W8_temporal",
+  "status": "passed",
+  "raw_normal_assigned_cells": 13713,
+  "pseudobulk_shape": [
+    264,
+    32738
+  ],
+  "response_shape": [
+    120,
+    32738
+  ],
+  "all_lines": 24,
+  "primary_lines_t10": 22,
+  "external_transfer_lines": 17,
+  "max_response_reconstruction_error": 0.0,
+  "max_metric_recomputation_error": 8.326672684688674e-17,
+  "temporal_response_used_for_fit": false,
+  "training_depmap_overlap": 0,
+  "artifact_hashes": {
+    "data/processed/pseudobulk_timecourse.parquet": "f317281497ca27696cf751399acf38d0513aad31bd9e0b1883284992e0edde4b",
+    "data/processed/response_timecourse.parquet": "ccc5dbe39b8a4fb03a80795904dfb11cda0013c9a141e7be9b83d8716a0545f3"
+  }
+}

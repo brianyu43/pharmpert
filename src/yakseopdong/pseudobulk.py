@@ -437,7 +437,6 @@ def run_pseudobulk(root: Path) -> dict[str, object]:
         cell_qc=pd.DataFrame([block.cell_qc for block in blocks.values()]),
     )
 
-    output_paths = sorted(processed.glob("*.parquet"))
     output_contract = {
         "gene_metadata.parquet": (32_738, 0, ""),
         "pseudobulk_24h.parquet": (188, 32_738, "log1p_cpm"),
@@ -446,6 +445,9 @@ def run_pseudobulk(root: Path) -> dict[str, object]:
         "pseudobulk_pooled_sensitivity.parquet": (194, 32_738, "log1p_cpm"),
         "response_pooled_sensitivity.parquet": (97, 32_738, "delta_log1p_cpm"),
     }
+    # Keep the base W3 contract explicit. Later stages add their own processed
+    # parquet files and must not make a clean rebuild of this frozen stage fail.
+    output_paths = [processed / name for name in sorted(output_contract)]
     processed_manifest = pd.DataFrame(
         [
             {

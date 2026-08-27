@@ -1,0 +1,54 @@
+{
+  "stage": "W8_temporal",
+  "status": "complete_pending_independent_validation",
+  "cohort": {
+    "source": "data/mcfarland_2020.h5ad",
+    "source_sha256": "94a7240047b9ce6822dc2aa1e7a66c1fd8b00be842e5a95fc72cbeb6f2834d2c",
+    "normal_assigned_cells": 13713,
+    "pseudobulk_groups": 264,
+    "response_rows": 120,
+    "cell_lines_all": 24,
+    "cell_lines_t10": 22,
+    "cell_lines_t20": 15,
+    "cell_lines_t30": 12,
+    "genes": 32738
+  },
+  "descriptive": {
+    "primary_lines": 22,
+    "primary_rows": 110,
+    "pca_variable_genes": 5000,
+    "pca_explained_variance_ratio": [
+      0.07804697450517657,
+      0.028923883251376695,
+      0.027778651100417766,
+      0.024576934875125578,
+      0.022030772991298228
+    ],
+    "early_late_rmse_difference_mean": -0.009666220760164018,
+    "early_late_rmse_difference_ci95": [
+      -0.034209125430695195,
+      0.012089574986010054
+    ]
+  },
+  "control_48h_qc": {
+    "lines": 22,
+    "median_rmse": 0.26265169895321194,
+    "median_pcc": 0.9869130696328556,
+    "pooling_performed": false
+  },
+  "external_transfer": {
+    "training_lines": 94,
+    "eligible_temporal_lines": 22,
+    "external_test_lines": 17,
+    "overlapping_lines_excluded": 5,
+    "best_b4_transfer_hour_by_rmse": 24,
+    "temporal_response_used_for_fit": false,
+    "prediction_sha256": "5e880e257179df9d56b4fb7a420b47d016258f846db6ec53b673c3afea7983b0"
+  },
+  "interpretation_contract": {
+    "pca": "whole_timecourse_descriptive_only",
+    "primary_delta": "Tram_time_minus_DMSO_time",
+    "untreated_48h": "control_QC_only_not_pooled",
+    "single_cell_trajectory_claim": false
+  }
+}

@@ -36,6 +36,14 @@ descriptive_control_time_qc:
   interpretation: time_and_source_difference_not_causal_time_effect
 
 timecourse:
+  protocol_version: "1.0"
+  source: data/mcfarland_2020.h5ad
+  condition_source: hash_tag
+  cell_line_source: singlet_ID
+  depmap_id_source: DepMap_ID
+  quality_filter:
+    column: cell_quality
+    value: normal
   expected_hours:
     - 3
     - 6
@@ -43,4 +51,12 @@ timecourse:
     - 24
     - 48
   min_cells_per_condition: 10
+  sensitivity_thresholds: [10, 20, 30]
+  primary_control: time_matched_DMSO
+  untreated_48h_use: control_QC_only
   pool_controls_only_after_time_effect_check: true
+  primary_analysis_unit: cell_line
+  pca_variable_genes: 5000
+  transfer_training_cohort: strict_94_24h
+  transfer_test_rule: DepMap_ID_not_in_training_cohort
+  transfer_models: [B1, B4_FIXED_D20_A100, CCLR_FIXED_D20_R20_A100]

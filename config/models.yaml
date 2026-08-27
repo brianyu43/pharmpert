@@ -98,6 +98,23 @@ w7_ablation:
   bootstrap_seed: 20260827
   sensitivity_as_predictor: false
 
+w8_temporal:
+  protocol_version: "1.0"
+  descriptive_response_pca_components: 5
+  descriptive_response_pca_variable_genes: 5000
+  fixed_transfer:
+    training_source: strict_94_time_matched_24h
+    external_depmap_ids_only: true
+    control_dimension: 20
+    response_rank: 20
+    ridge_alpha: 100.0
+    variable_genes: 5000
+    min_mean_log1p_cpm: 0.1
+  bootstrap_replicates: 2000
+  bootstrap_seed: 20260827
+  target_genes: all_32738
+  temporal_response_used_for_fit: false
+
 compute:
   device: cpu
   max_workers: 12

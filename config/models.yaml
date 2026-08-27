@@ -45,6 +45,59 @@ main_model:
   sensitivity_as_predictor: false
   mutations_as_predictor: false
 
+w7_ablation:
+  protocol_version: "1.2"
+  mode: diagnostic_fixed_outer_fold_evaluation
+  primary_reference: B4_DIRECT_RIDGE_W5
+  fixed_reference:
+    control_dimension: 20
+    response_rank: 20
+    ridge_alpha: 100.0
+  control_dimensions: [5, 10, 20, 30]
+  response_ranks: [2, 5, 10, 20, 30, 40, 50]
+  response_rank_extension:
+    status: post_w6_diagnostic_only
+    reason: W6 selected the preregistered upper boundary rank 20 in every outer fold
+    changes_w6_primary_result: false
+  feature_variants:
+    - full_filtered_genes
+    - predefined_pathway_panel
+    - full_filtered_genes_plus_training_fitted_lineage
+    - full_filtered_genes_plus_training_fitted_braf_kras
+  pathway_panel:
+    config: config/genesets.yaml
+    selector: dataset_symbol_intersection_then_outer_training_expression_filter
+    target_genes: all_32738
+  metadata_features:
+    lineage:
+      encoding: outer_training_fitted_one_hot_drop_first_false
+      unknown_test_category: all_zero
+    braf_kras:
+      encoding: outer_training_fitted_center_and_scale
+      columns: [braf_mut, kras_mut]
+      constant_training_columns: drop
+  comparisons:
+    - B1_MEAN_W5
+    - B4_DIRECT_RIDGE_W5
+    - CCLR_NESTED_W6
+    - FIXED_FULL_D20_R20
+    - CONTROL_D05_R20
+    - CONTROL_D10_R20
+    - CONTROL_D30_R20
+    - RANK_D20_R02
+    - RANK_D20_R05
+    - RANK_D20_R10
+    - RANK_D20_R30
+    - RANK_D20_R40
+    - RANK_D20_R50
+    - PATHWAY_D20_R20
+    - LINEAGE_D20_R20
+    - BRAF_KRAS_D20_R20
+  selection_rule: report_all_fixed_variants_without_outer_test_selection
+  bootstrap_replicates: 2000
+  bootstrap_seed: 20260827
+  sensitivity_as_predictor: false
+
 compute:
   device: cpu
   max_workers: 12

@@ -29,6 +29,8 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("run-baselines", help="run nested-CV B0-B4 baselines")
     subparsers.add_parser("run-cclr", help="run nested-CV CCLR main model")
     subparsers.add_parser("validate-cclr", help="independently validate W6 outputs")
+    subparsers.add_parser("run-ablation", help="run frozen W7 diagnostic ablations")
+    subparsers.add_parser("validate-ablation", help="independently validate W7 outputs")
     return parser
 
 
@@ -95,6 +97,18 @@ def main() -> int:
         from yakseopdong.cclr_validation import validate_cclr
 
         report = validate_cclr(repository_root())
+        print(json.dumps(report, indent=2))
+        return 0
+    if args.command == "run-ablation":
+        from yakseopdong.ablation import run_ablation
+
+        report = run_ablation(repository_root())
+        print(json.dumps(report, indent=2))
+        return 0
+    if args.command == "validate-ablation":
+        from yakseopdong.ablation_validation import validate_ablation
+
+        report = validate_ablation(repository_root())
         print(json.dumps(report, indent=2))
         return 0
     raise RuntimeError(f"unknown command: {args.command}")

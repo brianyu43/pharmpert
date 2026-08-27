@@ -4,13 +4,13 @@
 
 ## 현재 상태
 
-- Scope Lock: v1.1
-- 단계: Stage 1–6 완료; 24h 반응 행렬, B0–B4, CCLR 주 모델 완료
+- Scope Lock: v1.1; Evaluation Protocol: v1.2
+- 단계: Stage 1–7 완료; 24h 반응 행렬, B0–B4, CCLR, 고정 ablation·누수 감사 완료
 - 핵심 일반화 단위: cell line
 - 핵심 비교: B1 global mean response 대비 context 정보의 추가 이득
 - GPU: 핵심 분석에는 불필요
 
-공식 experiment 3 원자료에서 strict 94-line 24시간 pseudobulk와 반응 행렬을 생성했다. EGR1/DUSP6 등 사전 지정 MAPK marker의 억제 방향을 재현했고, lineage-aware 5-fold에서 B0–B4와 CCLR을 평가했다. B4 direct ridge는 B1 global mean보다 RMSE를 `0.001715` 개선했다. CCLR도 B1보다 `0.001367` 개선했지만 B4보다는 `0.000348` 나빴다. 맥락의 추가 정보는 검출되지만 강한 개인화 예측이나 임상적 결과는 주장하지 않는다.
+공식 experiment 3 원자료에서 strict 94-line 24시간 pseudobulk와 반응 행렬을 생성했다. EGR1/DUSP6 등 사전 지정 MAPK marker의 억제 방향을 재현했고, lineage-aware 5-fold에서 B0–B4와 CCLR을 평가했다. B4 direct ridge는 B1 global mean보다 RMSE를 `0.001715` 개선했다. CCLR도 B1보다 `0.001367` 개선했지만 B4보다는 `0.000348` 나빴다. W7의 고정 rank·control dimension·pathway·lineage·BRAF/KRAS 변형도 B1은 이겼지만 B4를 확실히 넘지 못했다. 맥락의 추가 정보는 검출되지만 강한 개인화 예측이나 임상적 결과는 주장하지 않는다.
 
 ## 빠른 시작
 
@@ -34,6 +34,8 @@ make splits
 make baselines
 make cclr
 make validate-cclr
+make ablation
+make validate-ablation
 make notebooks
 ```
 
@@ -82,3 +84,14 @@ DMSO 24h → train-only control PCA → ridge → response-PC scores → reconst
 ```
 
 CCLR RMSE는 `0.322383`, PCC-context는 `0.096521`이다. B1 대비 RMSE gain은 `0.001367` (95% CI `0.000823–0.001933`)이지만, B4 대비 paired gain은 `-0.000348` (95% CI `-0.000584–-0.000105`)이다. 따라서 W6에서는 저차원 response basis가 B4보다 낫다는 가설을 지지하지 않는다. 모든 fold가 response rank 20과 alpha 100을 선택했다는 경계값 현상은 W7 ablation에서 확인하되 W6 결과를 보고 grid를 바꾸지는 않는다.
+
+## W7 고정 ablation 결론
+
+W7은 같은 outer fold에서 `d=20`, `rank=20`, `alpha=100`을 기준으로 한 요인씩 바꾸는 진단 분석이다. control dimension `[5, 10, 20, 30]`, response rank `[2, 5, 10, 20, 30, 40, 50]`, 사전 동결 pathway panel, training-fitted lineage 및 BRAF/KRAS 입력을 모두 보고한다. Rank 30/40/50은 W6의 상한 선택을 확인하기 위한 별도 진단이며 W6 주 결과를 소급 변경하지 않는다.
+
+- fixed full `d20/r20`: RMSE `0.322350`; B4 대비 gain `-0.000315` (95% CI `-0.000612–-0.000044`)
+- pathway panel: RMSE `0.322286`; B4 대비 gain `-0.000251` (95% CI `-0.000598–0.000127`)
+- lineage 추가: RMSE `0.322329`; B4 대비 gain `-0.000295` (95% CI `-0.000585–0.000025`)
+- BRAF/KRAS 추가: RMSE `0.322162`; B4 대비 gain `-0.000127` (95% CI `-0.000624–0.000383`)
+
+모든 fixed low-rank 변형은 B1보다 일관되게 나았지만 B4 대비 우위 CI는 없었다. BRAF/KRAS 변형이 fixed 변형 중 평균상 가장 가까웠다는 사실은 outer-test를 본 뒤의 관찰이므로 새 주 모델 선택으로 사용하지 않는다. W6 response subspace의 fold-pair mean squared cosine은 평균 `0.676`으로 상위 방향은 공유되지만 최약 방향은 불안정했다.

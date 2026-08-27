@@ -1,0 +1,26 @@
+{
+  "status": "complete",
+  "protocol_version": "1.2",
+  "mode": "diagnostic_fixed_outer_fold_evaluation",
+  "cell_lines": 94,
+  "genes": 32738,
+  "variants": 16,
+  "outer_folds": 5,
+  "metrics_rows": 1504,
+  "pathway_panel_defined_symbols": 1039,
+  "pathway_panel_mapped_columns": 1007,
+  "best_fixed_diagnostic_variant_not_promoted": "BRAF_KRAS_D20_R20",
+  "best_fixed_diagnostic_rmse": 0.32216164507198136,
+  "total_seconds": 8.695707625010982,
+  "comparison_sha256": "45950d118fd74d4924b56a3bd4b95e0b286bf1d5638a25da78a7255be89fb46c",
+  "repeat_run_comparison_sha256_match": true,
+  "w7_config_sha256": "539218f9e0cd145f9848ce3c33e9e49f98143e7aa57997af36a63a8f4b29af50",
+  "genesets_config_sha256": "fadccdadb386946f6770f45addac9de9ef12388b7f1b45a43027d1f4dd51805d",
+  "outer_test_response_used_for_fit": false,
+  "outer_test_used_for_variant_selection": false,
+  "sensitivity_used_as_predictor": false,
+  "mutation_columns_used": [
+    "braf_mut",
+    "kras_mut"
+  ]
+}

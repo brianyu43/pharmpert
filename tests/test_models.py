@@ -1,7 +1,9 @@
 import numpy as np
 
 from yakseopdong.models import (
+    fit_binary_covariate_encoder,
     fit_control_embedding,
+    fit_lineage_encoder,
     fit_predict_baselines,
     fit_predict_cclr,
     fit_response_embedding,
@@ -15,6 +17,35 @@ def test_control_embedding_is_fit_only_from_training_matrix() -> None:
     second = fit_control_embedding(train.copy(), 3, 20, -10.0, seed=5)
     np.testing.assert_array_equal(first.gene_indices, second.gene_indices)
     np.testing.assert_allclose(first.pca.components_, second.pca.components_)
+
+
+def test_control_embedding_respects_predefined_candidate_panel() -> None:
+    rng = np.random.default_rng(33)
+    train = rng.normal(loc=2.0, size=(15, 40))
+    candidates = np.asarray([2, 5, 8, 13, 21, 34])
+    embedding = fit_control_embedding(
+        train,
+        max_components=3,
+        max_variable_genes=5,
+        min_mean_log1p_cpm=0.1,
+        seed=8,
+        candidate_gene_indices=candidates,
+    )
+    assert set(embedding.gene_indices).issubset(set(candidates))
+    assert len(embedding.gene_indices) == 5
+
+
+def test_training_fitted_metadata_encoders_handle_unknown_and_constant_columns() -> None:
+    lineage = fit_lineage_encoder(np.asarray(["lung", "skin", "lung"]))
+    encoded = lineage.transform(np.asarray(["skin", "unknown"]))
+    assert encoded.shape == (2, 2)
+    np.testing.assert_array_equal(encoded[1], np.zeros(2))
+
+    binary = fit_binary_covariate_encoder(
+        np.asarray([[0.0, 1.0], [1.0, 1.0], [0.0, 1.0]])
+    )
+    assert binary.kept_indices.tolist() == [0]
+    assert binary.transform(np.asarray([[1.0, 1.0]])).shape == (1, 1)
 
 
 def test_all_baselines_predict_without_outer_test_response() -> None:

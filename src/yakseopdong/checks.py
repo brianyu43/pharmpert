@@ -17,6 +17,7 @@ REQUIRED_PATHS = (
     "config/cohort.yaml",
     "config/splits.yaml",
     "config/models.yaml",
+    "config/genesets.yaml",
     "data_manifest.csv",
     "docs/project_blueprint.md",
     "docs/scope.md",
@@ -28,8 +29,17 @@ REQUIRED_PATHS = (
     "inner_split_assignments.csv",
     "notebooks/02_response_landscape.ipynb",
     "notebooks/03_baselines.ipynb",
+    "notebooks/04_main_model.ipynb",
+    "notebooks/05_ablation.ipynb",
     "results/logs/baseline_summary.json",
+    "results/logs/cclr_summary.json",
+    "results/logs/ablation_summary.json",
+    "results/logs/ablation_validation.json",
     "results/tables/baseline_comparison.csv",
+    "results/tables/model_comparison_w6.csv",
+    "results/tables/ablation_metrics.csv",
+    "results/figures/ablation_performance.png",
+    "results/figures/complexity_vs_performance.png",
 )
 
 

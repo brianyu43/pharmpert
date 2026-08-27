@@ -1,6 +1,6 @@
 # Data Dictionary
 
-상태: Stage 1–6 원자료, pseudobulk, annotation, split, baseline, CCLR 계약 확인 완료. 아래 항목은 추정값이 아니라 실행으로 확인한 값만 기록한다.
+상태: Stage 1–7 원자료, pseudobulk, annotation, split, baseline, CCLR, ablation 계약 확인 완료. 아래 항목은 추정값이 아니라 실행으로 확인한 값만 기록한다.
 
 ## Source manifest
 
@@ -54,6 +54,12 @@
 | `cclr_component_scores.csv` | 1,880 | fold별 held-out observed/predicted response-PC score |
 | `cclr_component_top_loadings.csv` | 10,000 | 5 folds × 20 components × 양/음 방향 상위 50 genes |
 | `cclr_outer_fold_*.npz` | 5 files | control PCA, response PCA, ridge와 선택 hyperparameter |
+| `ablation_metrics_by_line.csv` | 1,504 | 16개 고정 비교군 × 94 lines의 paired metric |
+| `ablation_metrics.csv` | 16 | 각 비교군의 macro metric과 2,000회 bootstrap CI |
+| `ablation_runtime.csv` | 80 | 16개 비교군 × 5 folds의 predictor 차원·parameter 수·runtime |
+| `pathway_panel_coverage.csv` | 12 | 6개 collection, union, fold별 training-only 선택 수 |
+| `component_pathway_enrichment.csv` | 1,200 | 5 folds × 20 components × 양/음 × 6 collections |
+| `cclr_subspace_stability.csv` | 10 | 5개 W6 response basis의 모든 fold-pair principal-angle overlap |
 
 `all_CL_features.rds`는 Figshare v3의 `Trametinib_24hr_expt3`와 `metadata` 객체를 사용한다. strict 94 lines에서 lineage, sensitivity, 네 hotspot mutation field의 필수값은 모두 완전하다. PRISM AUC 2개와 GDSC AUC 39개는 개별 source에서 결측이지만 저자의 결합 `AUC_avg`와 `sens=1-AUC_avg`는 94개 모두 존재한다.
 
@@ -68,7 +74,7 @@
 | dose | `dose_value`, `dose_unit` | trametinib `0.1 µM`, control `0.0 µM` | Supplementary Table 3과 AnnData metadata가 일치 |
 | pool/channel | `channel`, `hash_assignment`, `hash_tag` | 문자열 `nan`, 숫자/문자 channel, hash condition | 99-line expt3 식별 규칙이 아직 미확정 |
 | quality/singlet | `cell_quality`, `hash_tag` | `normal` 등 5개; time-course `multiplet`/`unknown` | time-course clean tag filtering 필요 |
-| lineage | 저자 RDS `metadata.Disease` | 21 unique | strict 94 lines 모두 연결; split balancing과 B2에만 사용 |
+| lineage | 저자 RDS `metadata.Disease` | 21 unique | strict 94 lines 모두 연결; split balancing, B2, 명시적 W7 ablation에만 사용 |
 
 ## Cohort counts
 

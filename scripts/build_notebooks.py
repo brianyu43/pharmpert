@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 import nbformat as nbf
+import pandas as pd
 
 
 def _notebook(cells: list[nbf.NotebookNode]) -> nbf.NotebookNode:
@@ -423,6 +424,116 @@ display(loadings.loc[
     nbf.write(_notebook(cells), root / "notebooks" / "04_main_model.ipynb")
 
 
+def build_ablation(root: Path) -> None:
+    comparison = pd.read_csv(root / "results/tables/ablation_metrics.csv").set_index("model")
+    pathway = comparison.loc["PATHWAY_D20_R20"]
+    lineage = comparison.loc["LINEAGE_D20_R20"]
+    mutations = comparison.loc["BRAF_KRAS_D20_R20"]
+    cells = [
+        nbf.v4.new_markdown_cell(
+            f"""# W7 fixed ablation and leakage audit
+
+## tl;dr
+
+동결된 94개 세포주 outer 5-fold에서 16개 비교군을 평가했다. 모든 고정
+low-rank 변형은 B1 평균 반응보다 나았지만 B4 direct ridge를 확실히 넘지 못했다.
+Pathway panel의 B4 대비 RMSE gain은 `{pathway['rmse_gain_vs_b4_mean']:.6f}`
+(95% CI `{pathway['rmse_gain_vs_b4_ci95_low']:.6f}–{pathway['rmse_gain_vs_b4_ci95_high']:.6f}`),
+lineage 추가는 `{lineage['rmse_gain_vs_b4_mean']:.6f}`, BRAF/KRAS 추가는
+`{mutations['rmse_gain_vs_b4_mean']:.6f}`다. 따라서 W7은 외부 정보가 격차를
+줄일 가능성은 보이지만 B4 우위나 새 주 모델을 확정하지 않는다."""
+        ),
+        nbf.v4.new_code_cell(ROOT_CELL),
+        nbf.v4.new_code_cell(
+            """summary = json.loads((root / "results/logs/ablation_summary.json").read_text())
+comparison = pd.read_csv(root / "results/tables/ablation_metrics.csv")
+variants = pd.read_csv(root / "results/tables/ablation_variants.csv")
+coverage = pd.read_csv(root / "results/tables/pathway_panel_coverage.csv")
+enrichment = pd.read_csv(root / "results/tables/component_pathway_enrichment.csv")
+stability = pd.read_csv(root / "results/tables/cclr_subspace_stability.csv")
+display(comparison[[
+    "model", "rmse_delta_mean", "pcc_context_mean",
+    "rmse_gain_vs_b1_mean", "rmse_gain_vs_b1_ci95_low", "rmse_gain_vs_b1_ci95_high",
+    "rmse_gain_vs_b4_mean", "rmse_gain_vs_b4_ci95_low", "rmse_gain_vs_b4_ci95_high",
+]])
+assert summary["cell_lines"] == 94
+assert summary["variants"] == 16
+assert summary["outer_test_response_used_for_fit"] is False
+assert summary["outer_test_used_for_variant_selection"] is False
+"""
+        ),
+        nbf.v4.new_markdown_cell(
+            """## Context & Methods
+
+W7은 W6 결과를 소급 재튜닝하는 단계가 아니라 같은 frozen outer test에서 모델의
+어떤 제약과 입력이 성능을 바꾸는지 확인하는 진단 분석이다.
+
+### Key Assumptions
+
+- 기준점은 control dimension 20, response rank 20, ridge alpha 100이다.
+- control dimension `[5, 10, 20, 30]`과 response rank `[2, 5, 10, 20, 30, 40, 50]`을 모두 보고한다.
+- rank 30/40/50은 W6의 rank 20 상한 선택 뒤 사전 동결한 진단 확장이며 W6 주 결과를 바꾸지 않는다.
+- MSigDB Hallmark 2026.1.Hs 6개 source set과 기존 8개 immediate-early marker를
+  결과 확인 전에 동결했다.
+- pathway 입력만 제한하고 response target은 모든 32,738 genes로 유지한다.
+- lineage one-hot과 BRAF/KRAS 표준화는 각 outer-training fold에서만 fit한다.
+- outer-test response와 sensitivity는 predictor나 variant 선택에 사용하지 않는다.
+- 모든 변형을 보고하며 outer-test 평균이 가장 좋은 변형을 새 주 모델로 승격하지 않는다."""
+        ),
+        nbf.v4.new_markdown_cell("## Data"),
+        nbf.v4.new_code_cell(
+            """annotations = pd.read_csv(root / "cell_line_annotations.csv")
+display(pd.DataFrame({
+    "field": ["cell lines", "lineages", "BRAF mutant", "KRAS mutant"],
+    "value": [len(annotations), annotations["lineage"].nunique(),
+              int(annotations["braf_mut"].sum()), int(annotations["kras_mut"].sum())],
+}))
+display(coverage)
+assert coverage.loc[coverage["row_type"].eq("panel_union"), "defined_symbols"].iloc[0] == 1039
+assert coverage.loc[coverage["row_type"].eq("panel_union"), "mapped_symbols"].iloc[0] == 1001
+"""
+        ),
+        nbf.v4.new_markdown_cell("## Results"),
+        nbf.v4.new_code_cell(
+            """display(Image(filename=str(root / "results/figures/ablation_performance.png")))
+display(Image(filename=str(root / "results/figures/complexity_vs_performance.png")))
+display(variants[[
+    "model", "family", "parameter_count_mean", "rmse_delta_mean", "rmse_gain_vs_b4_mean"
+]])
+"""
+        ),
+        nbf.v4.new_markdown_cell("### Pathway enrichment and fold stability"),
+        nbf.v4.new_code_cell(
+            """significant = (
+    enrichment.assign(significant=enrichment["fdr_bh"].lt(0.05))
+    .groupby(["collection", "direction"])["significant"].sum().unstack(fill_value=0)
+)
+display(significant)
+display(stability)
+display(Image(filename=str(root / "results/figures/component_diagnostics.png")))
+print("Mean fold-pair response-subspace overlap:", stability["mean_squared_cosine"].mean())
+"""
+        ),
+        nbf.v4.new_markdown_cell(
+            f"""## Takeaways
+
+- control dimension은 10–30 사이에서 차이가 작고, rank 20을 30–50으로 늘려도
+  B4를 따라잡지 못한다. W6 상한 선택이 큰 미탐색 이득을 숨겼다는 근거는 없다.
+- pathway panel은 평균 격차를 줄였지만 B4 대비 CI
+  `{pathway['rmse_gain_vs_b4_ci95_low']:.6f}–{pathway['rmse_gain_vs_b4_ci95_high']:.6f}`가
+  0을 포함한다.
+- BRAF/KRAS 추가 변형이 고정 low-rank 변형 중 평균 RMSE가 가장 낮지만, B4 대비 CI
+  `{mutations['rmse_gain_vs_b4_ci95_low']:.6f}–{mutations['rmse_gain_vs_b4_ci95_high']:.6f}`가
+  넓게 0을 포함한다. test 결과로 고른 관찰이므로 새 주 모델로 승격하지 않는다.
+- W6 response subspace의 fold-pair mean squared cosine은 평균 약 `0.676`이다.
+  상위 방향은 안정적이지만 최약 방향은 거의 정렬되지 않아 component 번호별 강한 해석은 피한다.
+- 사전 정의 pathway enrichment는 반복 검출되지만, 예측 정확도 개선과 생물학적
+  enrichment를 동일한 주장으로 취급하지 않는다."""
+        ),
+    ]
+    nbf.write(_notebook(cells), root / "notebooks" / "05_ablation.ipynb")
+
+
 def main() -> None:
     root = Path(__file__).resolve().parents[1]
     (root / "notebooks").mkdir(exist_ok=True)
@@ -431,6 +542,7 @@ def main() -> None:
     build_response_landscape(root)
     build_baselines(root)
     build_main_model(root)
+    build_ablation(root)
 
 
 if __name__ == "__main__":

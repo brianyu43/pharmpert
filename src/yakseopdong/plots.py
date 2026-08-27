@@ -534,3 +534,269 @@ def write_cclr_figures(
     )
     fig.tight_layout(rect=[0, 0.04, 1, 1])
     _finish(fig, root / "results" / "figures" / "cclr_components.png")
+
+
+def _gain_points(
+    axis: plt.Axes,
+    frame: pd.DataFrame,
+    labels: list[str],
+    title: str,
+    xlabel: str,
+) -> None:
+    """Draw paired RMSE-gain points with bootstrap intervals."""
+    positions = np.arange(len(frame))
+    means = frame["rmse_gain_vs_b4_mean"].to_numpy(dtype=float)
+    errors = np.vstack(
+        [
+            means - frame["rmse_gain_vs_b4_ci95_low"].to_numpy(dtype=float),
+            frame["rmse_gain_vs_b4_ci95_high"].to_numpy(dtype=float) - means,
+        ]
+    )
+    axis.axhline(0, color=INK, linewidth=1)
+    axis.errorbar(
+        positions,
+        means,
+        yerr=errors,
+        fmt="none",
+        ecolor=INK,
+        capsize=3,
+        linewidth=1,
+        zorder=1,
+    )
+    colors = [BLUE if value >= 0 else GOLD for value in means]
+    axis.scatter(
+        positions,
+        means,
+        s=58,
+        c=colors,
+        edgecolor=INK,
+        linewidth=0.5,
+        zorder=2,
+    )
+    axis.set_xticks(positions, labels)
+    axis.set_xlabel(xlabel)
+    axis.set_title(title, loc="left", color=INK)
+    axis.set_ylabel("Paired RMSE gain vs B4")
+    axis.grid(axis="y", color=GRID, linewidth=0.7, alpha=0.7)
+    axis.spines[["top", "right"]].set_visible(False)
+
+
+def write_ablation_figures(
+    root: Path,
+    comparison: pd.DataFrame,
+    variants: pd.DataFrame,
+    enrichment: pd.DataFrame,
+    stability: pd.DataFrame,
+) -> None:
+    """Write W7 performance, complexity, pathway, and stability figures."""
+    indexed = comparison.set_index("model")
+    rank_models = [
+        "RANK_D20_R02",
+        "RANK_D20_R05",
+        "RANK_D20_R10",
+        "FIXED_FULL_D20_R20",
+        "RANK_D20_R30",
+        "RANK_D20_R40",
+        "RANK_D20_R50",
+    ]
+    control_models = [
+        "CONTROL_D05_R20",
+        "CONTROL_D10_R20",
+        "FIXED_FULL_D20_R20",
+        "CONTROL_D30_R20",
+    ]
+    feature_models = [
+        "FIXED_FULL_D20_R20",
+        "PATHWAY_D20_R20",
+        "LINEAGE_D20_R20",
+        "BRAF_KRAS_D20_R20",
+    ]
+    fig, axes = plt.subplots(1, 3, figsize=(14.4, 4.8))
+    _gain_points(
+        axes[0], indexed.loc[rank_models], ["2", "5", "10", "20", "30", "40", "50"],
+        "Response-rank ablation", "Response rank"
+    )
+    _gain_points(
+        axes[1], indexed.loc[control_models], ["5", "10", "20", "30"],
+        "Control-dimension ablation", "Control PCs"
+    )
+    _gain_points(
+        axes[2], indexed.loc[feature_models], ["full", "pathway", "+lineage", "+BRAF/KRAS"],
+        "Input-feature ablation", "Predictor input"
+    )
+    axes[2].tick_params(axis="x", rotation=20)
+    fig.suptitle(
+        "W7 fixed ablations against the direct-ridge benchmark",
+        x=0.055,
+        y=1.02,
+        ha="left",
+        fontsize=13,
+        color=INK,
+    )
+    fig.text(
+        0.055,
+        -0.015,
+        "Strict 94-line cohort · frozen outer 5-fold · 2,000 paired cell-line bootstrap replicates",
+        color="#59636E",
+        fontsize=9,
+    )
+    fig.tight_layout(rect=[0, 0.05, 1, 1])
+    _finish(fig, root / "results" / "figures" / "ablation_performance.png")
+
+    fig, axis = plt.subplots(figsize=(9.2, 6.0))
+    family_colors = {
+        "benchmark_snapshot": "#7A6FAC",
+        "fixed_reference": INK,
+        "control_dimension": BLUE,
+        "response_rank": "#5A8F62",
+        "feature_input": GOLD,
+        "metadata_input": "#B05A5A",
+    }
+    abbreviations = {
+        "B1_MEAN_W5": "B1",
+        "B4_DIRECT_RIDGE_W5": "B4",
+        "CCLR_NESTED_W6": "CCLR",
+        "FIXED_FULL_D20_R20": "d20/r20",
+        "CONTROL_D05_R20": "d5",
+        "CONTROL_D10_R20": "d10",
+        "CONTROL_D30_R20": "d30",
+        "RANK_D20_R02": "r2",
+        "RANK_D20_R05": "r5",
+        "RANK_D20_R10": "r10",
+        "RANK_D20_R30": "r30",
+        "RANK_D20_R40": "r40",
+        "RANK_D20_R50": "r50",
+        "PATHWAY_D20_R20": "pathway",
+        "LINEAGE_D20_R20": "+lineage",
+        "BRAF_KRAS_D20_R20": "+BRAF/KRAS",
+    }
+    label_offsets = {
+        "B1_MEAN_W5": (5, 5),
+        "B4_DIRECT_RIDGE_W5": (5, 5),
+        "CCLR_NESTED_W6": (13, -21),
+        "FIXED_FULL_D20_R20": (-67, -38),
+        "CONTROL_D05_R20": (7, -7),
+        "CONTROL_D10_R20": (-42, 10),
+        "CONTROL_D30_R20": (-47, -18),
+        "RANK_D20_R02": (5, 5),
+        "RANK_D20_R05": (5, 5),
+        "RANK_D20_R10": (5, 5),
+        "RANK_D20_R30": (5, 5),
+        "RANK_D20_R40": (5, 5),
+        "RANK_D20_R50": (5, 5),
+        "PATHWAY_D20_R20": (7, 9),
+        "LINEAGE_D20_R20": (-66, 7),
+        "BRAF_KRAS_D20_R20": (5, 5),
+    }
+    annotated_models = {
+        "B1_MEAN_W5",
+        "B4_DIRECT_RIDGE_W5",
+        "CCLR_NESTED_W6",
+        "FIXED_FULL_D20_R20",
+        "RANK_D20_R02",
+        "RANK_D20_R10",
+        "RANK_D20_R30",
+        "RANK_D20_R50",
+        "PATHWAY_D20_R20",
+        "LINEAGE_D20_R20",
+        "BRAF_KRAS_D20_R20",
+    }
+    for family, group in variants.groupby("family", sort=False):
+        axis.scatter(
+            group["parameter_count_mean"],
+            group["rmse_gain_vs_b4_mean"],
+            s=62,
+            color=family_colors[family],
+            edgecolor=INK,
+            linewidth=0.5,
+            label=family.replace("_", " "),
+        )
+        for row in group.itertuples():
+            if row.model not in annotated_models:
+                continue
+            offset = label_offsets[row.model]
+            axis.annotate(
+                abbreviations[row.model],
+                (row.parameter_count_mean, row.rmse_gain_vs_b4_mean),
+                xytext=offset,
+                textcoords="offset points",
+                fontsize=7,
+                arrowprops=(
+                    {"arrowstyle": "-", "color": GRID, "linewidth": 0.6}
+                    if max(abs(offset[0]), abs(offset[1])) > 20
+                    else None
+                ),
+            )
+    axis.axhline(0, color=INK, linewidth=1)
+    axis.set_xscale("log")
+    axis.set_xlabel("Mean parameter count across folds · log scale")
+    axis.set_ylabel("Paired macro RMSE gain vs B4")
+    axis.set_title("Model complexity does not guarantee held-out improvement", loc="left")
+    axis.legend(frameon=False, fontsize=8, ncol=2)
+    axis.grid(color=GRID, linewidth=0.7, alpha=0.7)
+    axis.spines[["top", "right"]].set_visible(False)
+    fig.tight_layout()
+    _finish(fig, root / "results" / "figures" / "complexity_vs_performance.png")
+
+    significant = (
+        enrichment.assign(significant=enrichment["fdr_bh"].lt(0.05))
+        .groupby(["collection", "direction"], sort=True)["significant"]
+        .sum()
+        .unstack(fill_value=0)
+    )
+    folds = sorted(set(stability["outer_fold_a"]) | set(stability["outer_fold_b"]))
+    matrix = np.eye(len(folds), dtype=float)
+    positions = {fold: index for index, fold in enumerate(folds)}
+    for row in stability.itertuples():
+        left = positions[row.outer_fold_a]
+        right = positions[row.outer_fold_b]
+        matrix[left, right] = row.mean_squared_cosine
+        matrix[right, left] = row.mean_squared_cosine
+    fig, axes = plt.subplots(1, 2, figsize=(11.6, 4.8))
+    positions_y = np.arange(len(significant))
+    negative = significant.get("negative", pd.Series(0, index=significant.index))
+    positive = significant.get("positive", pd.Series(0, index=significant.index))
+    axes[0].barh(positions_y, negative, color=BLUE, label="negative loading")
+    axes[0].barh(
+        positions_y,
+        positive,
+        left=negative,
+        color=GOLD,
+        label="positive loading",
+    )
+    axes[0].set_yticks(positions_y, [name.replace("_", " ") for name in significant.index])
+    axes[0].set_xlabel("Fold-component directions with BH FDR < 0.05")
+    axes[0].set_title("Prespecified pathway enrichment", loc="left", color=INK)
+    axes[0].legend(frameon=False, fontsize=8)
+    axes[0].grid(axis="x", color=GRID, linewidth=0.7, alpha=0.7)
+    axes[0].spines[["top", "right"]].set_visible(False)
+
+    image = axes[1].imshow(matrix, vmin=0, vmax=1, cmap="Blues", interpolation="nearest")
+    axes[1].set_xticks(range(len(folds)), folds)
+    axes[1].set_yticks(range(len(folds)), folds)
+    axes[1].set_xlabel("Outer fold")
+    axes[1].set_ylabel("Outer fold")
+    axes[1].set_title("W6 response-subspace overlap", loc="left", color=INK)
+    for row in range(len(folds)):
+        for column in range(len(folds)):
+            axes[1].text(
+                column,
+                row,
+                f"{matrix[row, column]:.2f}",
+                ha="center",
+                va="center",
+                fontsize=8,
+                color="white" if matrix[row, column] > 0.55 else INK,
+            )
+    colorbar = fig.colorbar(image, ax=axes[1], shrink=0.78, pad=0.03)
+    colorbar.set_label("Mean squared principal-angle cosine")
+    fig.suptitle(
+        "W7 component diagnostics",
+        x=0.07,
+        y=1.02,
+        ha="left",
+        fontsize=13,
+        color=INK,
+    )
+    fig.tight_layout()
+    _finish(fig, root / "results" / "figures" / "component_diagnostics.png")

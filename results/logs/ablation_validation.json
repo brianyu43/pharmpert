@@ -1,0 +1,14 @@
+{
+  "status": "pass",
+  "cell_lines": 94,
+  "variants": 16,
+  "metrics_rows": 1504,
+  "paired_metrics_recalculated": true,
+  "bootstrap_intervals_recalculated": true,
+  "fixed_parameter_counts_recalculated": true,
+  "outer_test_response_api_absent": true,
+  "pathway_panel_and_component_diagnostics_checked": true,
+  "repeat_run_comparison_sha256_match": true,
+  "comparison_sha256": "45950d118fd74d4924b56a3bd4b95e0b286bf1d5638a25da78a7255be89fb46c",
+  "validation_inputs_sha256": "3306efdc16f411cb24f385a0124971583fe991e32954f6b3934d7a57a632450b"
+}

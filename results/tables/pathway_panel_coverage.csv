@@ -1,0 +1,13 @@
+row_type,collection,outer_fold,defined_symbols,mapped_symbols,mapped_matrix_columns,selected_training_columns
+collection,MAPK_KRAS_signaling,,400,384,386,
+collection,E2F_targets,,200,195,196,
+collection,G2M_checkpoint,,200,187,190,
+collection,apoptosis,,161,159,159,
+collection,epithelial_mesenchymal_transition,,200,195,196,
+collection,immediate_early_response,,8,8,8,
+panel_union,all_input_collections,,1039,1001,1007,
+outer_training_selection,all_input_collections,0,1039,1001,1007,918
+outer_training_selection,all_input_collections,1,1039,1001,1007,917
+outer_training_selection,all_input_collections,2,1039,1001,1007,924
+outer_training_selection,all_input_collections,3,1039,1001,1007,918
+outer_training_selection,all_input_collections,4,1039,1001,1007,921

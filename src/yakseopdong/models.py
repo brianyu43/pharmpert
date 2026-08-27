@@ -38,6 +38,66 @@ class ResponseEmbedding:
 
 
 @dataclass(frozen=True)
+class LineageEncoder:
+    """Outer-training-fitted one-hot encoder with an all-zero unknown category."""
+
+    categories: tuple[str, ...]
+
+    def transform(self, lineages: NDArray[np.str_]) -> NDArray[np.float64]:
+        values = np.asarray(lineages, dtype=str)
+        encoded = np.zeros((len(values), len(self.categories)), dtype=np.float64)
+        positions = {name: index for index, name in enumerate(self.categories)}
+        for row, value in enumerate(values):
+            position = positions.get(value)
+            if position is not None:
+                encoded[row, position] = 1.0
+        return encoded
+
+
+@dataclass(frozen=True)
+class BinaryCovariateEncoder:
+    """Outer-training-fitted standardizer for nonconstant binary covariates."""
+
+    means: NDArray[np.float64]
+    scales: NDArray[np.float64]
+    kept_indices: NDArray[np.int64]
+
+    def transform(self, values: NDArray[np.floating]) -> NDArray[np.float64]:
+        matrix = np.asarray(values, dtype=np.float64)
+        if matrix.ndim != 2 or matrix.shape[1] != len(self.means):
+            raise ValueError("binary covariates do not match the fitted columns")
+        if not np.isfinite(matrix).all():
+            raise ValueError("binary covariates must be finite")
+        kept = matrix[:, self.kept_indices]
+        return (kept - self.means[self.kept_indices]) / self.scales[self.kept_indices]
+
+
+def fit_lineage_encoder(lineages: NDArray[np.str_]) -> LineageEncoder:
+    """Fit deterministic categories using outer-training labels only."""
+    values = np.asarray(lineages, dtype=str)
+    if values.ndim != 1 or not len(values):
+        raise ValueError("lineages must be a nonempty one-dimensional array")
+    return LineageEncoder(categories=tuple(sorted(np.unique(values).tolist())))
+
+
+def fit_binary_covariate_encoder(
+    values: NDArray[np.floating],
+) -> BinaryCovariateEncoder:
+    """Fit means and scales on outer-training binary features only."""
+    matrix = np.asarray(values, dtype=np.float64)
+    if matrix.ndim != 2 or not len(matrix):
+        raise ValueError("binary covariates must be a nonempty two-dimensional matrix")
+    if not np.isfinite(matrix).all() or not np.isin(matrix, [0.0, 1.0]).all():
+        raise ValueError("binary covariates must contain only finite zero/one values")
+    means = matrix.mean(axis=0)
+    scales = matrix.std(axis=0)
+    kept = np.flatnonzero(scales > 1e-12).astype(np.int64, copy=False)
+    safe_scales = scales.copy()
+    safe_scales[scales <= 1e-12] = 1.0
+    return BinaryCovariateEncoder(means=means, scales=safe_scales, kept_indices=kept)
+
+
+@dataclass(frozen=True)
 class CCLRArtifact:
     """All training-fitted objects needed for one outer-fold CCLR prediction."""
 
@@ -62,6 +122,7 @@ def fit_control_embedding(
     max_variable_genes: int,
     min_mean_log1p_cpm: float,
     seed: int,
+    candidate_gene_indices: NDArray[np.integer] | None = None,
 ) -> ControlEmbedding:
     """Fit control-only feature filtering and PCA on training lines."""
     train = np.asarray(train_control, dtype=np.float64)
@@ -69,7 +130,18 @@ def fit_control_embedding(
         raise ValueError("train_control must be a 2D matrix with at least three rows")
     means = train.mean(axis=0)
     variances = train.var(axis=0)
-    eligible = np.flatnonzero((means >= min_mean_log1p_cpm) & (variances > 1e-10))
+    eligible_mask = (means >= min_mean_log1p_cpm) & (variances > 1e-10)
+    if candidate_gene_indices is None:
+        eligible = np.flatnonzero(eligible_mask)
+    else:
+        candidates = np.asarray(candidate_gene_indices, dtype=np.int64)
+        if candidates.ndim != 1 or not len(candidates):
+            raise ValueError("candidate_gene_indices must be a nonempty vector")
+        if len(np.unique(candidates)) != len(candidates):
+            raise ValueError("candidate_gene_indices must be unique")
+        if candidates.min() < 0 or candidates.max() >= train.shape[1]:
+            raise ValueError("candidate_gene_indices are outside the gene matrix")
+        eligible = candidates[eligible_mask[candidates]]
     if len(eligible) < max_components:
         raise ValueError("too few eligible genes for the requested PCA dimension")
     order = np.argsort(-variances[eligible], kind="stable")

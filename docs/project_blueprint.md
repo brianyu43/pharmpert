@@ -627,10 +627,27 @@ ridge regression으로 반응 점수를 예측한다.
 - `leakage_audit.md`
 - `ablation_metrics.csv`
 - 모델 복잡도 대 성능 그림
+- `05_ablation.ipynb`
+- pathway enrichment와 fold response-subspace 안정성 표
 
 #### 종료 기준
 
 누수 항목이 모두 `PASS`이거나, 예외가 있다면 결과에서 명시적으로 분리된다.
+
+#### 실행 결과 (2026-08-27)
+
+- v1.2 protocol에서 B1/B4/W6 CCLR과 13개 fixed low-rank 변형, 총 16개 비교군을
+  같은 94-line outer 5-fold에 평가했다.
+- 모든 fixed 변형은 B1보다 일관되게 나았지만 B4를 확실히 이긴 변형은 없었다.
+- full d20/r20의 B4 대비 gain은 `-0.000315` (95% CI `-0.000612–-0.000044`)였다.
+- pathway, lineage, BRAF/KRAS 변형의 B4 대비 gain CI는 모두 0을 포함했다.
+- rank를 30/40/50으로 늘려도 B4보다 나았다는 근거가 없어 W6 rank 상한 뒤에 큰
+  미탐색 이득이 있다는 가설은 지지되지 않았다.
+- MSigDB Hallmark 2026.1.Hs 기반 panel은 1,039 symbols 중 1,001 symbols가 데이터에
+  매핑됐고, fold별 training filter 뒤 917–924 columns가 사용됐다.
+- W6 response subspace의 fold-pair mean squared cosine은 평균 `0.676`이었다.
+- 1,504개 line-level metric, paired bootstrap CI, parameter count, pathway enrichment,
+  10개 fold-pair 안정성 값을 저장했다. 누수 항목은 모두 PASS다.
 
 ---
 
@@ -660,7 +677,7 @@ ridge regression으로 반응 점수를 예측한다.
 
 #### 산출물
 
-- `05_temporal.ipynb`
+- `06_temporal.ipynb`
 - 시간별 반응 행렬
 - component trajectory 그림
 - early/late heterogeneity 표
@@ -1044,7 +1061,8 @@ yak-seopdong/
 │   ├── 02_response_landscape.ipynb
 │   ├── 03_baselines.ipynb
 │   ├── 04_main_model.ipynb
-│   ├── 05_temporal.ipynb
+│   ├── 05_ablation.ipynb
+│   ├── 06_temporal.ipynb
 │   └── 06_report_figures.ipynb
 ├── src/yakseopdong/
 │   ├── io.py

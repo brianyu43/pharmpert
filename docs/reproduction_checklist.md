@@ -23,6 +23,10 @@
 - [x] CCLR과 B1/B4의 paired cell-line bootstrap 비교
 - [x] 동일 seed/config 재실행에서 CCLR prediction SHA-256 일치 확인
 - [x] 저장한 fold artifact만으로 CCLR 예측 재구성 검증
+- [x] W7 response-rank/control-dimension/pathway-panel/lineage/BRAF-KRAS 고정 ablation
+- [x] W7 component pathway enrichment와 fold response-subspace 안정성 계산
+- [x] W7 16개 변형 × 94 lines paired metric과 2,000회 bootstrap CI 생성
+- [x] W7 comparison SHA-256 재실행 일치와 독립 metric/CI/복잡도 검증
 
 ## 관찰된 최소 재현 결과
 
@@ -41,15 +45,18 @@
 - CCLR RMSE gain vs B4: `-0.000348` (95% CI `-0.000584–-0.000105`)
 - CCLR은 94개 중 33개 line에서 B4보다 낮은 RMSE였고 macro-average에서는 B4보다 나빴다.
 - 모든 outer fold가 response rank `20`, ridge alpha `100`을 선택했고 control dimension은 `5–30`이었다.
+- W7 fixed full d20/r20 RMSE: `0.322350`; B4 대비 gain `-0.000315` (95% CI `-0.000612–-0.000044`)
+- W7 pathway RMSE: `0.322286`; B4 대비 gain `-0.000251` (95% CI `-0.000598–0.000127`)
+- W7 lineage RMSE: `0.322329`; B4 대비 gain `-0.000295` (95% CI `-0.000585–0.000025`)
+- W7 BRAF/KRAS RMSE: `0.322162`; B4 대비 gain `-0.000127` (95% CI `-0.000624–0.000383`)
+- W6 response-subspace fold-pair mean squared cosine: 평균 `0.676` (범위 `0.627–0.755`)
 
 높은 상관만으로 DMSO pooling을 정당화할 수 없다. 시간/source 차이의 RMSE가 약물 반응 RMSE에 비해 작지 않으므로 주 분석은 DMSO 24h time-matched control을 유지한다. pooled control은 원 논문 재현 및 민감도 분석에만 사용한다.
 
 ## 남은 항목
 
 - [ ] 후기 E2F/G2M/cell-cycle 프로그램 재현
-- [ ] 3–48시간 time-course pseudobulk 및 시점별 최소 세포 기준 감사
-- [ ] W7 response-rank/control-dimension/pathway-panel ablation
-- [ ] W7 component pathway enrichment와 fold 안정성 해석
+- [ ] W8 3–48시간 time-course pseudobulk 및 초기/후기 trajectory 분석
 
 ## 해석 제한
 

@@ -1,4 +1,4 @@
-.PHONY: install smoke test lint data-probe core-audit pseudobulk metadata landscape splits baselines cclr validate-cclr ablation validate-ablation temporal validate-temporal biology validate-biology robustness validate-robustness distribution validate-distribution notebooks
+.PHONY: install smoke test lint data-probe core-audit pseudobulk metadata landscape splits baselines cclr validate-cclr ablation validate-ablation temporal validate-temporal biology validate-biology robustness validate-robustness distribution validate-distribution freeze-release validate-release notebooks
 
 install:
 	uv sync --all-groups
@@ -68,6 +68,12 @@ distribution:
 
 validate-distribution:
 	uv run python -m yakseopdong validate-distribution
+
+freeze-release:
+	uv run python -m yakseopdong freeze-release
+
+validate-release:
+	uv run python -m yakseopdong validate-release
 
 notebooks:
 	uv run python scripts/build_notebooks.py

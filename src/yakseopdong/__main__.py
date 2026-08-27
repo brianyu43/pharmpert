@@ -41,6 +41,8 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser(
         "validate-distribution", help="independently validate W11 distribution outputs"
     )
+    subparsers.add_parser("freeze-release", help="freeze W12 final artifacts and manifests")
+    subparsers.add_parser("validate-release", help="independently validate final release")
     return parser
 
 
@@ -160,6 +162,16 @@ def main() -> int:
         from yakseopdong.distribution_validation import validate_distribution
 
         print(json.dumps(validate_distribution(repository_root()), indent=2))
+        return 0
+    if args.command == "freeze-release":
+        from yakseopdong.release import freeze_release
+
+        print(json.dumps(freeze_release(repository_root()), indent=2))
+        return 0
+    if args.command == "validate-release":
+        from yakseopdong.release_validation import validate_release
+
+        print(json.dumps(validate_release(repository_root()), indent=2))
         return 0
     raise RuntimeError(f"unknown command: {args.command}")
 

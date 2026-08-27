@@ -1,6 +1,6 @@
-# Evaluation Protocol v1.2 — Frozen baseline, CCLR, and W7 ablation
+# Evaluation Protocol v1.3 — Frozen baseline through distribution extension
 
-이 문서는 모델 결과를 보기 전에 정한 평가 원칙과 Stage 4에서 고정한 실제 split/feature 규칙을 기록한다. baseline과 W6 CCLR의 주 결과는 v1.1 규칙을 유지하며, 아래 W7 ablation은 결과 확인 전에 v1.2 진단 분석으로 별도 동결한다.
+이 문서는 모델 결과를 보기 전에 정한 평가 원칙과 Stage 4에서 고정한 실제 split/feature 규칙을 기록한다. Baseline과 W6 CCLR의 주 결과는 v1.1, W7 ablation은 v1.2 규칙을 유지한다. W8–W11 확장은 주 모델을 소급 선택하지 않는 v1.3 해석·강건성 프로토콜이다.
 
 ## Frozen implementation
 
@@ -41,6 +41,36 @@
 - BRAF/KRAS는 저자 Figshare v3 annotation의 완전성을 확인한 두 binary field만 사용하고, outer-training 평균·표준편차로 변환한다. training에서 상수인 열은 제거한다.
 - `B1`, `B4`, W6 `CCLR`, 모든 고정 변형을 함께 보고하되 outer-test 결과로 최적 변형을 선정하거나 주 모델을 교체하지 않는다.
 - sensitivity는 predictor로 사용하지 않는다.
+
+### W8 temporal extension
+
+- clean hash-tag cell만 사용하고 condition/time별 최소 10 cells를 주 기술 기준으로 한다.
+- 24h core model의 hyperparameter는 고정하며 time-course로 재선택하지 않는다.
+- 외부 model transfer는 core와 겹치는 5개 line을 제외한 17개 line에서만 계산한다.
+- 시간별 B1은 core outer-training mean이며 B4/CCLR은 고정된 24h fold artifact의 ensemble 예측이다.
+- early 3–6h와 late 24–48h heterogeneity 차이는 line 단위 paired bootstrap으로 평가한다.
+- time-course source 차이 때문에 순수 시간 인과효과를 주장하지 않는다.
+
+### W9 biological interpretation
+
+- sensitivity, lineage, BRAF/KRAS는 모두 interpretation-only다.
+- 연속 변수는 cell-line Spearman, category는 permutation effect size를 사용한다.
+- 38개 검정 전체를 Benjamini–Hochberg로 보정한다.
+- prediction error association은 response magnitude와 cell support를 서로 보정한 partial Spearman을 함께 보고한다.
+
+### W10 robustness
+
+- bootstrap seed, inclusion threshold 10/20/30, variable-gene filter 1k/3k/5k/10k, response rank, extreme sensitivity 제거를 비교한다.
+- 각 조건 20-cell subsampling은 5개 고정 seed로 반복한다.
+- leave-one-lineage-out은 새로운 lineage에 대한 탐색적 외삽 검사이며 주 split을 대체하지 않는다.
+- split-half pseudobulk 차이로 full-target measurement floor와 PCC를 근사한다.
+
+### W11 gated distribution extension
+
+- W10 완료 후에만 수행하며, 실행 전 gate는 외부 17-line에서 B4가 B1보다 Energy와 sliced-Wasserstein 중 적어도 하나를 paired CI로 개선하는지 확인한다.
+- 2,000 training-derived genes, 10 control-derived PCs를 사용한다.
+- 모든 control cell에 같은 line-level predicted shift를 적용하므로 covariance/shape와 paired-cell trajectory는 주장하지 않는다.
+- 분포 metric은 B4/CCLR의 tuning이나 model selection에 사용하지 않는다.
 
 ## 일반화 단위
 

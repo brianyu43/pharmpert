@@ -1,0 +1,7 @@
+model,definition,context,selection
+B0,zero response,none,none
+B1,outer-training mean response,none,none
+B2,training lineage mean,lineage,fallback B1
+B3,nearest control-PC line response,control PCA,inner CV dimension
+B4,control PCA to full response ridge,control PCA,nested inner CV
+CCLR,control PCA to response-PC ridge,control PCA,nested inner CV

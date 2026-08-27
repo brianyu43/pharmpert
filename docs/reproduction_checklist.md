@@ -1,63 +1,70 @@
-# 최소 재현 체크리스트
+# 최종 재현 체크리스트
 
 작성일: 2026-08-27
 
-## 완료
+Release: 1.0.0
 
-- [x] 공식 experiment 3 원 Matrix Market이 32,738 genes × cells의 non-negative integer count임을 전체 검증
-- [x] 세 archive의 ordered `genes.tsv` 일치 확인
-- [x] `cell_quality == normal` 기준 94-line time-matched 주 코호트와 97-line pooled 민감도 코호트 재현
-- [x] strict 94-line `pseudobulk_24h.parquet`과 `response_24h.parquet` 생성
-- [x] DMSO 6h–24h control 시간/source 차이 정량화
-- [x] EGR1, ETV4/5, DUSP4/5/6, SPRY2/4의 평균 억제 방향 확인
-- [x] 2,000회 cell-line bootstrap으로 marker 평균의 95% 구간 계산
-- [x] cell-count, control-time, marker-response 그림 생성 및 시각 검수
-- [x] 저자 `all_CL_features.rds`를 94 lines에 100% 연결하고 source checksum 검증
-- [x] response PCA PC1과 외부 trametinib sensitivity 연관 정량화
-- [x] lineage-aware outer 5-fold와 nested inner 4-fold 동결
-- [x] B0–B4를 모든 outer fold에서 실행하고 470개 예측 저장
-- [x] paired cell-line bootstrap으로 B1 대비 gain 95% CI 계산
-- [x] 동일 seed/config 재실행에서 baseline prediction SHA-256 일치 확인
-- [x] CCLR response basis와 ridge를 모든 nested outer fold에서 training-only로 학습
-- [x] CCLR 94개 held-out 예측, component loading/score, fold artifact 생성
-- [x] CCLR과 B1/B4의 paired cell-line bootstrap 비교
-- [x] 동일 seed/config 재실행에서 CCLR prediction SHA-256 일치 확인
-- [x] 저장한 fold artifact만으로 CCLR 예측 재구성 검증
-- [x] W7 response-rank/control-dimension/pathway-panel/lineage/BRAF-KRAS 고정 ablation
-- [x] W7 component pathway enrichment와 fold response-subspace 안정성 계산
-- [x] W7 16개 변형 × 94 lines paired metric과 2,000회 bootstrap CI 생성
-- [x] W7 comparison SHA-256 재실행 일치와 독립 metric/CI/복잡도 검증
+## 완료 게이트
 
-## 관찰된 최소 재현 결과
+- [x] 공식 experiment 3 Matrix Market의 32,738 genes, non-negative integer count, ordered gene 일치 검증
+- [x] strict 94-line time-matched와 pooled-control 97-line 코호트 재현
+- [x] 희소 pseudobulk, 24h response, processed manifest와 checksum 생성
+- [x] DMSO 6h–24h source/time 차이 및 사전 marker 방향 검증
+- [x] 94-line annotation 100% join과 lineage-aware outer/inner split 동결
+- [x] B0–B4 470 held-out predictions, paired bootstrap, deterministic rerun
+- [x] CCLR 94 held-out predictions, fold artifacts, reconstruction, 독립 validator
+- [x] W7 16-model ablation, leakage audit, subspace/pathway 진단, 독립 validator
+- [x] W8 24-line/13,713-cell time-course, 22-line 기술 분석, 17-line external transfer
+- [x] W9 38개 biological/error 검정, BH-FDR 재계산, partial association
+- [x] W10 threshold/gene-filter/bootstrap/subsampling/LOLO/noise-floor 강건성 분석
+- [x] W11 사전 gate 통과 후 17-line/1,892-cell latent mean-shift 분포 분석
+- [x] W12 564 final predictions, 64 metrics, 94 line table, 10 figures, 6 tables 동결
+- [x] W13 최종 보고서, supplementary, limitations 작성
+- [x] W14 전체 unit test·stage validator·notebook 재실행
+- [x] W15 독립 release validator와 Git 상태/commit 기록
 
-- DMSO 6h–24h 중앙 Pearson correlation: `0.9727` (97 lines, 16,843 descriptive QC genes)
-- strict 94-line 중앙 control 시간/source RMSE: `0.4054`
-- strict 94-line 중앙 trametinib response RMSE: `0.4536`
-- 중앙 control/treatment RMSE 비율: `0.8879`
-- EGR1 평균 response: `-2.6698`, 음수 비율 `100%`
-- DUSP6 평균 response: `-2.3944`, 음수 비율 `100%`
-- response PC1 대 sensitivity: Pearson `-0.5989`, Spearman `-0.6683` (PCA 부호는 임의)
-- B1 global mean RMSE: `0.323750`
-- B4 direct ridge RMSE: `0.322035`; PCC-context: `0.107666`
-- B4 RMSE gain vs B1: `0.001715` (95% CI `0.001168–0.002284`, 상대 약 `0.53%`)
-- CCLR RMSE: `0.322383`; PCC-context: `0.096521`
-- CCLR RMSE gain vs B1: `0.001367` (95% CI `0.000823–0.001933`)
-- CCLR RMSE gain vs B4: `-0.000348` (95% CI `-0.000584–-0.000105`)
-- CCLR은 94개 중 33개 line에서 B4보다 낮은 RMSE였고 macro-average에서는 B4보다 나빴다.
-- 모든 outer fold가 response rank `20`, ridge alpha `100`을 선택했고 control dimension은 `5–30`이었다.
-- W7 fixed full d20/r20 RMSE: `0.322350`; B4 대비 gain `-0.000315` (95% CI `-0.000612–-0.000044`)
-- W7 pathway RMSE: `0.322286`; B4 대비 gain `-0.000251` (95% CI `-0.000598–0.000127`)
-- W7 lineage RMSE: `0.322329`; B4 대비 gain `-0.000295` (95% CI `-0.000585–0.000025`)
-- W7 BRAF/KRAS RMSE: `0.322162`; B4 대비 gain `-0.000127` (95% CI `-0.000624–0.000383`)
-- W6 response-subspace fold-pair mean squared cosine: 평균 `0.676` (범위 `0.627–0.755`)
+## 핵심 재현 결과
 
-높은 상관만으로 DMSO pooling을 정당화할 수 없다. 시간/source 차이의 RMSE가 약물 반응 RMSE에 비해 작지 않으므로 주 분석은 DMSO 24h time-matched control을 유지한다. pooled control은 원 논문 재현 및 민감도 분석에만 사용한다.
+- Core: 94 lines, 16,588 normal cells, 32,738 genes
+- DMSO 6h–24h median PCC: `0.9727`
+- Control source/time RMSE: `0.4054`; trametinib response RMSE: `0.4536`; ratio `0.8879`
+- B1 RMSE: `0.323750`
+- B4 RMSE: `0.322035`; PCC-context: `0.107666`
+- B4 gain vs B1: `0.001715` (95% CI `0.001168–0.002284`, about `0.53%`)
+- CCLR RMSE: `0.322383`; gain vs B4: `-0.000348` (95% CI `-0.000584–-0.000105`)
+- External B4 gain: 3h `-0.007310`, 6h `-0.004712`, 12h `-0.001242`, 24h `0.002074`, 48h `0.003839`
+- Equal-20-cell B4 gain: negative in `5/5` repeats
+- LOLO B4 gain: `0.000514` (95% CI `-0.000132–0.001178`)
+- Split-half full-target floor: `0.279028`; PCC `0.236373`
+- W11 B4 Energy gain: `0.570597`; sliced-Wasserstein gain: `0.163040`
 
-## 남은 항목
+## 명령
 
-- [ ] 후기 E2F/G2M/cell-cycle 프로그램 재현
-- [ ] W8 3–48시간 time-course pseudobulk 및 초기/후기 trajectory 분석
+```bash
+uv sync --all-groups
+uv run ruff check src tests scripts
+uv run pytest -q
+uv run python -m yakseopdong smoke
+uv run python -m yakseopdong validate-cclr
+uv run python -m yakseopdong validate-ablation
+uv run python -m yakseopdong validate-temporal
+uv run python -m yakseopdong validate-biology
+uv run python -m yakseopdong validate-robustness
+uv run python -m yakseopdong validate-distribution
+uv run python -m yakseopdong freeze-release
+uv run python -m yakseopdong validate-release
+uv run python scripts/build_notebooks.py --execute
+git diff --check
+```
+
+## Frozen artifact hashes
+
+- `final_predictions.parquet`: `5ffe460c0a3019fa6369d483fa6dfd2ec771494e472418ab401303c555ee6562`
+- `final_metrics.csv`: `bd1c448709a69b3858f0d91451615e8ed129f26450f574917a7df69297ab281f`
+- `final_cell_lines.csv`: `4fd26f2484a62027ac184759b1b71ecb9e23d91a0716aa6d3e73891af78027ed`
+
+Figure/table manifest hashes are recorded in `release/final_config.json` because the study-design figure and corrected cohort counts are part of the final release freeze.
 
 ## 해석 제한
 
-DMSO 6h와 24h는 별도 archive에서 측정되었다. 따라서 이 비교는 시간, sequencing depth, pool/batch 차이가 섞인 관찰적 QC이며 순수한 시간 인과효과가 아니다. pseudobulk는 독립 세포 집단의 요약이므로 동일 세포의 전후 trajectory로 해석하지 않는다.
+높은 control PCC만으로 pooling을 정당화할 수 없다. DMSO 6h와 24h는 별도 source이며 time-course도 core와 batch/source가 다르다. Pseudobulk와 W11은 동일 세포의 전후 trajectory가 아니다. B4 gain은 작고 equal-cell subsampling에 민감하므로 strong personalization claim은 금지한다. 자세한 경계는 `report/limitations.md`에 있다.

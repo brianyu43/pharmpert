@@ -1,0 +1,11 @@
+figure_id,title,path,claim,bytes,sha256,visual_inspection
+F1,Study design,results/figures/study_design.png,cell-line generalization design,92534,4ae1def5fe9987f7e62a634bdc339bef4af3cc9c0556261d64b960f864543b93,passed
+F2,Cohort cell counts,results/figures/cell_count_heatmap.png,sampling coverage,90193,b3d9e36a6330d0113fcbfc1db223bf7dbf743d3dbc2912d8882a9ef85cdfc99b,passed
+F3,Observed response structure,results/figures/response_landscape.png,control and response spaces differ,156098,e9f52bb276fd96104a090e06e4c900031c2bbc981a1d542907a4d309ee9afd9d,passed
+F4,Held-out benchmark,results/figures/cclr_performance.png,B4 narrowly beats B1 and CCLR,117295,74b45b0a2d2bd5ca24a00f7a6eab2a67f209922092c6f9b99f4c3d5944f25b0f,passed
+F5,Prediction cases,results/figures/prediction_cases.png,best median worst heterogeneity,264941,ebf8fedca1298f731f960bdcd6b4c557ab392fe7eebfc5a6b482dbaf69fcfddd,passed
+F6,Model components,results/figures/component_diagnostics.png,response programs and stability,123277,07d92130e4a9e9249c140f499b6462773bcae17b5d87ad04264398fb4a109ac2,passed
+F7,Temporal analysis,results/figures/final_temporal.png,early target and later cell-cycle response,106790,84a646b954977b914bd3a428f24c32fc763daceb59d23818b24c4044cfa5eaef,passed
+F8,Biology and error,results/figures/final_biology_error.png,sensitivity and measurement support,217564,c5bcffc8ebbe8ccfb8b7ffa8d35f121cb642a69f9e034a98a8462999a5833a6d,passed
+S1,Single-cell distribution gate,results/figures/single_cell_distribution.png,external latent mean translation,152214,820b7269502552eb040dbd4b5167fe331fff696d65d504842b58997560f12b8e,passed
+S2,Noise ceiling,results/figures/noise_ceiling.png,split-half measurement floor,129986,14ff5cbb9f55ae79458ac8ec7f84c65808a9447a81d8a08c44ee9ba3d280a756,passed

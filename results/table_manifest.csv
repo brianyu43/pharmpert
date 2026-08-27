@@ -1,0 +1,7 @@
+table_id,title,path,rows,bytes,sha256
+T1,Analysis cohorts,results/tables/final_table1_cohorts.csv,5,286,0775b8cdabc637889c81fc1156b1f08089aa371ff08e97a9bfc0ab4ec292fc95
+T2,Model definitions,results/tables/final_table2_models.csv,6,348,5dfb581a97425fb20787e97d69a904b4257add0c50d58ee94f8ae9d2d7f13c9d
+T3,Primary held-out benchmark,results/tables/final_table3_benchmark.csv,3,2210,eecdb8f5e2f511eeec88159034c29443f39c01bec3f45def1c7d633baa895580
+T4,Fixed ablations,results/tables/final_table4_ablation.csv,16,9877,2a8a6bbc129a7197a8f61dd337b9077f147ac444cf5fb29f330a16ceb222e858
+T5,Robustness conclusions,results/tables/final_table5_robustness.csv,6,571,41e48dbb6f8f59d7415a74971d185684ee11ad5383ee27279b73305e0ed5f229
+S1,Cell-line metrics,results/final_cell_lines.csv,94,35451,4fd26f2484a62027ac184759b1b71ecb9e23d91a0716aa6d3e73891af78027ed

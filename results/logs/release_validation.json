@@ -1,0 +1,50 @@
+{
+  "stage": "W12_W15_release",
+  "status": "passed",
+  "stage_validators": {
+    "cclr": "pass",
+    "ablation": "pass",
+    "temporal": "passed",
+    "biology": "passed",
+    "robustness": "passed",
+    "distribution": "passed"
+  },
+  "prediction_shape": [
+    564,
+    32738
+  ],
+  "models": [
+    "B0",
+    "B1",
+    "B2",
+    "B3",
+    "B4",
+    "CCLR"
+  ],
+  "lines_per_model": {
+    "B0": 94,
+    "B1": 94,
+    "B2": 94,
+    "B3": 94,
+    "B4": 94,
+    "CCLR": 94
+  },
+  "final_metrics_rows": 64,
+  "final_cell_lines": 94,
+  "figure_count": 10,
+  "table_count": 6,
+  "reports_complete": true,
+  "treated_test_response_used_for_fit": false,
+  "artifact_hashes": {
+    "final_predictions_sha256": "5ffe460c0a3019fa6369d483fa6dfd2ec771494e472418ab401303c555ee6562",
+    "final_metrics_sha256": "bd1c448709a69b3858f0d91451615e8ed129f26450f574917a7df69297ab281f",
+    "final_cell_lines_sha256": "4fd26f2484a62027ac184759b1b71ecb9e23d91a0716aa6d3e73891af78027ed",
+    "figure_manifest_sha256": "8bbba730263adc6f4667aab7ef2bd17389b423c4cc81360b4de4ded9a2886af2",
+    "table_manifest_sha256": "1f2acdc7ac55ec7be1e1aada910394d216b3cd85915eb4ed6b5b0c6257d1ca23",
+    "final_report_sha256": "c759e6e2e7ed19c4b49b76bf677decbc81e88501074a19aaf0dee1037ad9f4b8",
+    "supplementary_sha256": "b6b0abf35d3b0a71d17046aee9edbda2dea270321e1e43cbcb917b4c6ece7cfc",
+    "limitations_sha256": "50fc8676e67ff9a52a774461d93244ff18d318a7a4e5a71a2b6993c46dd6923d",
+    "report_artifact_sha256": "951e3c5a126e408e60a2a7199767453be6540030da2fdcfeb0bed7baa1fc3cc2",
+    "report_artifact_validation_sha256": "a611fcc3a6b4e8dbd4455529565884605b4d210c6e21f014dd6b40e25246462b"
+  }
+}

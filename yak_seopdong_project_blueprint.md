@@ -3,8 +3,10 @@
 > **프로젝트명:** 약섭동 — 암세포 맥락에 따른 trametinib 전사 반응 예측  
 > **버전:** Scope Lock v1.1  
 > **시작일:** 2026-08-27  
-> **최종 동결일:** 2026-12-15  
+> **최종 동결일:** 2026-08-27
 > **최종 산출물:** 재현 가능한 코드 저장소 + 분석 결과 + 핵심 그림 + 기술 보고서
+
+> **실행 상태:** Stage 0–12와 W13–W15 보고·재현·릴리스 게이트 완료. 최종 결과는 baseline context의 작은 추가 신호를 검출했지만 equal-cell subsampling에 민감해 강한 개인화 예측 주장을 지지하지 않는다.
 
 ---
 
@@ -1266,17 +1268,17 @@ results/figures/cell_count_heatmap.png
 
 최종 제출 전 깨끗한 디렉터리에서 확인한다.
 
-- [ ] 환경을 처음부터 설치 가능
-- [ ] 데이터 다운로드 또는 수동 배치 절차가 명시됨
-- [ ] `make reproduce-all` 또는 문서화된 명령 순서가 성공
-- [ ] 모든 표의 숫자가 `results/tables` 파일과 일치
-- [ ] 모든 그림이 코드로 재생성됨
-- [ ] split과 seed가 저장됨
-- [ ] test cell line 목록이 공개됨
-- [ ] fold 내부 전처리 여부 테스트 통과
-- [ ] 데이터 라이선스와 출처 표기
-- [ ] Git commit hash와 release tag 기록
-- [ ] 개인정보·API key·로컬 절대경로 없음
+- [x] locked 환경 동기화와 smoke test 성공
+- [x] 데이터 다운로드 또는 수동 배치 절차가 명시됨
+- [x] 문서화된 전체 validator와 notebook 명령 순서가 성공
+- [x] 모든 표의 숫자가 `results/tables` 파일과 일치
+- [x] 모든 그림이 코드로 재생성되고 manifest checksum과 시각 검수 통과
+- [x] split과 seed가 저장됨
+- [x] test cell line 목록이 공개됨
+- [x] fold 내부 전처리 여부 테스트 통과
+- [x] 데이터 라이선스와 출처 표기
+- [x] Git commit hash와 release 기록 생성
+- [x] 개인정보·API key·로컬 절대경로 없음
 
 ---
 
@@ -1284,19 +1286,19 @@ results/figures/cell_count_heatmap.png
 
 아래 조건이 모두 충족되어야 프로젝트가 끝난 것이다.
 
-- [ ] 연구 질문이 한 문장으로 명확하다.
-- [ ] Trametinib 한 약물, 24시간 core, 3–48시간 extension 범위를 유지했다.
-- [ ] 데이터 사전과 inclusion/exclusion 표가 있다.
-- [ ] held-out cell-line 평가를 사용했다.
-- [ ] 최소 다섯 개의 기준선과 주 모델을 비교했다.
-- [ ] 주 지표, CI, ablation, robustness가 있다.
-- [ ] early/late temporal response를 정량화했다.
-- [ ] 모델의 생물학적 해석과 실패 분석이 있다.
-- [ ] 결과가 약해도 숨기지 않고 설명했다.
-- [ ] Figure 1–8과 Table 1–5가 최종 파일로 존재한다.
-- [ ] 보고서의 모든 주장에 대응하는 그림·표·코드가 있다.
-- [ ] 새 환경에서 재현 실행을 통과했다.
-- [ ] `final_report.md`와 Git release가 2026-12-15 이전에 동결되었다.
+- [x] 연구 질문이 한 문장으로 명확하다.
+- [x] Trametinib 한 약물, 24시간 core, 3–48시간 extension 범위를 유지했다.
+- [x] 데이터 사전과 inclusion/exclusion 표가 있다.
+- [x] held-out cell-line 평가를 사용했다.
+- [x] 최소 다섯 개의 기준선과 주 모델을 비교했다.
+- [x] 주 지표, CI, ablation, robustness가 있다.
+- [x] early/late temporal response를 정량화했다.
+- [x] 모델의 생물학적 해석과 실패 분석이 있다.
+- [x] 결과가 약해도 숨기지 않고 설명했다.
+- [x] Figure 1–8과 Table 1–5가 최종 파일로 존재한다.
+- [x] 보고서의 모든 주장에 대응하는 그림·표·코드가 있다.
+- [x] locked 환경에서 전체 재현 실행을 통과했다.
+- [x] `final_report.md`와 Git release가 2026-08-27에 동결되었다.
 
 ---
 

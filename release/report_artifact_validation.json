@@ -1,0 +1,11 @@
+{
+  "validator": "mcp__dataAnalyticsWidgets__validate_artifact",
+  "status": "passed",
+  "surface": "report",
+  "manifest_title": "Predicting Context-Dependent Transcriptional Responses to MEK Inhibition across Cancer Cell Lines",
+  "dataset_count": 3,
+  "source_count": 3,
+  "snapshot_status": "ready",
+  "render_status": "passed",
+  "validated_at": "2026-08-27T00:00:00+09:00"
+}

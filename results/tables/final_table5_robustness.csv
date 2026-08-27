@@ -1,0 +1,7 @@
+conclusion,status,evidence
+B4 gain over B1 is positive in the frozen split,robust,three bootstrap seeds have CI above zero
+B4 gain survives inclusion thresholds 10/20/30,robust,gain range 0.001470 to 0.001892
+B4 gain survives variable-gene filters,robust,gain range 0.001246 to 0.001637
+B4 gain survives equal-20-cell subsampling,sensitive,positive repeats 0/5
+B4 gain under leave-one-lineage-out,inconclusive,"LOLO gain 0.000514, 95% CI -0.000132 to 0.001178"
+Absolute error is close to a nonzero measurement floor,limitation,split-half-derived full-target floor 0.2790

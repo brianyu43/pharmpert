@@ -1,0 +1,6 @@
+cohort,lines,cells,role
+core_24h_strict,94,16588,primary held-out benchmark
+pooled_control_sensitivity,97,25130,control-source sensitivity
+timecourse_all,24,13713,coverage
+timecourse_primary_t10,22,12078,temporal description
+temporal_external,17,1892,24h external transfer/distribution

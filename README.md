@@ -1,16 +1,17 @@
 # 약섭동 (Yak-seopdong)
 
-암세포주의 vehicle-control(DMSO) 전사 상태로부터 보지 못한 세포주의 24시간 trametinib 전사 반응을 예측하는 재현 가능한 분석 프로젝트다.
+암세포주의 동시에 측정된 vehicle-control(DMSO) 전사 상태로부터, 보지 못한 세포주의 24시간 trametinib 전사 반응을 예측하고 그 한계를 검증한 재현 가능한 분석 프로젝트다.
 
-## 현재 상태
+## 최종 상태
 
-- Scope Lock: v1.1; Evaluation Protocol: v1.2
-- 단계: Stage 1–7 완료; 24h 반응 행렬, B0–B4, CCLR, 고정 ablation·누수 감사 완료
-- 핵심 일반화 단위: cell line
-- 핵심 비교: B1 global mean response 대비 context 정보의 추가 이득
-- GPU: 핵심 분석에는 불필요
+- Stage 0–12 분석·동결 완료, W13–W15 보고·재현·릴리스 검증 수행
+- 주 일반화 단위: `cell_line`; lineage-aware outer 5-fold / nested inner 4-fold
+- 주 코호트: 94 cell lines, 32,738 genes, 16,588 normal cells
+- 주 모델: B4 direct multi-output ridge; 주 비교군: B1 outer-training mean response
+- 최종 예측: B0–B4와 CCLR, 총 564 held-out line-model rows
+- GPU: 필요 없음; 모든 결과는 CPU에서 생성
 
-공식 experiment 3 원자료에서 strict 94-line 24시간 pseudobulk와 반응 행렬을 생성했다. EGR1/DUSP6 등 사전 지정 MAPK marker의 억제 방향을 재현했고, lineage-aware 5-fold에서 B0–B4와 CCLR을 평가했다. B4 direct ridge는 B1 global mean보다 RMSE를 `0.001715` 개선했다. CCLR도 B1보다 `0.001367` 개선했지만 B4보다는 `0.000348` 나빴다. W7의 고정 rank·control dimension·pathway·lineage·BRAF/KRAS 변형도 B1은 이겼지만 B4를 확실히 넘지 못했다. 맥락의 추가 정보는 검출되지만 강한 개인화 예측이나 임상적 결과는 주장하지 않는다.
+주 결과는 명확하지만 크기는 작다. B1 RMSE는 `0.323750`, B4 RMSE는 `0.322035`이며 paired improvement는 `0.001715` (95% CI `0.001168–0.002284`, 약 `0.53%`)이다. CCLR은 B1보다 낫지만 B4보다 `0.000348` 나빴다. inclusion threshold와 gene filter에는 방향이 유지됐지만, 조건당 20개 cell로 균등 subsampling하면 5/5 반복에서 B4 gain이 음수가 됐다. 따라서 결론은 **baseline context의 추가 정보는 검출되지만, 강한 개인화 예측 성능은 입증되지 않았다**이다.
 
 ## 빠른 시작
 
@@ -22,7 +23,7 @@ make smoke
 make test
 ```
 
-데이터 다운로드를 포함한 probe는 명시적으로 실행한다.
+원자료 확보 후 전체 파이프라인은 다음 순서로 실행한다.
 
 ```bash
 make data-probe
@@ -36,62 +37,48 @@ make cclr
 make validate-cclr
 make ablation
 make validate-ablation
+make temporal
+make validate-temporal
+make biology
+make validate-biology
+make robustness
+make validate-robustness
+make distribution
+make validate-distribution
+make freeze-release
+make validate-release
 make notebooks
 ```
 
-## 문서
+`make pseudobulk`는 공식 experiment 3의 integer raw count를 희소 상태에서 세포주별 합산한다. 전체 single-cell 행렬을 dense로 변환하지 않는다. 원자료와 중간 processed data는 Git에 넣지 않으며 checksum과 manifest로 식별한다.
 
-- `docs/project_blueprint.md`: 전체 연구 청사진
-- `docs/scope.md`: 포함·제외 범위와 연구 질문
-- `docs/evaluation_protocol.md`: 분할, 지표, 누수 방지 규칙
-- `docs/data_dictionary.md`: Stage 1에서 채울 데이터 계약
-- `docs/leakage_audit.md`: fold별 누수 감사표
-- `docs/reproduction_checklist.md`: 현재 최소 재현 결과와 남은 항목
-- `processed_manifest.csv`: 생성된 Parquet의 shape, 값 열, SHA-256
-- `cell_line_annotations.csv`: 저자 제공 disease/sensitivity/mutation의 94-line join
-- `split_assignments.csv`, `inner_split_assignments.csv`: 고정 outer/inner cell-line split
-
-## 검증 게이트
-
-Stage 0 완료는 다음 명령이 모두 성공할 때만 선언한다.
-
-```bash
-uv sync --all-groups
-uv run python -m yakseopdong smoke
-uv run pytest
-```
-
-`make pseudobulk`는 공식 expt3 zip의 integer raw count를 희소 상태에서 세포주별 합산하고, `data/processed/`에 vector-valued Parquet을 생성한다. 전체 single-cell 행렬을 dense로 변환하지 않는다.
-
-현재 core cohort는 공식 Figshare experiment 3 원자료로 분리한다. 주 분석은 시간 일치 `DMSO_24hr_expt3` 대 `Trametinib_24hr_expt3`의 94개 eligible line이며, 저자 분석 재현용 pooled-control(`DMSO_6hr + DMSO_24hr`) 97개 line은 별도 민감도 분석으로 유지한다.
-
-현재 QC에서 DMSO 6h–24h 중앙 PCC는 0.9727이지만, control 시간/source RMSE는 trametinib 반응 RMSE의 중앙 0.8879배다. 따라서 높은 상관만으로 pooling을 주 분석에 사용하지 않고 24시간 DMSO를 유지한다.
-
-## 현재 모델과 W6 결론
-
-B4는 각 fold의 training control에서만 분산 상위 5,000 genes를 고르고 whitened PCA를 fit한 뒤, PCA score에서 32,738-gene response로 multi-output ridge를 학습한다. PCA 차원과 ridge alpha는 outer-train 내부 4-fold CV로 선택한다. 외부 sensitivity와 mutation은 해석에만 쓰며 predictor에는 넣지 않는다.
+## 모델과 평가
 
 ```text
-DMSO 24h expression → train-only gene filter/PCA → ridge → predicted trametinib Δ
+DMSO 24h expression
+  → outer-training-only variable-gene filter/PCA
+  → nested-CV multi-output ridge
+  → predicted trametinib 24h − DMSO 24h
 ```
 
-5-fold macro 결과에서 B1 RMSE는 `0.323750`, B4 RMSE는 `0.322035`, B4 PCC-context는 `0.107666`이다. B4의 B1 대비 RMSE gain 95% paired-bootstrap CI는 `0.001168–0.002284`다. 통계적으로 방향은 일관되지만 절대·상대 개선이 작으므로 “강한 개인화 예측”이 아니라 다음 저차원 모델을 시험할 근거로 해석한다.
+B4는 각 training partition에서만 분산 상위 5,000 genes를 선택하고 whitened PCA를 fit한 뒤, control PC score에서 전체 32,738-gene response로 ridge regression을 학습한다. 외부 sensitivity와 mutation은 해석에만 쓰며 predictor에는 넣지 않는다. CCLR은 response를 training-only PCA로 한 번 더 압축하지만, 이 추가 low-rank 제약은 B4를 개선하지 못했다.
 
-CCLR은 training response를 PCA 프로그램으로 압축하고 control PCA에서 각 프로그램 점수를 예측한다.
+시간축 17-line 외부 전이에서 B4는 3h/6h에는 B1보다 나쁘고, 12h에는 차이가 불확실하며, 24h와 48h에만 작게 나았다. W11 single-cell 분포 분석은 17 lines, 1,892 cells에서 통과했지만 모든 control cell에 동일한 latent shift를 더하는 검사이므로 분포 모양이나 개별 세포 trajectory를 예측한 결과가 아니다.
 
-```text
-DMSO 24h → train-only control PCA → ridge → response-PC scores → reconstructed trametinib Δ
-```
+## 주요 산출물
 
-CCLR RMSE는 `0.322383`, PCC-context는 `0.096521`이다. B1 대비 RMSE gain은 `0.001367` (95% CI `0.000823–0.001933`)이지만, B4 대비 paired gain은 `-0.000348` (95% CI `-0.000584–-0.000105`)이다. 따라서 W6에서는 저차원 response basis가 B4보다 낫다는 가설을 지지하지 않는다. 모든 fold가 response rank 20과 alpha 100을 선택했다는 경계값 현상은 W7 ablation에서 확인하되 W6 결과를 보고 grid를 바꾸지는 않는다.
+- `report/final_report.md`: 최종 기술 보고서
+- `report/supplementary.md`: 보충 방법·결과·재현 정보
+- `report/limitations.md`: 주장 경계를 정한 제한점 목록
+- `results/final_predictions.parquet`: B0–B4/CCLR held-out 예측
+- `results/final_metrics.csv`: 핵심·시간축·강건성·분포 지표
+- `results/final_cell_lines.csv`: 94-line annotation과 오류 지표
+- `results/figure_manifest.csv`, `results/table_manifest.csv`: 번호·경로·checksum manifest
+- `release/final_config.json`: 동결된 release contract
+- `results/logs/release_validation.json`: 독립 릴리스 검증 결과
 
-## W7 고정 ablation 결론
+세부 데이터 계약과 누수 방지 규칙은 `docs/data_dictionary.md`, `docs/evaluation_protocol.md`, `docs/leakage_audit.md`를 따른다. 전체 완료 게이트는 `docs/reproduction_checklist.md`에 기록한다.
 
-W7은 같은 outer fold에서 `d=20`, `rank=20`, `alpha=100`을 기준으로 한 요인씩 바꾸는 진단 분석이다. control dimension `[5, 10, 20, 30]`, response rank `[2, 5, 10, 20, 30, 40, 50]`, 사전 동결 pathway panel, training-fitted lineage 및 BRAF/KRAS 입력을 모두 보고한다. Rank 30/40/50은 W6의 상한 선택을 확인하기 위한 별도 진단이며 W6 주 결과를 소급 변경하지 않는다.
+## 인용
 
-- fixed full `d20/r20`: RMSE `0.322350`; B4 대비 gain `-0.000315` (95% CI `-0.000612–-0.000044`)
-- pathway panel: RMSE `0.322286`; B4 대비 gain `-0.000251` (95% CI `-0.000598–0.000127`)
-- lineage 추가: RMSE `0.322329`; B4 대비 gain `-0.000295` (95% CI `-0.000585–0.000025`)
-- BRAF/KRAS 추가: RMSE `0.322162`; B4 대비 gain `-0.000127` (95% CI `-0.000624–0.000383`)
-
-모든 fixed low-rank 변형은 B1보다 일관되게 나았지만 B4 대비 우위 CI는 없었다. BRAF/KRAS 변형이 fixed 변형 중 평균상 가장 가까웠다는 사실은 outer-test를 본 뒤의 관찰이므로 새 주 모델 선택으로 사용하지 않는다. W6 response subspace의 fold-pair mean squared cosine은 평균 `0.676`으로 상위 방향은 공유되지만 최약 방향은 불안정했다.
+원자료와 생물학적 맥락은 McFarland et al., *Nature Communications* 11, 4296 (2020), DOI `10.1038/s41467-020-17440-w`를 따른다. 이 저장소의 결과는 독립 반복이 제한된 관찰적 예측 분석이며 임상 효능이나 인과효과를 주장하지 않는다.

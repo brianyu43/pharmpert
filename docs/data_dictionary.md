@@ -1,6 +1,6 @@
 # Data Dictionary
 
-상태: Stage 1–7 원자료, pseudobulk, annotation, split, baseline, CCLR, ablation 계약 확인 완료. 아래 항목은 추정값이 아니라 실행으로 확인한 값만 기록한다.
+상태: Stage 1–12 원자료, pseudobulk, annotation, split, model, temporal, robustness, distribution, release 계약 확인 완료. 아래 항목은 추정값이 아니라 실행으로 확인한 값만 기록한다.
 
 ## Source manifest
 
@@ -60,6 +60,14 @@
 | `pathway_panel_coverage.csv` | 12 | 6개 collection, union, fold별 training-only 선택 수 |
 | `component_pathway_enrichment.csv` | 1,200 | 5 folds × 20 components × 양/음 × 6 collections |
 | `cclr_subspace_stability.csv` | 10 | 5개 W6 response basis의 모든 fold-pair principal-angle overlap |
+| `timecourse_cell_counts.csv` | 264 | 24 lines × 11 condition/time groups의 clean-cell 수와 eligibility |
+| `temporal_transfer_predictions.parquet` | 255 | 17 external lines × 5 time points × B1/B4/CCLR prediction |
+| `biological_validation.csv` | 38 | component/pathway/error association과 BH-FDR |
+| `robustness_metrics.csv` | 69 | threshold, gene filter, seed, subsampling, LOLO, noise-floor 결과 |
+| `single_cell_pca_scores.parquet` | 1,892 | 17 external lines의 control/trametinib latent scores |
+| `final_predictions.parquet` | 564 | B0–B4와 CCLR 각 94 held-out prediction |
+| `final_metrics.csv` | 64 | core, temporal, robustness, single-cell distribution 요약 |
+| `final_cell_lines.csv` | 94 | annotation, cell support, B1/B4/CCLR error와 paired gain |
 
 `all_CL_features.rds`는 Figshare v3의 `Trametinib_24hr_expt3`와 `metadata` 객체를 사용한다. strict 94 lines에서 lineage, sensitivity, 네 hotspot mutation field의 필수값은 모두 완전하다. PRISM AUC 2개와 GDSC AUC 39개는 개별 source에서 결측이지만 저자의 결합 `AUC_avg`와 `sens=1-AUC_avg`는 94개 모두 존재한다.
 
@@ -72,7 +80,7 @@
 | control | `perturbation`, time-course에서는 `hash_tag` | `control`; `DMSO_*hr`; `Untreated_48hr` | time-course의 `perturbation`만으로 조건 구분 불가 |
 | time | `time`, time-course에서는 `hash_tag` | `24`, `6`, `72, 96`, `3, 6, 12, 24, 48` | `time`은 일부 행에서 실험 전체 시점 목록이므로 cell-level 시간이 아님 |
 | dose | `dose_value`, `dose_unit` | trametinib `0.1 µM`, control `0.0 µM` | Supplementary Table 3과 AnnData metadata가 일치 |
-| pool/channel | `channel`, `hash_assignment`, `hash_tag` | 문자열 `nan`, 숫자/문자 channel, hash condition | 99-line expt3 식별 규칙이 아직 미확정 |
+| pool/channel | `channel`, `hash_assignment`, `hash_tag` | 문자열 `nan`, 숫자/문자 channel, hash condition | core는 공식 expt3 archive, time-course는 clean hash tag로 분리 |
 | quality/singlet | `cell_quality`, `hash_tag` | `normal` 등 5개; time-course `multiplet`/`unknown` | time-course clean tag filtering 필요 |
 | lineage | 저자 RDS `metadata.Disease` | 21 unique | strict 94 lines 모두 연결; split balancing, B2, 명시적 W7 ablation에만 사용 |
 
@@ -81,7 +89,8 @@
 - 24시간 strict time-matched core: normal cell 기준 양 조건 각각 20개 이상인 94개 line
 - 저자 pooled-control 재현 cohort: DMSO 6h+24h와 trametinib 24h에서 각각 20개 이상인 97개 line
 - time-course clean hashtag cell 수: 13,713개로 원 논문 수치와 일치
-- time-course의 모든 필수 시점을 만족하는 cell line: 미확인(후속 시간축 단계)
+- time-course clean 조건에서 3/6/12/24/48h control과 trametinib을 모두 만족하는 line: 24개; 시점·조건별 최소 10 cells 기준 22개
+- core와 겹치지 않는 temporal external model-transfer line: 17개
 - strict 24h 제외 규칙: DMSO 24h 또는 trametinib 24h 정상 세포 20개 미만
 - strict 24h 제외 목록: `JHOM1_OVARY`(DMSO 24h 11 cells),
   `SNU410_PANCREAS`(18), `SNU61_LARGE_INTESTINE`(18)

@@ -1,0 +1,13 @@
+{
+  "stage": "W11_single_cell_distribution",
+  "status": "passed",
+  "decision": "promote_to_main_text",
+  "gate_passed": true,
+  "cell_lines": 17,
+  "cells": 1892,
+  "metric_rows": 68,
+  "max_metric_recomputation_error": 3.552713678800501e-15,
+  "max_summary_recomputation_error": 3.3306690738754696e-16,
+  "distribution_metric_used_for_tuning": false,
+  "paired_cell_trajectory_claim": false
+}

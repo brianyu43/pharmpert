@@ -59,3 +59,15 @@
 - Comparison logic: threshold cohorts are independently split; gene filtering remains fold-local;
   leave-one-lineage-out holds out an entire Disease category.
 - Caveats: a positive point with a CI crossing zero is inconclusive, not robust.
+
+## W11 gated single-cell distribution translation
+
+- Question: does a fixed context-predicted mean shift place control cells closer to the
+  observed treated distribution than the global B1 shift?
+- Grain: 1,892 cells nested in 17 external lines at 24h; inference remains line-level.
+- Encodings: left x/y = control-fitted single-cell PC1/PC2 and color = observed or translated
+  distribution; right x = B1/B4 and y = Energy distance with one connector per line.
+- Comparison logic: the 24h predictions were frozen before distribution evaluation; promotion
+  requires paired-gain CI above zero for Energy and sliced-Wasserstein.
+- Caveats: translation preserves the control distribution's shape and covariance exactly. It
+  models a latent mean shift, not cell-specific responses, new states, or paired trajectories.

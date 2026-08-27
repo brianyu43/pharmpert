@@ -148,6 +148,22 @@ w10_robustness:
   leave_one_lineage_out: true
   sensitivity_as_predictor: false
 
+w11_single_cell_distribution:
+  protocol_version: "1.0"
+  status: optional_extension_fixed_gate
+  time_hours: 24
+  test_cohort: w8_external_17_depmap_ids
+  pca_components: 10
+  pca_variable_genes: 2000
+  sliced_wasserstein_projections: 100
+  bootstrap_replicates: 2000
+  promotion_gate:
+    required_models: [B4_FIXED_D20_A100]
+    metrics: [energy_distance, sliced_wasserstein]
+    rule: paired_gain_vs_B1_ci95_low_above_zero_for_both_metrics
+  distribution_metric_used_for_model_tuning: false
+  paired_cell_trajectory_claim: false
+
 compute:
   device: cpu
   max_workers: 12

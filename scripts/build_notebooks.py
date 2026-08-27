@@ -820,6 +820,82 @@ display(noise.groupby("cell_line")[[
     nbf.write(_notebook(cells), root / "notebooks" / "08_robustness.ipynb")
 
 
+def build_distribution(root: Path) -> None:
+    cells = [
+        nbf.v4.new_markdown_cell(
+            """# W11 gated single-cell distribution extension
+
+## tl;dr
+
+W8의 17개 완전 외부 cell line, 1,892개 24h single cell을 baseline PCA 10차원에
+표현했다. Control cell 분포를 예측 pseudobulk Δ만큼 평행이동했을 때 B4는 B1보다
+Energy distance를 0.571, sliced-Wasserstein을 0.163 줄였고 두 paired-bootstrap
+CI가 모두 0 위였다. 사전 gate를 통과해 제한적 본문 결과로 승격한다. 그러나
+이 방법은 분포의 평균 위치만 옮기고 shape/covariance를 예측하지 않으며 paired
+cell trajectory를 복원하지 않는다."""
+        ),
+        nbf.v4.new_code_cell(ROOT_CELL),
+        nbf.v4.new_code_cell(
+            """gate = json.loads((root / "results/logs/distribution_gate.json").read_text())
+validation = json.loads((root / "results/logs/distribution_validation.json").read_text())
+summary = pd.read_csv(root / "results/tables/single_cell_distribution_summary.csv")
+metrics = pd.read_csv(root / "results/tables/single_cell_distribution_metrics.csv")
+scores = pd.read_parquet(root / "results/tables/single_cell_pca_scores.parquet")
+
+display(pd.DataFrame({
+    "metric": ["gate decision", "external lines", "single cells",
+               "PCA variable genes", "PCA components"],
+    "value": [gate["decision"], gate["external_lines"], gate["cells"],
+              gate["pca_variable_genes"], gate["pca_components"]],
+}))
+assert validation["status"] == "passed"
+assert gate["passed"] is True
+assert gate["distribution_metric_used_for_tuning"] is False
+assert gate["paired_cell_trajectory_claim"] is False
+"""
+        ),
+        nbf.v4.new_markdown_cell(
+            """## Context & Methods
+
+### Key Assumptions
+
+- 94-line 학습 cohort와 DepMap ID가 겹치지 않는 W8 external 17-line의 24h만 쓴다.
+- 정상 `DMSO_24hr` control cells로 2,000 variable genes와 PCA 10축을 fit한다.
+- 각 model의 고정 pseudobulk Δ를 PCA loading에 투영해 같은 line의 모든 control
+  cell score에 동일하게 더한다.
+- observed Tram cell score와 translated control score 사이의 multivariate Energy
+  distance와 100개 고정 투영의 sliced-Wasserstein을 계산한다.
+- distribution metric으로 모델·projection·유전자를 튜닝하지 않는다.
+- 승격 gate는 B4−B1 paired gain의 95% CI lower bound가 두 metric 모두 0보다 큰지다.
+- translation은 control covariance와 multimodality를 그대로 보존하므로 새로운
+  세포상태 비율이나 cell-specific response를 생성하는 모델이 아니다."""
+        ),
+        nbf.v4.new_markdown_cell("## Results"),
+        nbf.v4.new_code_cell(
+            """display(summary)
+display(Image(filename=str(root / "results/figures/single_cell_distribution.png")))
+display(metrics.groupby("model")[[
+    "energy_distance", "sliced_wasserstein"
+]].median().sort_values("energy_distance"))
+"""
+        ),
+        nbf.v4.new_markdown_cell(
+            """## Takeaways
+
+- No-change control 분포는 가장 멀고, B1 평균 이동이 큰 폭을 회수한다.
+- B4는 B1보다 Energy 0.571 (95% CI 0.295–0.905), sliced-Wasserstein 0.163
+  (0.087–0.246)을 추가 개선한다.
+- 고정 CCLR도 비슷한 개선을 보이며 B4보다 수치상 아주 작게 낮지만, W11은
+  distribution metric으로 두 모델을 새로 선택하는 단계가 아니다.
+- 결과는 gene-wise RMSE의 작은 이득보다 latent distribution distance에서 더
+  분명하지만, 이는 PCA가 response-relevant 평균 이동을 압축하기 때문일 수 있다.
+- 본문에는 “external single-cell PCA에서 평균 translation이 개선됐다”로 포함하되,
+  분포 shape 예측·paired trajectory·강한 개인화의 증거로 확장하지 않는다."""
+        ),
+    ]
+    nbf.write(_notebook(cells), root / "notebooks" / "09_single_cell_distribution.ipynb")
+
+
 def main() -> None:
     root = Path(__file__).resolve().parents[1]
     (root / "notebooks").mkdir(exist_ok=True)
@@ -832,6 +908,7 @@ def main() -> None:
     build_temporal(root)
     build_biology(root)
     build_robustness(root)
+    build_distribution(root)
 
 
 if __name__ == "__main__":

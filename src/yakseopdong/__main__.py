@@ -37,6 +37,10 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("validate-biology", help="independently validate W9 outputs")
     subparsers.add_parser("run-robustness", help="run the W10 robustness suite")
     subparsers.add_parser("validate-robustness", help="independently validate W10 outputs")
+    subparsers.add_parser("run-distribution", help="run the gated W11 distribution extension")
+    subparsers.add_parser(
+        "validate-distribution", help="independently validate W11 distribution outputs"
+    )
     return parser
 
 
@@ -146,6 +150,16 @@ def main() -> int:
         from yakseopdong.robustness_validation import validate_robustness
 
         print(json.dumps(validate_robustness(repository_root()), indent=2))
+        return 0
+    if args.command == "run-distribution":
+        from yakseopdong.distribution import run_distribution
+
+        print(json.dumps(run_distribution(repository_root()), indent=2))
+        return 0
+    if args.command == "validate-distribution":
+        from yakseopdong.distribution_validation import validate_distribution
+
+        print(json.dumps(validate_distribution(repository_root()), indent=2))
         return 0
     raise RuntimeError(f"unknown command: {args.command}")
 

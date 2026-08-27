@@ -1,0 +1,36 @@
+{
+  "stage": "W11_single_cell_distribution",
+  "decision": "promote_to_main_text",
+  "rule": "B4 paired gain vs B1 CI lower bound > 0 for both metrics",
+  "passed": true,
+  "b4_results": [
+    {
+      "model": "B4_FIXED_D20_A100",
+      "metric": "energy_distance",
+      "macro_mean": 6.647262236833688,
+      "ci95_low": 4.53774769321688,
+      "ci95_high": 8.969071568528765,
+      "gain_vs_b1": 0.5705974521103855,
+      "gain_ci95_low": 0.2945769189172428,
+      "gain_ci95_high": 0.9048277614180618,
+      "n_cell_lines": 17
+    },
+    {
+      "model": "B4_FIXED_D20_A100",
+      "metric": "sliced_wasserstein",
+      "macro_mean": 3.596755404623123,
+      "ci95_low": 2.9530525062784623,
+      "ci95_high": 4.301090247636412,
+      "gain_vs_b1": 0.1630396088221422,
+      "gain_ci95_low": 0.08736082598411761,
+      "gain_ci95_high": 0.24581368243552515,
+      "n_cell_lines": 17
+    }
+  ],
+  "external_lines": 17,
+  "cells": 1892,
+  "pca_variable_genes": 2000,
+  "pca_components": 10,
+  "distribution_metric_used_for_tuning": false,
+  "paired_cell_trajectory_claim": false
+}

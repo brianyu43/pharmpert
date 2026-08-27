@@ -115,6 +115,19 @@ w8_temporal:
   target_genes: all_32738
   temporal_response_used_for_fit: false
 
+w9_biology:
+  protocol_version: "1.0"
+  status: interpretation_only_no_model_selection
+  response_pca_components: 5
+  response_pca_variable_genes: 5000
+  association_bootstrap_replicates: 2000
+  permutation_replicates: 10000
+  multiple_testing: benjamini_hochberg_all_reported_associations
+  prediction_case_model: B4
+  high_error_quantile: 0.75
+  low_cell_quantile: 0.25
+  sensitivity_as_predictor: false
+
 compute:
   device: cpu
   max_workers: 12

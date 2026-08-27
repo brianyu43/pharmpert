@@ -630,6 +630,97 @@ display(transfer.loc[transfer["metric"].isin(["rmse_delta", "rmse_gain_vs_b1"])]
     nbf.write(_notebook(cells), root / "notebooks" / "06_temporal.ipynb")
 
 
+def build_biology(root: Path) -> None:
+    cells = [
+        nbf.v4.new_markdown_cell(
+            """# W9 biological interpretation and error diagnostics
+
+## tl;dr
+
+24h observed response PC1은 trametinib sensitivity와 강하게 연결됐다
+(Spearman ρ −0.668), BRAF/KRAS 상태와 lineage도 같은 축과 연관됐다.
+Sensitivity가 높을수록 E2F/G2M 및 immediate-early score가 더 음수였다.
+B4 오차는 관측 반응 크기(ρ 0.973)와 조건별 최소 세포 수(ρ −0.775)에 크게
+좌우됐지만, fold-fitted baseline novelty와는 연관되지 않았다. 두 오차 요인은
+서로를 통제한 뒤에도 남아 큰 실제/관측 반응과 낮은 측정 지원이 함께 난도를
+높였음을 시사한다. 이 분석의 sensitivity·mutation은 해석용이며 predictor가 아니다."""
+        ),
+        nbf.v4.new_code_cell(ROOT_CELL),
+        nbf.v4.new_code_cell(
+            """summary = json.loads((root / "results/logs/biology_summary.json").read_text())
+validation = json.loads((root / "results/logs/biology_validation.json").read_text())
+associations = pd.read_csv(root / "results/tables/biological_validation.csv")
+targets = pd.read_csv(root / "results/tables/target_gene_validation.csv")
+enrichment = pd.read_csv(root / "results/tables/biological_pathway_enrichment.csv")
+cases = pd.read_csv(root / "results/tables/prediction_cases.csv")
+errors = pd.read_csv(root / "results/tables/error_classification.csv")
+
+display(pd.DataFrame({
+    "metric": ["cell lines", "association tests", "FDR < 0.05",
+               "target genes", "high-error lines"],
+    "value": [summary["cell_lines"], summary["association_tests"],
+              summary["significant_fdr05"], summary["target_genes"],
+              summary["high_error_lines"]],
+}))
+assert validation["status"] == "passed"
+assert validation["interpretation_only"] is True
+assert validation["sensitivity_used_as_predictor"] is False
+"""
+        ),
+        nbf.v4.new_markdown_cell(
+            """## Context & Methods
+
+### Key Assumptions
+
+- 분석 단위는 94개 held-out evaluation cell line이며 cell-level p-value를 쓰지 않는다.
+- response PCA는 전체 관측 반응을 요약하는 기술적 해석 축이고 PC 부호는 임의다.
+- 연속형 연결은 Spearman, cell-line bootstrap 95% CI, 10,000회 permutation을 쓴다.
+- mutation은 Cliff's delta, lineage는 global eta-squared label permutation으로 본다.
+- 총 38개 association p-value를 하나의 BH-FDR family로 보정한다.
+- baseline novelty는 각 outer fold의 training control에서만 fit한 whitened PC20에서
+  가장 가까운 training line까지의 거리다.
+- sensitivity, lineage, mutation은 W9 해석에만 쓰며 B4/CCLR predictor나 선택 기준이 아니다."""
+        ),
+        nbf.v4.new_markdown_cell("## Results"),
+        nbf.v4.new_code_cell(
+            """display(Image(filename=str(root / "results/figures/biological_correlates.png")))
+display(associations.loc[associations["fdr_bh"].lt(0.05), [
+    "family", "outcome", "predictor", "effect", "ci95_low", "ci95_high", "fdr_bh"
+]])
+display(targets)
+display(enrichment.loc[enrichment["fdr_bh"].lt(0.05)].sort_values("fdr_bh"))
+"""
+        ),
+        nbf.v4.new_code_cell(
+            """display(Image(filename=str(root / "results/figures/prediction_error_drivers.png")))
+display(associations.loc[associations["family"].str.startswith("error_factor"), [
+    "family", "outcome", "predictor", "effect", "ci95_low", "ci95_high", "fdr_bh"
+]])
+display(cases)
+display(errors["error_type"].value_counts().rename("cell_lines").to_frame())
+"""
+        ),
+        nbf.v4.new_markdown_cell(
+            """## Takeaways
+
+1. **생물학적 축**: response PC1은 sensitivity, BRAF/KRAS, lineage와 함께 변한다.
+   E2F/G2M 억제가 sensitivity와 가장 강하게 연결되어 MEK 억제 뒤 후기 cell-cycle
+   arrest가 약물 민감도의 주요 전사 축임을 지지한다.
+2. **표적 난도**: 반응 RMS가 클수록 B4/CCLR 절대 RMSE도 커진다. 이는 RMSE의
+   scale dependence를 포함하므로 개인화 실패만으로 읽으면 안 된다.
+3. **측정 지원**: 최소 cell count가 낮을수록 오차가 크며 response RMS 통제 후에도
+   partial ρ 약 −0.57로 남는다. pseudobulk Δ의 sampling noise가 실질적 요인이다.
+4. **배제된 설명**: baseline novelty는 B4 오차와 거의 무관했다(ρ 약 0.03).
+   따라서 이번 오차는 단순히 test line의 baseline이 training manifold에서 멀어서
+   생겼다는 설명을 지지하지 않는다.
+
+이 연결들은 관찰적이고 독립 biological replicate가 부족하므로 인과효과나
+gene-level 확증으로 표현하지 않는다."""
+        ),
+    ]
+    nbf.write(_notebook(cells), root / "notebooks" / "07_biological_interpretation.ipynb")
+
+
 def main() -> None:
     root = Path(__file__).resolve().parents[1]
     (root / "notebooks").mkdir(exist_ok=True)
@@ -640,6 +731,7 @@ def main() -> None:
     build_main_model(root)
     build_ablation(root)
     build_temporal(root)
+    build_biology(root)
 
 
 if __name__ == "__main__":

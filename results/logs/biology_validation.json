@@ -1,0 +1,15 @@
+{
+  "stage": "W9_biological_interpretation",
+  "status": "passed",
+  "cell_lines": 94,
+  "association_tests": 38,
+  "target_genes": 15,
+  "prediction_cases": 15,
+  "high_error_lines": 24,
+  "max_fdr_recomputation_error": 8.326672684688674e-17,
+  "max_enrichment_fdr_recomputation_error": 4.0245584642661925e-16,
+  "max_response_rms_recomputation_error": 2.7750396758285945e-08,
+  "primary_effect_recomputation_error": 0.0,
+  "interpretation_only": true,
+  "sensitivity_used_as_predictor": false
+}

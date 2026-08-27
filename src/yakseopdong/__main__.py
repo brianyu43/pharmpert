@@ -33,6 +33,8 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("validate-ablation", help="independently validate W7 outputs")
     subparsers.add_parser("run-temporal", help="build and analyze the W8 time course")
     subparsers.add_parser("validate-temporal", help="independently validate W8 outputs")
+    subparsers.add_parser("run-biology", help="run W9 biological and error interpretation")
+    subparsers.add_parser("validate-biology", help="independently validate W9 outputs")
     return parser
 
 
@@ -122,6 +124,16 @@ def main() -> int:
         from yakseopdong.temporal_validation import validate_temporal
 
         print(json.dumps(validate_temporal(repository_root()), indent=2))
+        return 0
+    if args.command == "run-biology":
+        from yakseopdong.biology import run_biology
+
+        print(json.dumps(run_biology(repository_root()), indent=2))
+        return 0
+    if args.command == "validate-biology":
+        from yakseopdong.biology_validation import validate_biology
+
+        print(json.dumps(validate_biology(repository_root()), indent=2))
         return 0
     raise RuntimeError(f"unknown command: {args.command}")
 

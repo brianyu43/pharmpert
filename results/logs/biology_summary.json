@@ -1,0 +1,241 @@
+{
+  "stage": "W9_biological_interpretation",
+  "status": "complete_pending_independent_validation",
+  "cell_lines": 94,
+  "response_pca_explained_variance_ratio": [
+    0.05885465815663338,
+    0.037786614149808884,
+    0.0318821482360363,
+    0.03088933229446411,
+    0.029793689027428627
+  ],
+  "association_tests": 38,
+  "significant_fdr05": 22,
+  "significant_associations": [
+    {
+      "family": "component_sensitivity",
+      "outcome": "response_pc1",
+      "predictor": "trametinib_sensitivity",
+      "effect": -0.6682729472961746,
+      "fdr_bh": 0.00031663500316635006
+    },
+    {
+      "family": "component_mutation",
+      "outcome": "response_pc1",
+      "predictor": "braf_mut",
+      "effect": -0.5813953488372093,
+      "fdr_bh": 0.007124287571242876
+    },
+    {
+      "family": "component_mutation",
+      "outcome": "response_pc1",
+      "predictor": "kras_mut",
+      "effect": -0.4231578947368421,
+      "fdr_bh": 0.0179426501794265
+    },
+    {
+      "family": "component_lineage",
+      "outcome": "response_pc1",
+      "predictor": "lineage_global",
+      "effect": 0.549362451231963,
+      "fdr_bh": 0.00227977202279772
+    },
+    {
+      "family": "component_mutation",
+      "outcome": "response_pc2",
+      "predictor": "braf_mut",
+      "effect": -0.7151162790697675,
+      "fdr_bh": 0.0013570071564272142
+    },
+    {
+      "family": "component_sensitivity",
+      "outcome": "response_pc3",
+      "predictor": "trametinib_sensitivity",
+      "effect": 0.23444713361991112,
+      "fdr_bh": 0.04141585841415858
+    },
+    {
+      "family": "component_sensitivity",
+      "outcome": "response_pc4",
+      "predictor": "trametinib_sensitivity",
+      "effect": -0.4143264819564354,
+      "fdr_bh": 0.00031663500316635006
+    },
+    {
+      "family": "component_mutation",
+      "outcome": "response_pc4",
+      "predictor": "kras_mut",
+      "effect": -0.3473684210526316,
+      "fdr_bh": 0.04559544045595441
+    },
+    {
+      "family": "component_sensitivity",
+      "outcome": "response_pc5",
+      "predictor": "trametinib_sensitivity",
+      "effect": -0.28117617310262616,
+      "fdr_bh": 0.015198480151984802
+    },
+    {
+      "family": "pathway_sensitivity",
+      "outcome": "MAPK_KRAS_signaling",
+      "predictor": "trametinib_sensitivity",
+      "effect": -0.2524654119856952,
+      "fdr_bh": 0.026597340265973404
+    },
+    {
+      "family": "pathway_sensitivity",
+      "outcome": "E2F_targets",
+      "predictor": "trametinib_sensitivity",
+      "effect": -0.617107972401835,
+      "fdr_bh": 0.00031663500316635006
+    },
+    {
+      "family": "pathway_sensitivity",
+      "outcome": "G2M_checkpoint",
+      "predictor": "trametinib_sensitivity",
+      "effect": -0.6018350612289131,
+      "fdr_bh": 0.00031663500316635006
+    },
+    {
+      "family": "pathway_sensitivity",
+      "outcome": "immediate_early_response",
+      "predictor": "trametinib_sensitivity",
+      "effect": -0.4248311237943865,
+      "fdr_bh": 0.0008768353933837386
+    },
+    {
+      "family": "error_factor",
+      "outcome": "b4_rmse",
+      "predictor": "response_rms",
+      "effect": 0.9728064154896507,
+      "fdr_bh": 0.00031663500316635006
+    },
+    {
+      "family": "error_factor",
+      "outcome": "b4_rmse",
+      "predictor": "min_condition_cells",
+      "effect": -0.7749815102732966,
+      "fdr_bh": 0.00031663500316635006
+    },
+    {
+      "family": "error_factor_partial",
+      "outcome": "b4_rmse",
+      "predictor": "response_rms|min_condition_cells",
+      "effect": 0.9534813670939067,
+      "fdr_bh": 0.00031663500316635006
+    },
+    {
+      "family": "error_factor_partial",
+      "outcome": "b4_rmse",
+      "predictor": "min_condition_cells|response_rms",
+      "effect": -0.5687301709555053,
+      "fdr_bh": 0.00031663500316635006
+    },
+    {
+      "family": "error_factor",
+      "outcome": "cclr_rmse",
+      "predictor": "response_rms",
+      "effect": 0.9738178665607051,
+      "fdr_bh": 0.00031663500316635006
+    },
+    {
+      "family": "error_factor",
+      "outcome": "cclr_rmse",
+      "predictor": "min_condition_cells",
+      "effect": -0.7762100337416523,
+      "fdr_bh": 0.00031663500316635006
+    },
+    {
+      "family": "error_factor",
+      "outcome": "cclr_rmse",
+      "predictor": "trametinib_sensitivity",
+      "effect": 0.22202073474695663,
+      "fdr_bh": 0.049049640490496406
+    },
+    {
+      "family": "error_factor_partial",
+      "outcome": "cclr_rmse",
+      "predictor": "response_rms|min_condition_cells",
+      "effect": 0.9561008109113388,
+      "fdr_bh": 0.00031663500316635006
+    },
+    {
+      "family": "error_factor_partial",
+      "outcome": "cclr_rmse",
+      "predictor": "min_condition_cells|response_rms",
+      "effect": -0.5826692461689992,
+      "fdr_bh": 0.00031663500316635006
+    }
+  ],
+  "error_factor_effects": [
+    {
+      "outcome": "b4_rmse",
+      "predictor": "response_rms",
+      "effect": 0.9728064154896507,
+      "ci95_low": 0.9472912801618961,
+      "ci95_high": 0.9825778556419453,
+      "fdr_bh": 0.00031663500316635006
+    },
+    {
+      "outcome": "b4_rmse",
+      "predictor": "baseline_novelty",
+      "effect": 0.033370660694288914,
+      "ci95_low": -0.17192174313609548,
+      "ci95_high": 0.23847849651712907,
+      "fdr_bh": 0.7713228677132287
+    },
+    {
+      "outcome": "b4_rmse",
+      "predictor": "min_condition_cells",
+      "effect": -0.7749815102732966,
+      "ci95_low": -0.8471361452607045,
+      "ci95_high": -0.6707718449613055,
+      "fdr_bh": 0.00031663500316635006
+    },
+    {
+      "outcome": "b4_rmse",
+      "predictor": "trametinib_sensitivity",
+      "effect": 0.2174403063251815,
+      "ci95_low": 0.004590164456842072,
+      "ci95_high": 0.40921921102104586,
+      "fdr_bh": 0.06277633106254593
+    },
+    {
+      "outcome": "cclr_rmse",
+      "predictor": "response_rms",
+      "effect": 0.9738178665607051,
+      "ci95_low": 0.9517142939091721,
+      "ci95_high": 0.9837526157649142,
+      "fdr_bh": 0.00031663500316635006
+    },
+    {
+      "outcome": "cclr_rmse",
+      "predictor": "baseline_novelty",
+      "effect": 0.03429541595925297,
+      "ci95_low": -0.16787045021632907,
+      "ci95_high": 0.24764380966250973,
+      "fdr_bh": 0.7713228677132287
+    },
+    {
+      "outcome": "cclr_rmse",
+      "predictor": "min_condition_cells",
+      "effect": -0.7762100337416523,
+      "ci95_low": -0.8484365789572302,
+      "ci95_high": -0.6680181049996365,
+      "fdr_bh": 0.00031663500316635006
+    },
+    {
+      "outcome": "cclr_rmse",
+      "predictor": "trametinib_sensitivity",
+      "effect": 0.22202073474695663,
+      "ci95_low": 0.012501598653284561,
+      "ci95_high": 0.4146972269083012,
+      "fdr_bh": 0.049049640490496406
+    }
+  ],
+  "pathway_enrichment_fdr05": 9,
+  "target_genes": 15,
+  "high_error_lines": 24,
+  "interpretation_only": true,
+  "sensitivity_used_as_predictor": false
+}

@@ -83,15 +83,23 @@ def _line_metrics(
     }
 
 
-def _summarize_metrics(metrics: pd.DataFrame, seed: int) -> pd.DataFrame:
+def _summarize_metrics(
+    metrics: pd.DataFrame,
+    seed: int,
+    models: list[str] | None = None,
+    metric_names: list[str] | None = None,
+    bootstrap_replicates: int = 2_000,
+) -> pd.DataFrame:
+    selected_models = MODELS if models is None else models
+    selected_metrics = METRICS if metric_names is None else metric_names
     rows: list[dict[str, float | int | str]] = []
-    for model_index, model in enumerate(MODELS):
+    for model_index, model in enumerate(selected_models):
         model_rows = metrics.loc[metrics["model"].eq(model)]
-        for metric_index, metric in enumerate(METRICS):
+        for metric_index, metric in enumerate(selected_metrics):
             values = model_rows[metric].to_numpy(dtype=float)
             mean, low, high = bootstrap_mean_interval(
                 values,
-                n_bootstrap=2_000,
+                n_bootstrap=bootstrap_replicates,
                 seed=seed + 100 * model_index + metric_index,
             )
             rows.append(
@@ -102,18 +110,24 @@ def _summarize_metrics(metrics: pd.DataFrame, seed: int) -> pd.DataFrame:
                     "ci95_low": low,
                     "ci95_high": high,
                     "n_cell_lines": int(np.isfinite(values).sum()),
-                    "bootstrap_replicates": 2_000,
+                    "bootstrap_replicates": bootstrap_replicates,
                 }
             )
     return pd.DataFrame(rows)
 
 
-def _comparison_table(summary: pd.DataFrame) -> pd.DataFrame:
+def _comparison_table(
+    summary: pd.DataFrame,
+    models: list[str] | None = None,
+    metric_names: list[str] | None = None,
+) -> pd.DataFrame:
+    selected_models = MODELS if models is None else models
+    selected_metrics = METRICS if metric_names is None else metric_names
     rows: list[dict[str, float | str]] = []
-    for model in MODELS:
+    for model in selected_models:
         selected = summary.loc[summary["model"].eq(model)].set_index("metric")
         row: dict[str, float | str] = {"model": model}
-        for metric in METRICS:
+        for metric in selected_metrics:
             row[f"{metric}_mean"] = float(selected.loc[metric, "macro_mean"])
             row[f"{metric}_ci95_low"] = float(selected.loc[metric, "ci95_low"])
             row[f"{metric}_ci95_high"] = float(selected.loc[metric, "ci95_high"])

@@ -12,7 +12,7 @@
     "B3",
     "B4"
   ],
-  "total_seconds": 4.543750249998993,
+  "total_seconds": 4.631574667000677,
   "predictions_rows": 470,
   "each_cell_line_predicted_once_per_model": true,
   "primary_metrics": {
@@ -58,7 +58,7 @@
     }
   },
   "prediction_sha256": "7d905af11b10f178954a2a9b5c0518a80efe2a2212054c4dbb23160356ad797c",
-  "models_config_sha256": "64140e8aa0c6b0644ae83d355176fb40cfdb74700f582b373c6840af102e932d",
+  "models_config_sha256": "1e3c092f83beb74891b3701ee7fdfc50b4aeae2ae966b4afacc067b822fc9945",
   "splits_config_sha256": "4e3d4a28010332552af2595ad50c43ca4145141a023dad39e991e408d4036834",
   "sensitivity_used_as_predictor": false,
   "mutations_used_as_predictor": false

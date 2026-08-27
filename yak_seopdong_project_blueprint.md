@@ -588,6 +588,17 @@ ridge regression으로 반응 점수를 예측한다.
 - 동일 seed/config에서 결과 재현
 - B0–B4와 공정한 비교 완료
 
+#### 실행 결과 (2026-08-27)
+
+- strict 94-line, outer 5-fold / inner 4-fold에서 CCLR held-out 예측 94개를 완성했다.
+- CCLR RMSE는 `0.322383`, B1 대비 gain은 `0.001367`이다.
+- B4 대비 paired RMSE gain은 `-0.000348` (95% CI `-0.000584–-0.000105`)로,
+  저차원 response basis가 direct ridge를 능가한다는 가설은 지지되지 않았다.
+- 동일 seed/config prediction SHA-256 재현, fold artifact 5개, component loading/score 표,
+  `04_main_model.ipynb`를 생성했다.
+- 모든 fold가 response rank 20과 alpha 100을 선택한 경계값 현상은 결과를 본 뒤 W6
+  grid를 바꾸지 않고 Stage 7 ablation 대상으로 이관한다.
+
 ---
 
 ### Stage 7. Ablation과 누수 감사

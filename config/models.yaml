@@ -31,9 +31,19 @@ baseline_protocol:
 main_model:
   id: CCLR
   name: context_conditioned_low_rank_response
+  feature_selection: same_as_baseline_training_control_only
   control_pca_dimensions: [5, 10, 20, 30]
+  control_pca_whiten: true
   response_ranks: [2, 5, 10, 20]
+  response_pca_whiten: false
   ridge_alphas: [0.01, 0.1, 1.0, 10.0, 100.0]
+  selection_metric: cell_line_macro_rmse_delta
+  tie_break: lower_response_rank_then_lower_control_dimension_then_higher_alpha
+  target_genes: all_32738
+  top_k: 50
+  bootstrap_replicates: 2000
+  sensitivity_as_predictor: false
+  mutations_as_predictor: false
 
 compute:
   device: cpu

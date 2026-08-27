@@ -1,6 +1,6 @@
 # Data Dictionary
 
-상태: Stage 1–5 원자료, pseudobulk, annotation, split, baseline 계약 확인 완료. 아래 항목은 추정값이 아니라 실행으로 확인한 값만 기록한다.
+상태: Stage 1–6 원자료, pseudobulk, annotation, split, baseline, CCLR 계약 확인 완료. 아래 항목은 추정값이 아니라 실행으로 확인한 값만 기록한다.
 
 ## Source manifest
 
@@ -49,6 +49,11 @@
 | `inner_split_assignments.csv` | 376 | 5개 outer train 각각의 4-fold inner assignment |
 | `baseline_predictions.parquet` | 470 | 94 lines × B0–B4, `predicted_delta_log1p_cpm[32738]` |
 | `baseline_metrics_by_line.csv` | 470 | cell-line 단위 RMSE/NRMSE/PCC/Spearman/top-50/context/gain |
+| `cclr_predictions.parquet` | 94 | 각 held-out line의 CCLR `predicted_delta_log1p_cpm[32738]` |
+| `cclr_metrics_by_line.csv` | 94 | CCLR의 cell-line 단위 metric과 B1/B4 paired gain |
+| `cclr_component_scores.csv` | 1,880 | fold별 held-out observed/predicted response-PC score |
+| `cclr_component_top_loadings.csv` | 10,000 | 5 folds × 20 components × 양/음 방향 상위 50 genes |
+| `cclr_outer_fold_*.npz` | 5 files | control PCA, response PCA, ridge와 선택 hyperparameter |
 
 `all_CL_features.rds`는 Figshare v3의 `Trametinib_24hr_expt3`와 `metadata` 객체를 사용한다. strict 94 lines에서 lineage, sensitivity, 네 hotspot mutation field의 필수값은 모두 완전하다. PRISM AUC 2개와 GDSC AUC 39개는 개별 source에서 결측이지만 저자의 결합 `AUC_avg`와 `sens=1-AUC_avg`는 94개 모두 존재한다.
 

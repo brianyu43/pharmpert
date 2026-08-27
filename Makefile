@@ -1,4 +1,4 @@
-.PHONY: install smoke test lint data-probe core-audit pseudobulk metadata landscape splits baselines notebooks
+.PHONY: install smoke test lint data-probe core-audit pseudobulk metadata landscape splits baselines cclr validate-cclr notebooks
 
 install:
 	uv sync --all-groups
@@ -33,9 +33,16 @@ splits:
 baselines:
 	uv run python -m yakseopdong run-baselines
 
+cclr:
+	uv run python -m yakseopdong run-cclr
+
+validate-cclr:
+	uv run python -m yakseopdong validate-cclr
+
 notebooks:
 	uv run python scripts/build_notebooks.py
 	uv run jupyter nbconvert --execute --to notebook --inplace notebooks/00_data_audit.ipynb
 	uv run jupyter nbconvert --execute --to notebook --inplace notebooks/01_qc.ipynb
 	uv run jupyter nbconvert --execute --to notebook --inplace notebooks/02_response_landscape.ipynb
 	uv run jupyter nbconvert --execute --to notebook --inplace notebooks/03_baselines.ipynb
+	uv run jupyter nbconvert --execute --to notebook --inplace notebooks/04_main_model.ipynb

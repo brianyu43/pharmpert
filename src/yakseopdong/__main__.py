@@ -27,6 +27,8 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("landscape", help="build exploratory control/response PCA")
     subparsers.add_parser("build-splits", help="freeze nested cell-line splits")
     subparsers.add_parser("run-baselines", help="run nested-CV B0-B4 baselines")
+    subparsers.add_parser("run-cclr", help="run nested-CV CCLR main model")
+    subparsers.add_parser("validate-cclr", help="independently validate W6 outputs")
     return parser
 
 
@@ -81,6 +83,18 @@ def main() -> int:
         from yakseopdong.benchmark import run_baselines
 
         report = run_baselines(repository_root())
+        print(json.dumps(report, indent=2))
+        return 0
+    if args.command == "run-cclr":
+        from yakseopdong.cclr import run_cclr
+
+        report = run_cclr(repository_root())
+        print(json.dumps(report, indent=2))
+        return 0
+    if args.command == "validate-cclr":
+        from yakseopdong.cclr_validation import validate_cclr
+
+        report = validate_cclr(repository_root())
         print(json.dumps(report, indent=2))
         return 0
     raise RuntimeError(f"unknown command: {args.command}")

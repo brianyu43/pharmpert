@@ -352,3 +352,185 @@ def write_baseline_figure(root: Path, comparison: pd.DataFrame) -> None:
     )
     fig.tight_layout()
     _finish(fig, root / "results" / "figures" / "baseline_performance.png")
+
+
+def write_cclr_figures(
+    root: Path,
+    comparison: pd.DataFrame,
+    cclr_metrics: pd.DataFrame,
+    hyperparameters: pd.DataFrame,
+    component_summary: pd.DataFrame,
+) -> None:
+    """Write honest CCLR benchmark and response-component diagnostic figures."""
+    selected_models = ["B1", "B4", "CCLR"]
+    selected = comparison.set_index("model").loc[selected_models]
+    positions = np.arange(len(selected_models))
+    colors = [GOLD, BLUE, "#7A6FAC"]
+    fig, axes = plt.subplots(1, 3, figsize=(13.6, 4.6))
+
+    rmse_means = selected["rmse_delta_mean"].to_numpy(dtype=float)
+    rmse_errors = np.vstack(
+        [
+            rmse_means - selected["rmse_delta_ci95_low"].to_numpy(dtype=float),
+            selected["rmse_delta_ci95_high"].to_numpy(dtype=float) - rmse_means,
+        ]
+    )
+    axes[0].errorbar(
+        positions,
+        rmse_means,
+        yerr=rmse_errors,
+        fmt="none",
+        ecolor=INK,
+        capsize=4,
+        linewidth=1,
+    )
+    axes[0].scatter(positions, rmse_means, s=70, c=colors, edgecolor=INK, linewidth=0.5)
+    for position, value in zip(positions, rmse_means, strict=True):
+        axes[0].text(position, value + 0.0008, f"{value:.4f}", ha="center", fontsize=8)
+    axes[0].set_title("Held-out response error", loc="left", color=INK)
+    axes[0].set_ylabel("Macro RMSE-Δ · focused scale")
+    axes[0].set_xticks(positions, selected_models)
+    padding = max(float(np.ptp(rmse_means)) * 0.8, 0.002)
+    axes[0].set_ylim(float(rmse_means.min() - padding), float(rmse_means.max() + padding))
+
+    gain_models = ["B4", "CCLR"]
+    gain_selected = selected.loc[gain_models]
+    gain_positions = np.arange(len(gain_models))
+    gains = gain_selected["rmse_gain_vs_b1_mean"].to_numpy(dtype=float)
+    gain_errors = np.vstack(
+        [
+            gains
+            - gain_selected["rmse_gain_vs_b1_ci95_low"].to_numpy(dtype=float),
+            gain_selected["rmse_gain_vs_b1_ci95_high"].to_numpy(dtype=float) - gains,
+        ]
+    )
+    axes[1].axhline(0, color=INK, linewidth=1)
+    axes[1].errorbar(
+        gain_positions,
+        gains,
+        yerr=gain_errors,
+        fmt="none",
+        ecolor=INK,
+        capsize=4,
+        linewidth=1,
+    )
+    axes[1].scatter(
+        gain_positions,
+        gains,
+        s=70,
+        c=[BLUE, "#7A6FAC"],
+        edgecolor=INK,
+        linewidth=0.5,
+    )
+    for position, value in zip(gain_positions, gains, strict=True):
+        axes[1].text(position, value + 0.00035, f"{value:+.4f}", ha="center", fontsize=8)
+    axes[1].set_title("Improvement over B1", loc="left", color=INK)
+    axes[1].set_ylabel("Paired RMSE gain (higher is better)")
+    axes[1].set_xticks(gain_positions, gain_models)
+
+    paired_gain = cclr_metrics["rmse_gain_vs_b4"].to_numpy(dtype=float)
+    axes[2].hist(paired_gain, bins=16, color="#7A6FAC", edgecolor="white")
+    axes[2].axvline(0, color=INK, linewidth=1)
+    axes[2].axvline(
+        paired_gain.mean(), color=GOLD, linewidth=1.5, linestyle="--", label="macro mean"
+    )
+    axes[2].set_title("CCLR paired difference vs B4", loc="left", color=INK)
+    axes[2].set_xlabel("Per-cell-line RMSE gain")
+    axes[2].set_ylabel("Cell lines")
+    axes[2].legend(frameon=False, fontsize=8)
+    for axis in axes:
+        axis.grid(axis="y", color=GRID, linewidth=0.7, alpha=0.7)
+        axis.spines[["top", "right"]].set_visible(False)
+    fig.suptitle(
+        "Context-conditioned low-rank response benchmark",
+        x=0.06,
+        y=1.02,
+        ha="left",
+        fontsize=13,
+        color=INK,
+    )
+    fig.text(
+        0.06,
+        -0.015,
+        "Strict 94-line cohort · lineage-aware outer 5-fold · 95% paired cell-line bootstrap CI",
+        color="#59636E",
+        fontsize=9,
+    )
+    fig.tight_layout(rect=[0, 0.04, 1, 1])
+    _finish(fig, root / "results" / "figures" / "cclr_performance.png")
+
+    folds = hyperparameters["outer_fold"].to_numpy(dtype=int)
+    component_pivot = component_summary.pivot(
+        index="outer_fold", columns="component", values="observed_vs_predicted_pcc"
+    ).sort_index()
+    fig, axes = plt.subplots(1, 3, figsize=(13.6, 4.5))
+    width = 0.36
+    axes[0].bar(
+        folds - width / 2,
+        hyperparameters["control_dimension"],
+        width=width,
+        color=BLUE,
+        label="control PCs",
+    )
+    axes[0].bar(
+        folds + width / 2,
+        hyperparameters["response_rank"],
+        width=width,
+        color="#7A6FAC",
+        label="response rank",
+    )
+    axes[0].set_title("Selected model dimensions", loc="left", color=INK)
+    axes[0].set_xlabel("Outer fold")
+    axes[0].set_ylabel("Dimensions")
+    axes[0].set_xticks(folds)
+    axes[0].legend(frameon=False, fontsize=8)
+
+    axes[1].bar(
+        folds,
+        100 * hyperparameters["response_variance_explained"],
+        color="#7A6FAC",
+        edgecolor=INK,
+        linewidth=0.4,
+    )
+    axes[1].set_title("Selected response subspace", loc="left", color=INK)
+    axes[1].set_xlabel("Outer fold")
+    axes[1].set_ylabel("Training-response variance explained (%)")
+    axes[1].set_xticks(folds)
+
+    matrix = component_pivot.to_numpy(dtype=float)
+    image = axes[2].imshow(
+        matrix,
+        aspect="auto",
+        cmap="coolwarm",
+        vmin=-1,
+        vmax=1,
+        interpolation="nearest",
+    )
+    axes[2].set_title("Held-out component-score PCC", loc="left", color=INK)
+    axes[2].set_xlabel("Response component")
+    axes[2].set_ylabel("Outer fold")
+    axes[2].set_xticks(np.arange(len(component_pivot.columns)), component_pivot.columns)
+    axes[2].set_yticks(np.arange(len(component_pivot.index)), component_pivot.index)
+    colorbar = fig.colorbar(image, ax=axes[2], shrink=0.75, pad=0.03)
+    colorbar.set_label("Pearson r")
+    for axis in axes[:2]:
+        axis.grid(axis="y", color=GRID, linewidth=0.7, alpha=0.7)
+        axis.spines[["top", "right"]].set_visible(False)
+    fig.suptitle(
+        "Fold-specific CCLR response programs",
+        x=0.06,
+        y=1.02,
+        ha="left",
+        fontsize=13,
+        color=INK,
+    )
+    fig.text(
+        0.06,
+        -0.015,
+        "Response bases are fit independently on each outer-training fold; "
+        "component numbers are not aligned across folds.",
+        color="#59636E",
+        fontsize=9,
+    )
+    fig.tight_layout(rect=[0, 0.04, 1, 1])
+    _finish(fig, root / "results" / "figures" / "cclr_components.png")

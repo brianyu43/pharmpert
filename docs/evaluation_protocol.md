@@ -1,4 +1,4 @@
-# Evaluation Protocol v1.0 — Frozen baseline benchmark
+# Evaluation Protocol v1.1 — Frozen baseline and CCLR benchmark
 
 이 문서는 모델 결과를 보기 전에 정한 평가 원칙과 Stage 4에서 고정한 실제 split/feature 규칙을 기록한다. pathway gene set 평가는 아직 버전이 고정되지 않아 baseline 주 결과에서 제외한다.
 
@@ -14,6 +14,18 @@
 - B4 ridge alpha: `[0.01, 0.1, 1, 10, 100]`
 - B2: 같은 lineage training line이 2개 미만이면 B1 fallback
 - sensitivity/mutation: predictor 사용 금지, 해석 전용
+
+### W6 CCLR extension frozen before execution
+
+- control feature filter/PCA: B4와 동일한 training-only 규칙
+- control PCA dimensions: `[5, 10, 20, 30]`; whitening 사용
+- response PCA ranks: `[2, 5, 10, 20]`; whitening 미사용
+- CCLR ridge alpha: `[0.01, 0.1, 1, 10, 100]`
+- selection metric: inner-validation cell-line macro RMSE-Δ
+- exact-tie rule: 작은 response rank, 작은 control dimension, 큰 alpha 순
+- response target: 전체 32,738 genes
+- 비교: 같은 held-out line에서 B1 및 B4와 paired RMSE/NRMSE difference
+- 결과를 본 뒤 W6 grid를 확장하지 않으며, 경계값 검사는 W7 ablation으로 분리
 
 ## 일반화 단위
 
@@ -56,8 +68,10 @@ residual_predicted = delta_predicted - mu_train
 - `PCC-context`: `residual_predicted`와 `residual_observed`의 Pearson correlation
 - `RMSE gain vs B1 = RMSE(B1) - RMSE(model)`
 - `NRMSE gain vs B1 = NRMSE(B1) - NRMSE(model)`
+- `RMSE gain vs B4 = RMSE(B4) - RMSE(CCLR)`
+- `NRMSE gain vs B4 = NRMSE(B4) - NRMSE(CCLR)`
 
-양의 gain은 해당 모델이 공통 평균 반응 B1보다 낫다는 뜻이다. 프로젝트의 맥락 예측 주장은 raw PCC만이 아니라 gain과 residual metric을 함께 근거로 한다.
+양의 gain은 기준 모델보다 낫다는 뜻이다. 프로젝트의 맥락 예측 주장은 raw PCC만이 아니라 gain과 residual metric을 함께 근거로 한다.
 
 ## 집계와 불확실성
 
@@ -70,6 +84,7 @@ residual_predicted = delta_predicted - mu_train
 ## 사전 판정 규칙
 
 - B1 대비 개선 CI가 0을 포함하면 일관된 개선이라고 주장하지 않는다.
+- CCLR의 B4 대비 paired gain CI가 0 이하이면 CCLR 우위를 주장하지 않는다.
 - 일부 lineage에서만 나타나는 개선은 전체 일반화 성능으로 표현하지 않는다.
 - split, primary metric, top-k, bootstrap seed는 test 결과를 본 뒤 바꾸지 않는다.
 - 규칙 변경이 불가피하면 이전 결과와 분리된 protocol version 및 이유를 남긴다.

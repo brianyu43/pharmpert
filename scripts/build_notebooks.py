@@ -1,7 +1,8 @@
-"""Build the reader-facing Stage 1/2 notebooks with nbformat."""
+"""Build the reader-facing project notebooks with nbformat."""
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import nbformat as nbf
@@ -326,6 +327,102 @@ print(f"B4 relative RMSE improvement vs B1: {relative_gain:.2%}")
     nbf.write(_notebook(cells), root / "notebooks" / "03_baselines.ipynb")
 
 
+def build_main_model(root: Path) -> None:
+    report = json.loads((root / "results/logs/cclr_summary.json").read_text())
+    metrics = report["primary_metrics"]
+    gain_b1 = metrics["rmse_gain_vs_b1_mean"]
+    gain_b4 = metrics["rmse_gain_vs_b4_mean"]
+    b4_low = metrics["rmse_gain_vs_b4_ci95_low"]
+    b4_high = metrics["rmse_gain_vs_b4_ci95_high"]
+    comparison_phrase = (
+        "CCLR이 B4보다 일관되게 낫다"
+        if b4_low > 0
+        else "CCLR의 B4 대비 차이는 0을 가로질러 우위를 확정하지 못한다"
+    )
+    cells = [
+        nbf.v4.new_markdown_cell(
+            f"""# Context-conditioned low-rank response (CCLR)
+
+## tl;dr
+
+94개 세포주의 lineage-aware outer 5-fold와 nested inner 4-fold에서 CCLR을
+평가했다. CCLR의 B1 대비 RMSE gain은 `{gain_b1:.6f}`, B4 대비 gain은
+`{gain_b4:.6f}` (95% CI `{b4_low:.6f}–{b4_high:.6f}`)다. {comparison_phrase}.
+이 결과는 32,738-gene 반응을 training-fold의 공유 response component로 제한했을 때
+직접 gene-level ridge보다 일반화가 좋아지는지를 검정한 것이다."""
+        ),
+        nbf.v4.new_code_cell(ROOT_CELL),
+        nbf.v4.new_code_cell(
+            """summary = json.loads((root / "results/logs/cclr_summary.json").read_text())
+validation = json.loads((root / "results/logs/cclr_validation.json").read_text())
+comparison = pd.read_csv(root / "results/tables/model_comparison_w6.csv")
+hyperparameters = pd.read_csv(root / "results/tables/cclr_hyperparameters.csv")
+component_summary = pd.read_csv(root / "results/tables/cclr_component_summary.csv")
+loadings = pd.read_csv(root / "results/tables/cclr_component_top_loadings.csv")
+artifact_manifest = pd.read_csv(root / "results/tables/cclr_model_artifacts.csv")
+display(comparison.loc[comparison["model"].isin(["B1", "B4", "CCLR"]), [
+    "model", "rmse_delta_mean", "pcc_delta_mean", "pcc_context_mean",
+    "rmse_gain_vs_b1_mean", "rmse_gain_vs_b1_ci95_low", "rmse_gain_vs_b1_ci95_high",
+    "rmse_gain_vs_b4_mean", "rmse_gain_vs_b4_ci95_low", "rmse_gain_vs_b4_ci95_high",
+]])
+display(hyperparameters)
+assert summary["each_cell_line_predicted_once"]
+assert summary["predictions_rows"] == 94
+assert summary["outer_test_response_used_for_fit"] is False
+assert summary["repeat_run_prediction_sha256_match"] is True
+assert len(artifact_manifest) == 5
+assert validation["status"] == "pass"
+"""
+        ),
+        nbf.v4.new_markdown_cell(
+            """## Context & Methods
+
+### Model
+
+각 outer-training fold에서 response를 `Δ ≈ μ + Ws`로 PCA 압축한다. 같은
+training control에서 상위 5,000 variable genes와 whitened PCA score `z`를 만들고,
+ridge로 `z → s`를 학습한 뒤 `μ + Wŝ`로 32,738-gene response를 복원한다.
+
+### Key Assumptions
+
+- outer test 단위는 cell line이며 각 line은 정확히 한 번만 예측한다.
+- control gene filter/PCA와 response PCA는 각 inner/outer training partition에서 다시 fit한다.
+- control 차원, response rank, ridge alpha는 inner-CV macro RMSE로만 선택한다.
+- response PCA component의 부호와 번호는 fold별로 임의이고 서로 직접 정렬되지 않는다.
+- outer-test response는 모델 fit에 쓰지 않고, 예측 완료 후 metric과 component-score 평가에만 쓴다.
+- sensitivity와 mutation은 predictor가 아니다."""
+        ),
+        nbf.v4.new_markdown_cell("## Results"),
+        nbf.v4.new_code_cell(
+            """display(Image(filename=str(root / "results/figures/cclr_performance.png")))
+display(Image(filename=str(root / "results/figures/cclr_components.png")))
+"""
+        ),
+        nbf.v4.new_markdown_cell("### Component inspection"),
+        nbf.v4.new_code_cell(
+            """display(component_summary.head(20))
+display(loadings.loc[
+    loadings["loading_rank"].le(10),
+    ["outer_fold", "component", "direction", "loading_rank", "gene_symbol", "loading"],
+].head(40))
+"""
+        ),
+        nbf.v4.new_markdown_cell(
+            f"""## Takeaways
+
+- CCLR의 B1 대비 평균 RMSE gain은 `{gain_b1:.6f}`다. 이는 baseline context가
+  공유 저차원 반응 프로그램의 세기를 예측하는지에 대한 주 검정이다.
+- CCLR의 B4 대비 paired gain 95% CI는 `{b4_low:.6f}–{b4_high:.6f}`다.
+  {comparison_phrase}.
+- response rank와 control 차원이 fold마다 달라질 수 있어, component loading은
+  fold별 해석 단위로 유지하며 component 번호를 전체 코호트의 고정 pathway로 보지 않는다.
+- W6는 모델 비교를 완료하지만 pathway enrichment, rank/feature ablation, lineage·mutation
+  확장은 W7의 별도 분석이다."""
+        ),
+    ]
+    nbf.write(_notebook(cells), root / "notebooks" / "04_main_model.ipynb")
+
+
 def main() -> None:
     root = Path(__file__).resolve().parents[1]
     (root / "notebooks").mkdir(exist_ok=True)
@@ -333,6 +430,7 @@ def main() -> None:
     build_qc(root)
     build_response_landscape(root)
     build_baselines(root)
+    build_main_model(root)
 
 
 if __name__ == "__main__":

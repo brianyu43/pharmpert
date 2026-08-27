@@ -1,0 +1,24 @@
+{
+  "status": "pass",
+  "checks": {
+    "prediction_rows_are_94": true,
+    "each_cell_line_predicted_once": true,
+    "fit_api_has_no_test_response": true,
+    "stored_metrics_match_independent_calculation": true,
+    "paired_bootstrap_ci_matches": true,
+    "five_artifacts_present": true,
+    "artifact_hashes_match_manifest": true,
+    "artifact_predictions_reconstruct": true,
+    "repeat_prediction_hash_matches": true,
+    "prediction_hash_matches_summary": true
+  },
+  "independent_macro_rmse": 0.32238303352471676,
+  "independent_macro_rmse_gain_vs_b1": 0.0013665906608175576,
+  "independent_macro_rmse_gain_vs_b4": -0.00034826672070002257,
+  "independent_rmse_gain_vs_b4_ci95": [
+    -0.0005839714635708413,
+    -0.0001051905411261185
+  ],
+  "maximum_metric_absolute_difference": 1.3834419720915037e-16,
+  "maximum_artifact_prediction_absolute_difference": 2.2805749111398654e-07
+}

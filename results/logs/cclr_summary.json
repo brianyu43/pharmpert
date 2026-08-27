@@ -1,0 +1,79 @@
+{
+  "status": "complete",
+  "device": "cpu",
+  "cell_lines": 94,
+  "genes": 32738,
+  "outer_folds": 5,
+  "inner_folds": 4,
+  "model": "CCLR",
+  "total_seconds": 4.972458125004778,
+  "predictions_rows": 94,
+  "each_cell_line_predicted_once": true,
+  "selected_hyperparameters": [
+    {
+      "outer_fold": 0,
+      "control_dimension": 30,
+      "response_rank": 20,
+      "alpha": 100.0,
+      "selected_control_genes": 5000,
+      "response_variance_explained": 0.49523925182024164,
+      "parameter_count": 688118
+    },
+    {
+      "outer_fold": 1,
+      "control_dimension": 20,
+      "response_rank": 20,
+      "alpha": 100.0,
+      "selected_control_genes": 5000,
+      "response_variance_explained": 0.5039445095325906,
+      "parameter_count": 687918
+    },
+    {
+      "outer_fold": 2,
+      "control_dimension": 10,
+      "response_rank": 20,
+      "alpha": 100.0,
+      "selected_control_genes": 5000,
+      "response_variance_explained": 0.5056936300966345,
+      "parameter_count": 687718
+    },
+    {
+      "outer_fold": 3,
+      "control_dimension": 5,
+      "response_rank": 20,
+      "alpha": 100.0,
+      "selected_control_genes": 5000,
+      "response_variance_explained": 0.49141032921274613,
+      "parameter_count": 687618
+    },
+    {
+      "outer_fold": 4,
+      "control_dimension": 20,
+      "response_rank": 20,
+      "alpha": 100.0,
+      "selected_control_genes": 5000,
+      "response_variance_explained": 0.5098963271348338,
+      "parameter_count": 687918
+    }
+  ],
+  "primary_metrics": {
+    "rmse_delta_mean": 0.32238303352471676,
+    "pcc_delta_mean": 0.4255012860680672,
+    "pcc_context_mean": 0.09652083882218145,
+    "rmse_gain_vs_b1_mean": 0.0013665906608175576,
+    "rmse_gain_vs_b1_ci95_low": 0.0008227561682265964,
+    "rmse_gain_vs_b1_ci95_high": 0.0019328389507898848,
+    "rmse_gain_vs_b4_mean": -0.0003482667207000465,
+    "rmse_gain_vs_b4_ci95_low": -0.0005839714635708632,
+    "rmse_gain_vs_b4_ci95_high": -0.00010519054112614201
+  },
+  "prediction_sha256": "68387db71ec768bde25e6934cd03193d131f930ca9c3c509f61820f6af2fd31b",
+  "repeat_run_prediction_sha256_match": true,
+  "models_config_sha256": "1e3c092f83beb74891b3701ee7fdfc50b4aeae2ae966b4afacc067b822fc9945",
+  "splits_config_sha256": "4e3d4a28010332552af2595ad50c43ca4145141a023dad39e991e408d4036834",
+  "artifact_manifest_sha256": "cb8c5e71b5d230d128db77befb76391a1247a5ca038053f0c25f2c95ea4f3c61",
+  "outer_test_response_used_for_fit": false,
+  "outer_test_response_used_for_component_evaluation_only": true,
+  "sensitivity_used_as_predictor": false,
+  "mutations_used_as_predictor": false
+}

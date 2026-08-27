@@ -1,6 +1,11 @@
 import numpy as np
 
-from yakseopdong.models import fit_control_embedding, fit_predict_baselines
+from yakseopdong.models import (
+    fit_control_embedding,
+    fit_predict_baselines,
+    fit_predict_cclr,
+    fit_response_embedding,
+)
 
 
 def test_control_embedding_is_fit_only_from_training_matrix() -> None:
@@ -43,3 +48,54 @@ def test_all_baselines_predict_without_outer_test_response() -> None:
     assert all(prediction.shape == (4, 50) for prediction in predictions.values())
     assert np.count_nonzero(predictions["B0"]) == 0
     assert info["b2_fallback"] == [False, False, True, False]
+
+
+def test_response_embedding_reconstructs_training_mean_at_zero_score() -> None:
+    rng = np.random.default_rng(12)
+    train_response = rng.normal(size=(14, 30))
+    embedding = fit_response_embedding(train_response, max_components=4, seed=7)
+    reconstructed_mean = embedding.inverse_transform(np.zeros((1, 4)))[0]
+    np.testing.assert_allclose(reconstructed_mean, train_response.mean(axis=0))
+
+
+def test_cclr_predicts_without_outer_test_response_and_is_deterministic() -> None:
+    rng = np.random.default_rng(22)
+    train_control = rng.normal(loc=2.0, scale=0.5, size=(20, 60))
+    latent = train_control[:, :3] @ rng.normal(size=(3, 2))
+    response_basis = rng.normal(scale=0.2, size=(2, 60))
+    train_response = latent @ response_basis + rng.normal(scale=0.01, size=(20, 60))
+    test_control = rng.normal(loc=2.0, scale=0.5, size=(5, 60))
+    inner_folds = np.tile(np.arange(4), 5)
+    config = {
+        "control_pca_dimensions": [2, 3],
+        "response_ranks": [1, 2],
+        "ridge_alphas": [0.1, 1.0],
+    }
+    feature_config = {
+        "max_variable_genes": 40,
+        "min_mean_log1p_cpm": 0.1,
+    }
+    first, first_info, first_artifact = fit_predict_cclr(
+        train_control,
+        train_response,
+        test_control,
+        inner_folds,
+        config,
+        feature_config,
+        seed=31,
+    )
+    second, second_info, _ = fit_predict_cclr(
+        train_control,
+        train_response,
+        test_control,
+        inner_folds,
+        config,
+        feature_config,
+        seed=31,
+    )
+    assert first.shape == (5, 60)
+    assert first_info["response_rank"] in {1, 2}
+    assert first_info["control_dimension"] in {2, 3}
+    assert first_info == second_info
+    np.testing.assert_allclose(first, second)
+    np.testing.assert_allclose(first, first_artifact.predict(test_control))

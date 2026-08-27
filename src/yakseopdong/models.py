@@ -24,6 +24,38 @@ class ControlEmbedding:
         return self.pca.transform(np.asarray(control)[:, self.gene_indices])
 
 
+@dataclass(frozen=True)
+class ResponseEmbedding:
+    """Training-fitted low-rank response basis."""
+
+    pca: PCA
+
+    def transform(self, response: NDArray[np.floating]) -> NDArray[np.float64]:
+        return self.pca.transform(np.asarray(response, dtype=np.float64))
+
+    def inverse_transform(self, scores: NDArray[np.floating]) -> NDArray[np.float64]:
+        return self.pca.inverse_transform(np.asarray(scores, dtype=np.float64))
+
+
+@dataclass(frozen=True)
+class CCLRArtifact:
+    """All training-fitted objects needed for one outer-fold CCLR prediction."""
+
+    control_embedding: ControlEmbedding
+    response_embedding: ResponseEmbedding
+    ridge: Ridge
+    control_dimension: int
+    response_rank: int
+    alpha: float
+
+    def predict(self, control: NDArray[np.floating]) -> NDArray[np.float32]:
+        control_scores = self.control_embedding.transform(control)[:, : self.control_dimension]
+        response_scores = np.asarray(self.ridge.predict(control_scores), dtype=np.float64)
+        if response_scores.ndim == 1:
+            response_scores = response_scores[:, None]
+        return self.response_embedding.inverse_transform(response_scores).astype(np.float32)
+
+
 def fit_control_embedding(
     train_control: NDArray[np.floating],
     max_components: int,
@@ -51,6 +83,28 @@ def fit_control_embedding(
     )
     pca.fit(train[:, selected])
     return ControlEmbedding(gene_indices=selected, pca=pca)
+
+
+def fit_response_embedding(
+    train_response: NDArray[np.floating],
+    max_components: int,
+    seed: int,
+) -> ResponseEmbedding:
+    """Fit a response PCA basis using training responses only."""
+    train = np.asarray(train_response, dtype=np.float64)
+    if train.ndim != 2 or len(train) < 3:
+        raise ValueError("train_response must be a 2D matrix with at least three rows")
+    n_components = min(int(max_components), len(train) - 1, train.shape[1])
+    if n_components < 1:
+        raise ValueError("response PCA requires at least one feasible component")
+    pca = PCA(
+        n_components=n_components,
+        whiten=False,
+        svd_solver="randomized",
+        random_state=seed,
+    )
+    pca.fit(train)
+    return ResponseEmbedding(pca=pca)
 
 
 def nearest_neighbor_predictions(
@@ -172,6 +226,187 @@ def select_baseline_hyperparameters(
         b4_scores, key=lambda item: (item[0], item[1], item[2])
     )
     return best_b3_dimension, best_b4_dimension, best_alpha, trace
+
+
+def select_cclr_hyperparameters(
+    train_control: NDArray[np.floating],
+    train_response: NDArray[np.floating],
+    inner_fold_ids: NDArray[np.integer],
+    control_dimensions: list[int],
+    response_ranks: list[int],
+    ridge_alphas: list[float],
+    max_variable_genes: int,
+    min_mean_log1p_cpm: float,
+    seed: int,
+) -> tuple[int, int, float, list[dict[str, float | int | str]]]:
+    """Select CCLR hyperparameters entirely inside the outer training fold."""
+    control = np.asarray(train_control, dtype=np.float64)
+    response = np.asarray(train_response, dtype=np.float64)
+    fold_ids = np.asarray(inner_fold_ids, dtype=int)
+    if len(control) != len(response) or len(control) != len(fold_ids):
+        raise ValueError("inner-CV arrays have inconsistent row counts")
+    unique_folds = sorted(np.unique(fold_ids).tolist())
+    if len(unique_folds) < 2:
+        raise ValueError("inner CV requires at least two folds")
+
+    candidates = {
+        (int(dimension), int(rank), float(alpha)): []
+        for dimension in control_dimensions
+        for rank in response_ranks
+        for alpha in ridge_alphas
+    }
+    trace: list[dict[str, float | int | str]] = []
+    for inner_fold in unique_folds:
+        validation_mask = fold_ids == inner_fold
+        inner_train_mask = ~validation_mask
+        fold_seed = seed + 10_000 * int(inner_fold)
+        max_control = min(max(control_dimensions), int(inner_train_mask.sum()) - 1)
+        max_response = min(max(response_ranks), int(inner_train_mask.sum()) - 1)
+        control_embedding = fit_control_embedding(
+            control[inner_train_mask],
+            max_components=max_control,
+            max_variable_genes=max_variable_genes,
+            min_mean_log1p_cpm=min_mean_log1p_cpm,
+            seed=fold_seed,
+        )
+        response_embedding = fit_response_embedding(
+            response[inner_train_mask],
+            max_components=max_response,
+            seed=fold_seed + 1,
+        )
+        feasible_dimensions = _candidate_dimensions(
+            control_dimensions, control_embedding.pca.n_components_
+        )
+        feasible_ranks = _candidate_dimensions(
+            response_ranks, response_embedding.pca.n_components_
+        )
+        train_control_scores = control_embedding.transform(control[inner_train_mask])
+        validation_control_scores = control_embedding.transform(control[validation_mask])
+        train_response_scores = response_embedding.transform(response[inner_train_mask])
+        validation_response = response[validation_mask]
+
+        for dimension in feasible_dimensions:
+            for rank in feasible_ranks:
+                for alpha in ridge_alphas:
+                    ridge = Ridge(alpha=float(alpha), fit_intercept=True, solver="svd")
+                    ridge.fit(
+                        train_control_scores[:, :dimension],
+                        train_response_scores[:, :rank],
+                    )
+                    predicted_scores = np.asarray(
+                        ridge.predict(validation_control_scores[:, :dimension]),
+                        dtype=np.float64,
+                    )
+                    if predicted_scores.ndim == 1:
+                        predicted_scores = predicted_scores[:, None]
+                    padded_scores = np.zeros(
+                        (len(predicted_scores), response_embedding.pca.n_components_),
+                        dtype=np.float64,
+                    )
+                    padded_scores[:, :rank] = predicted_scores
+                    prediction = response_embedding.inverse_transform(padded_scores)
+                    line_losses = [
+                        rmse(observed, predicted)
+                        for observed, predicted in zip(
+                            validation_response, prediction, strict=True
+                        )
+                    ]
+                    key = (dimension, rank, float(alpha))
+                    candidates[key].extend(line_losses)
+                    trace.append(
+                        {
+                            "model": "CCLR",
+                            "inner_fold": int(inner_fold),
+                            "control_dimension": dimension,
+                            "response_rank": rank,
+                            "alpha": float(alpha),
+                            "mean_rmse": float(np.mean(line_losses)),
+                            "n_validation_lines": int(validation_mask.sum()),
+                        }
+                    )
+
+    scored = [
+        (float(np.mean(losses)), rank, dimension, -alpha, dimension, rank, alpha)
+        for (dimension, rank, alpha), losses in candidates.items()
+        if losses
+    ]
+    if not scored:
+        raise RuntimeError("inner CV produced no feasible CCLR candidate scores")
+    _, _, _, _, best_dimension, best_rank, best_alpha = min(scored)
+    return best_dimension, best_rank, best_alpha, trace
+
+
+def fit_predict_cclr(
+    train_control: NDArray[np.floating],
+    train_response: NDArray[np.floating],
+    test_control: NDArray[np.floating],
+    inner_fold_ids: NDArray[np.integer],
+    config: dict[str, Any],
+    feature_config: dict[str, Any],
+    seed: int,
+) -> tuple[NDArray[np.float32], dict[str, Any], CCLRArtifact]:
+    """Fit CCLR without accepting or inspecting outer-test responses."""
+    control_train = np.asarray(train_control, dtype=np.float64)
+    response_train = np.asarray(train_response, dtype=np.float64)
+    control_test = np.asarray(test_control, dtype=np.float64)
+    if len(control_train) != len(response_train):
+        raise ValueError("training control and response rows must align")
+    if control_train.shape[1] != control_test.shape[1]:
+        raise ValueError("training and test control genes must align")
+
+    control_dimensions = [int(value) for value in config["control_pca_dimensions"]]
+    response_ranks = [int(value) for value in config["response_ranks"]]
+    ridge_alphas = [float(value) for value in config["ridge_alphas"]]
+    best_dimension, best_rank, best_alpha, trace = select_cclr_hyperparameters(
+        control_train,
+        response_train,
+        inner_fold_ids,
+        control_dimensions=control_dimensions,
+        response_ranks=response_ranks,
+        ridge_alphas=ridge_alphas,
+        max_variable_genes=int(feature_config["max_variable_genes"]),
+        min_mean_log1p_cpm=float(feature_config["min_mean_log1p_cpm"]),
+        seed=seed,
+    )
+    control_embedding = fit_control_embedding(
+        control_train,
+        max_components=best_dimension,
+        max_variable_genes=int(feature_config["max_variable_genes"]),
+        min_mean_log1p_cpm=float(feature_config["min_mean_log1p_cpm"]),
+        seed=seed,
+    )
+    response_embedding = fit_response_embedding(
+        response_train,
+        max_components=best_rank,
+        seed=seed + 1,
+    )
+    train_control_scores = control_embedding.transform(control_train)[:, :best_dimension]
+    train_response_scores = response_embedding.transform(response_train)[:, :best_rank]
+    ridge = Ridge(alpha=best_alpha, fit_intercept=True, solver="svd")
+    ridge.fit(train_control_scores, train_response_scores)
+    artifact = CCLRArtifact(
+        control_embedding=control_embedding,
+        response_embedding=response_embedding,
+        ridge=ridge,
+        control_dimension=best_dimension,
+        response_rank=best_rank,
+        alpha=best_alpha,
+    )
+    prediction = artifact.predict(control_test)
+    genes = int(response_train.shape[1])
+    parameter_count = genes * (best_rank + 1) + best_rank * (best_dimension + 1)
+    info = {
+        "control_dimension": best_dimension,
+        "response_rank": best_rank,
+        "alpha": best_alpha,
+        "selected_control_genes": int(len(control_embedding.gene_indices)),
+        "parameter_count": int(parameter_count),
+        "response_explained_variance_ratio": (
+            response_embedding.pca.explained_variance_ratio_.tolist()
+        ),
+        "inner_cv_trace": trace,
+    }
+    return prediction, info, artifact
 
 
 def fit_predict_baselines(
